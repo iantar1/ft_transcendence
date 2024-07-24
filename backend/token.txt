@@ -1,0 +1,25 @@
+UID: u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed
+SECRET: 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
+URI: https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code
+
+
+
+
+
+
+
+curl -F grant_type='authorization_code' \
+-F client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed \
+-F client_secret=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 \
+-F code=e20e65a8302f43995eaff795fcf07bf79e5a4759a2a6b64c3a572ce418ae411e \
+-F redirect_uri=http://localhost:8000/ \
+-X POST https://api.intra.42.fr/oauth/token
+
+
+{"access_token":"e1e6e0c0df96204f291c2ef1332550aa5ba5cf25a52c9cecbd2f1c871e0061e2",
+"token_type":"bearer",
+"expires_in":7200,
+"refresh_token":"982666b9365d2fdf9204c792c998aa359c7a9ecad55fc99e4de8f2f5f734c79b",
+"scope":"public",
+"created_at":1721758488,
+"secret_valid_until":1724168268} 
