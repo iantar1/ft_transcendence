@@ -15,6 +15,7 @@ curl -F grant_type='authorization_code' \
 -F redirect_uri=http://localhost:8000/ \
 -X POST https://api.intra.42.fr/oauth/token
 
+access: f7fa210e4d61f5f877f885601e1e2ecd5441bef46cac512796f8a88b8c2c63d5
 
 {"access_token":"e1e6e0c0df96204f291c2ef1332550aa5ba5cf25a52c9cecbd2f1c871e0061e2",
 "token_type":"bearer",
@@ -23,3 +24,17 @@ curl -F grant_type='authorization_code' \
 "scope":"public",
 "created_at":1721758488,
 "secret_valid_until":1724168268} 
+
+
+
+
+'image': {
+            'link': 'https://cdn.intra.42.fr/users/460588001e70c03e56f0bb1a4ecd87cc/iantar.JPG',
+            'versions':
+            {
+                'large': 'https://cdn.intra.42.fr/users/bcbafec69d082d596ee4047e2037aebc/large_iantar.JPG',
+                'medium': 'https://cdn.intra.42.fr/users/b8d0326075cafe1fdd71d0b2c3579a5c/medium_iantar.JPG',
+                'small': 'https://cdn.intra.42.fr/users/afab29e36a499599ec28575cb126c876/small_iantar.JPG', 
+                'micro': 'https://cdn.intra.42.fr/users/a1b9affc46f850d9c8a74d651a3c9d9a/micro_iantar.JPG'
+            }
+        }
