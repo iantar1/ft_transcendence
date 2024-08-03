@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from .models import UserData
 from django.http import JsonResponse
 from django.core import serializers
+
 
 import requests
 
@@ -93,10 +94,56 @@ def get_user_by_id(request, _login):
     print(f"-----------..000000000----->>> {_login}")
     data = UserData.objects.all()
     print(f"-------------_>{data}")
-    serialized_data = serializers.serialize('json', data.filter(login=_login))
+    serialized_data = UserSerializer
     # except:
     #     return HttpResponse("<h1>this user id does't exist</h1>")
+    return Response(serialized_data)
     return JsonResponse(serialized_data, safe=False)
 
 def api(request):
     return HttpResponse("<h1>Nice</h1>")
+
+
+# djangorest-freamework
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializer import *
+from rest_framework import generics
+from rest_framework.decorators import api_view
+
+# @api_view
+
+class UserView(APIView):
+    serializer_class =  UserSerializer
+    def get(self, request):
+        output = [{'user_id':output.user_id,
+                  'first_name':output.first_name,
+                  'last_name':output.last_name,
+                  'login':output.login,
+                  'email':output.email,
+                  'image':output.image}
+                  for output in UserData.objects.all()]
+        return Response(output)
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+    
+class UserCreateView(generics.CreateAPIView):
+    queryset = UserData.objects.all()
+    serializer_class = UserSerializer
+
+    def get(self, request):
+        users = UserData.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)

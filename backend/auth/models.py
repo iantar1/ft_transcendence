@@ -15,15 +15,15 @@ from jsonfield import JSONField
     # user_data = models.OneToOneField(UserData, )
 
 class UserData(models.Model):
-    user_id = models.AutoField(primary_key=True, default=0)
+    user_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     login = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     image = models.CharField(max_length=500, null=True)
-    
-    
-    def __str__(self):
+
+
+    def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
 
