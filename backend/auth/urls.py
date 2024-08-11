@@ -12,8 +12,12 @@ urlpatterns = [
     path('rest', UserView.as_view(), name="anything"),
     path('rest1', UserCreateView.as_view(), name="any"),
     path('rest/<str:login>', UserView.as_view(), name="get_user_by_id"),
+    path('test', ExampleView.as_view()),
+
     # path('rest1', UserCreateView.as_view(), name="ab"),
-    
+ 
+ 
+    # path('auth', ),   
 ]
 
 

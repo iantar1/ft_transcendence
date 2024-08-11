@@ -1,1 +1,3 @@
 backend/.venv 
+backend2/.venv
+#backend2/config/.env

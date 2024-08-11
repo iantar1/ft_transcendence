@@ -41,7 +41,15 @@ INSTALLED_APPS = [
     'auth.apps.CustomAuthConfig',
     'rest_framework',
     'corsheaders',
+
+    'oauth2_provider',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    
+    # 'accounts',
 ]
+
+# AUTH_USER_MODEL = 'auth.User1337' #to be the model used for the auth application 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,7 +63,22 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES':['rest_framework.permissions.AllowAny']}
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES':[
+        # 'rest_framework.permissions.AllowAny'
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ],
+}
+# AUTH_USER_MODEL = 'authentication.User1337'
 
 CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'config.urls'
