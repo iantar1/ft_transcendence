@@ -29,8 +29,9 @@ def home(request):
 import requests
 from .models import *
 
-def storeUser(data_json):
+def storeUser(data_json)-> int:
     # check if the user already exsit
+    print("##################################")
     user = CustomUser(
             user_id=data_json["id"],
             first_name = data_json["first_name"],
@@ -39,8 +40,13 @@ def storeUser(data_json):
             image = data_json["image"]["link"],
             username = data_json["login"]
         )
+    existing_user = CustomUser.objects.filter(email=data_json["email"]).first()
+
+    if existing_user:
+        print("User already exists.")
+        return 1
     user.save()
-    
+    return 0
     
 
 def getData(access_token):
@@ -48,29 +54,32 @@ def getData(access_token):
     headers = {
         "Authorization": f"Bearer {access_token}"
     }
-
     response = requests.get(url, headers=headers)
-    print(response.json())
-    storeUser(response.json())
+    # print(response.json())
+    return storeUser(response.json())
     
 def auth(request):
     # queryStr = request.META['QUERY_STRING']
-    response = redirect(AUTH_URI)
     queryStr = request.GET.get('code')
-    print(f"this : {queryStr}")
-    print("---------------------")
+    # print(f"this : {queryStr}")
+    # print("---------------------")
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
                'client_secret':CLIENT_SECRET,
                'code':queryStr,
                'redirect_uri':REDIRECT_URI,}
     r = requests.post(OUUTH_TOKEN_URI, data=payload)
-    print(payload)
+    # print(payload)
     print(f"here: {r.json()}")
-    try:
-        access_token = r.json()['access_token']
-        print(f"------------------------>>>>>> {access_token}")
-        print(getData(access_token))
-    except:
-        return HttpResponse("<h1>GHyrha</h1>")
+    access_token = r.json()['access_token']
+    print(f"------------------------>>>>>> {access_token}")
+    if getData(access_token) == 1:
+        print('this should not be printed')
+        return HttpResponse("<h1>this user is Alrady xist</h1>")
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n")
+    # try:
+    #     access_token = r.json()['access_token']
+    #     # print(f"------------------------>>>>>> {access_token}")
+    #     getData(access_token)
+    # except:
     return HttpResponse("<h1>Ghadi nhakiwk alm3llem</h1>")

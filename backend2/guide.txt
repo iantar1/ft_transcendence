@@ -1,0 +1,12 @@
+/intra
+    
+/google
+
+/login
+
+/register
+
+/home
+
+/loguot
+
