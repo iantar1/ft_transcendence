@@ -14,13 +14,17 @@ import django.http
 import rest_framework
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 
 # class User():
     
 @api_view(['POST'])
+@permission_classes([AllowAny])
 
 def register_user(request):
     # if (request)
+    print("je;llkjk==============")
+    # exit()
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -29,12 +33,17 @@ def register_user(request):
             # return redirect("home")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
     
-    
+from rest_framework.authtoken.models import Token
 @api_view(['POST'])
+@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 # @api_view(['GET'])
 
+
 def user_login(request: rest_framework.request.Request):
+    print("hheheheheheheheh")
     if request.method == 'POST':
         username = request.data.get('username')
         password = request.data.get('password')
@@ -50,9 +59,14 @@ def user_login(request: rest_framework.request.Request):
         user = authenticate(username=username, password=password)
         print(f"username : {username},  password:{password}, user: {user}")
         if user:
-            token = Token.generate_key()
+            # token = Token.generate_key()
+            token = Token.objects.create(user=user)
             # print(f"the value of _ is :{_}")
-            return Response({'token': token}, status=status.HTTP_200_OK)
+            response = HttpResponse("cookie set")
+            response.set_cookie('token', token)
+            # response = Response({'token': token}, status=status.HTTP_200_OK)
+            # response.set_cookie(key='auth_token', value=token, httponly=True, secure=True)
+            return response
 
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -101,11 +115,23 @@ from django.http import HttpResponse
 # (instead of the usual Django HttpRequest)
 # and return a Response (instead of a Django HttpResponse).
 # This decorator also allows you to specify which HTTP methods the view should respond to.
-
+@permission_classes([AllowAny])
+# @permission_classes([IsAuthenticated])
 def home_page(request):
-    print(f"the type of request is :{type(request)}")
-    if request.user.is_authenticated:
-        return HttpResponse("<h1>YOU'Re authorized alm3lem</h1>")
+    # print(request.headers)
+    token = request.COOKIES.get('auth_token')
+    # print(token)
+    if token:
+        # Perform validation of the token (e.g., checking it against the database)
+        # try:
+            user = Token.user
+            print(f"token: {token}")
+            print(f"rToken.key: {Token.key}")
+            if token == Token.key:  # Manually set the user on the request
+                return HttpResponse("<h1>YOU'RE authorized alm3lem</h1>")
+        # except:
+            # pass
+
     return HttpResponse("<h1>You're Not</h1>")
 
 
@@ -124,8 +150,43 @@ def test(request):
         #
     return HttpResponse(str)
 
+# @permission_classes([IsAuthenticated])
+
+# def getUserData(request):
+#     return     
+    
+    
 
 # serializer = UserSerializer(data=request.data)
 #         if serializer.is_valid():
 #             serializer.save()
 #             # str = "hello"   
+
+
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
+
+@permission_classes([AllowAny])
+class LoginView(APIView):
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request):
+        # Your authentication logic here
+        user = authenticate(username=request.data['username'], password=request.data['password'])
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'Authorization: 'f"Token {token.key}"})
+        else:
+            return Response({'error': 'Invalid credentials'}, status=401)
+
+@permission_classes([AllowAny])
+
+class HomeView(APIView):
+    
+    # permission_classes = [IsAuthenticated]
+    def get(self, request):
+        return Response("YES, ")
+        
+#this class   : TokenAuthentication

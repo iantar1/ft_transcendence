@@ -1,3 +1,5 @@
+import requests
+from .models import *
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -23,15 +25,16 @@ OUUTH_TOKEN_URI = os.getenv('OUUTH_TOKEN_URI')
 # AuthUri = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code"
 
 def home(request):
-    response = redirect(AUTH_URI)
-    return response
+    return redirect(AUTH_URI)
 
-import requests
-from .models import *
 
 def storeUser(data_json)-> int:
     # check if the user already exsit
-    print("##################################")
+    existing_user = CustomUser.objects.filter(email=data_json["email"]).first()
+
+    if existing_user:
+        print("User already exists.")
+        return 1
     user = CustomUser(
             user_id=data_json["id"],
             first_name = data_json["first_name"],
@@ -40,11 +43,6 @@ def storeUser(data_json)-> int:
             image = data_json["image"]["link"],
             username = data_json["login"]
         )
-    existing_user = CustomUser.objects.filter(email=data_json["email"]).first()
-
-    if existing_user:
-        print("User already exists.")
-        return 1
     user.save()
     return 0
     
@@ -55,7 +53,7 @@ def getData(access_token):
         "Authorization": f"Bearer {access_token}"
     }
     response = requests.get(url, headers=headers)
-    # print(response.json())
+    print(f"the resposnse josn: {response.json()}")
     return storeUser(response.json())
     
 def auth(request):
@@ -75,6 +73,7 @@ def auth(request):
     print(f"------------------------>>>>>> {access_token}")
     if getData(access_token) == 1:
         print('this should not be printed')
+        # return redirect("test")
         return HttpResponse("<h1>this user is Alrady xist</h1>")
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n")
     # try:

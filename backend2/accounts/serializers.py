@@ -27,3 +27,19 @@ class UserSerializer(serializers.ModelSerializer):
             representation['image'] = instance.image.name  # This gives you just the relative path
         return representation
 
+# {
+#     "first_name": "John",
+#     "last_name": "Doe",
+#     "username": "johndoe123",
+#     "email": "johndoe@example.com",
+#     "image": "http://example.com/path/to/image.jpg",
+#     "password": "securepassword123",
+#     "user_id": 1
+# }
+
+
+# {
+#     "username": "johndoe123",
+#     "password": "securepassword123"
+# }
+#  "token": "512726c2412fdfd3c6f98b0e6d67f673ecc3347f"
