@@ -5,7 +5,7 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     # email = models.EmailField(unique=True)
-    # image = models.ImageField(upload_to ='image/')
+    image = models.ImageField(upload_to ='image/')
     image = models.TextField(null=True)
     user_id = models.IntegerField(null=True)
     

@@ -167,6 +167,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
+from django.http import JsonResponse
 
 @permission_classes([AllowAny])
 class LoginView(APIView):
@@ -177,16 +178,36 @@ class LoginView(APIView):
         user = authenticate(username=request.data['username'], password=request.data['password'])
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            return Response({'Authorization: 'f"Token {token.key}"})
+            print(f"what is this: {created}")
+            response = Response({'Authorization: 'f"Token {token.key}"})
+            response['Authorization'] = f"Token {token.key}"
+            return response
+        
+            response = JsonResponse({'message': 'Login successful'})
+            response.set_cookie(key='Authorization', value=f"Token {token.key}")
+            return response
+            return Response.set_cookie(self, key='Authorization: ', value=f"Token {token.key}")
         else:
             return Response({'error': 'Invalid credentials'}, status=401)
 
-@permission_classes([AllowAny])
+    def get(self, request : rest_framework.request.Request):
+        print(f"type of request : {type(request)}")
+        print(f"request.authenticators{request.authenticators}")
+        print(f"request.user: {request.user}")
+        print(f"request.auth: {request.auth}")
+        print("Headers:")
+        for key, value in request.headers.items():
+            print(f"{key}: {value}")
+        
+        
 
-class HomeView(APIView):
+        user_data = UserSerializer(request.user).data
+        return Response(user_data)
+# @permission_classes([AllowAny])
+# @permission_classes([IsAuthenticated])
+# class HomeView(APIView):
     
     # permission_classes = [IsAuthenticated]
-    def get(self, request):
-        return Response("YES, ")
+    
         
 #this class   : TokenAuthentication

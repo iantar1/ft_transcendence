@@ -21,11 +21,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
     
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        if instance.image:
-            representation['image'] = instance.image.name  # This gives you just the relative path
-        return representation
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     if instance.image:
+    #         representation['image'] = instance.image.name  # This gives you just the relative path
+    #     return representation
 
 # {
 #     "first_name": "John",

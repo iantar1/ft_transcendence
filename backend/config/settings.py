@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-av+23-m%n#zj8j!l%-of_2dd=25(54jiq_)15z77u1+6$+%7qu'
+SECRET_KEY = 'django-insecure-zyz*f+#nuu@%qz(&jvc!+)$jwdrl#am@px=mc#*l)0ctm@)_&3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,19 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'auth.apps.CustomAuthConfig',
+    'UserManagement',
     'rest_framework',
-    'corsheaders',
-
-    'oauth2_provider',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
-    
-    # 'accounts',
 ]
-
-# AUTH_USER_MODEL = 'auth.User1337' #to be the model used for the auth application 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,28 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
-
-AUTH_USER_MODEL = 'accounts.CustomUser'
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES':[
-        # 'rest_framework.permissions.AllowAny'
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    # ],
-}
-# AUTH_USER_MODEL = 'authentication.User1337'
-
-CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -155,7 +125,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-import os
-# for storing images
-MEDIA_URL = "/media/"
-MEDIA_ROOT=os.path.join(BASE_DIR,"media/")
+AUTH_USER_MODEL = 'UserManagement.User'

@@ -14,7 +14,7 @@ urlpatterns = [
     path('', intra_auth.auth),
     path('test', views.test),
     path('login/', LoginView.as_view()),
-    path('home', HomeView.as_view()),
+    path('home', LoginView.as_view()),
     
     # path('get', )
     # path('register/', RegisterUserView.as_view(), name='register'),
