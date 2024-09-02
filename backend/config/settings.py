@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'UserManagement',
     'rest_framework',
+    'corsheaders',
+    # 'Rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -49,8 +51,30 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8080',
+#     'http://127.0.0.1:8080',
+#     'http://localhost:8000',  # Add the port where your frontend is running if different
+# ]
+
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'Access-Control-Allow-Origin',
+    # add any other headers you might need
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'OPTIONS',
+    # add any other methods you might need
+]
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -126,3 +150,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'UserManagement.User'
+
+MEDIA_URL = '/media/'
+
+import environ
+
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
+

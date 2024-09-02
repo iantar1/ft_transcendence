@@ -4,7 +4,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
-        fields = ['id', 'first_name', 'last_name', 'username', 'email','password']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image']
         extra_kwargs = {'password': {'write_only': True}}#it will only be used for creating or updating data and will not be included in the serialized output
         
 
@@ -19,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             username=validated_data['username'],
+            image = validated_data['image'],
             email=validated_data['email'],
         )
         user.set_password(validated_data['password'])
@@ -30,5 +31,10 @@ class UserSerializer(serializers.ModelSerializer):
 #     "last_name": "a",
 #     "username": "a",
 #     "email": "a@a.com",
+#     "password": "a"
+# }
+
+# {
+#     "username": "a",
 #     "password": "a"
 # }

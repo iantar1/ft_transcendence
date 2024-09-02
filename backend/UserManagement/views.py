@@ -31,9 +31,10 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed("incorrect password")
         
+        #here 
         playlod = {
             'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1),#it will despire after one minute
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),#it will despire after one minute
             'iat': datetime.datetime.utcnow(),#date which the token is created 
         }
         token = jwt.encode(playlod, 'secret', algorithm='HS256')
@@ -74,3 +75,26 @@ class LogoutView(APIView):
             'message':'the user is successfuly logout'
         }
         return response
+
+
+class UpdateView(APIView):
+    
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated-')
+        
+        try:
+            playload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated+')
+        
+    #check password and update it (password) (new password)
+        
+        user = User.objects.filter(id=playload['id']).first()
+        serializer = UserSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+        

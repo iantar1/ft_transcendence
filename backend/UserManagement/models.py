@@ -4,7 +4,25 @@ from django.db import models
 class User(AbstractUser):
     # image = models.ImageField(upload_to ='image/')
     username = models.CharField(max_length=50, unique=True)
-    image_intra = models.TextField(null=True)
+    image = models.ImageField(upload_to='images', default='/images/default.png')
     email = models.EmailField(unique=True)
+    #a one to one relationship 
     
 
+class Stats(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+#if a User object is deleted, all related Stats objects will also be deleted.
+    wins = models.CharField(max_length=500, null=True)
+    losses = models.CharField(max_length=500,null=True)
+    
+    def __str__(self):
+        return self.name
+
+class MatchHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+#on_delete=models.CASCADE: if a User object is deleted, all related MatchHistory objects will also be deleted.
+    tmp_text = models.CharField(max_length=500, null=True)
+    # 1v1 games, dates, and relevant details
+    
+    def __str__(self):
+        return self.name
