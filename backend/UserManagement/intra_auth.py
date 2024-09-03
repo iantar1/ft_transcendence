@@ -14,6 +14,8 @@ from .serializers import UserSerializer
 from rest_framework.response import Response
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
+from .utils import *
+from rest_framework.exceptions import AuthenticationFailed
 
 # AUTH_URI = os.environ.get('AUTH_URI')
 
@@ -34,27 +36,27 @@ def home(request):
 
 def storeUser(data_json)-> User:
     # check if the user already exsit
-    existing_user = User.objects.filter(username=data_json["login"]).first()
+    existing_user = User.objects.filter(username=data_json.get("login")).first()
 
     if existing_user:
         print("User already exists.")
         return existing_user
-    response = requests.get(data_json["image"]["link"])
+    response = requests.get(data_json.get("image", {}).get("link"))
     if response.status_code == 200:
         img_temp = NamedTemporaryFile(delete=True)
         img_temp.write(response.content)
         img_temp.flush()
 
         # Extract the image filename from the URL
-        filename = os.path.basename(data_json["image"]["link"])
+        filename = os.path.basename(data_json.get("image", {}).get("link"))
 
     user = User(
             # id=data_json["id"],
-            first_name = data_json["first_name"],
-            last_name = data_json["last_name"],
-            email = data_json["email"],
+            first_name = data_json.get("first_name"),
+            last_name = data_json.get("last_name"),
+            email = data_json.get("email"),
             image = File(img_temp, name=filename),#set default if you can't get the image
-            username = data_json["login"]
+            username = data_json.get("login")
         )
     user.save()
     return user
@@ -72,21 +74,38 @@ def getData(access_token) -> User:
 from rest_framework.renderers import JSONRenderer
 
 def auth(request):
-    # queryStr = request.META['QUERY_STRING']
+    
     queryStr = request.GET.get('code')
-    # print(f"this : {queryStr}")
-    # print("---------------------")
+    # token = request.COOKIES.get('access')
+    # if token:
+    #     try:
+    #         playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+    #         user = User.objects.filter(id=playload['id']).first()
+    #         if user:
+    #             serializer = UserSerializer(user)
+    #             response = Response(serializer.data)
+    #             response.accepted_renderer = JSONRenderer()
+    #             response.accepted_media_type = 'application/json'
+    #             return response
+    #     except jwt.ExpiredSignatureError:
+    #         pass
+            # raise AuthenticationFailed('Unauthenticated')
+
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
                'client_secret':CLIENT_SECRET,
                'code':queryStr,
                'redirect_uri':REDIRECT_URI,}
     r = requests.post(OUUTH_TOKEN_URI, data=payload)
-    # print(payload)
     print(f"here: {r.json()}")
-    access_token = r.json()['access_token']
-    print(f"------------------------>>>>>> {access_token}")
-    user = getData(access_token)
+    # try:
+        # intra_access_token =  r.cookies.get('access_token')
+    intra_access_token = r.json().get('access_token')#['access_token']
+    user = getData(intra_access_token)
+    # except:
+    #     raise AuthenticationFailed('Unauthenticated')
+    print(f"------------------------>>>>>> {intra_access_token}")
+        
     serializer = UserSerializer(user)
     # user.use
     response = Response(serializer.data)
@@ -96,6 +115,8 @@ def auth(request):
     'request': request,
     'response': response
     }
+    access_token = create_access_token(user.id)
+    response.set_cookie(key="access", value=access_token, httponly=True)
     return response
     return Response(serializer.data)
 
