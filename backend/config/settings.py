@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'UserManagement',
     'rest_framework',
-    'corsheaders',
-    'rest_framework_simplejwt',
+    # 'corsheaders',
+    # 'rest_framework_simplejwt',
 ]
 
 
@@ -161,12 +161,12 @@ env = environ.Env()
 environ.Env.read_env()
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
 
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
+# }
 
 from datetime import timedelta
 
