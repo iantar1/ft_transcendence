@@ -11,6 +11,7 @@ urlpatterns = [
     path('update/', UpdateView.as_view()),
     path('intra/', intra_auth.home),
     path('', intra_auth.auth),
+    # path('set-two-factor-auth/', views.Set2FAView.as_view()),``
     # path('intra/')
     
 

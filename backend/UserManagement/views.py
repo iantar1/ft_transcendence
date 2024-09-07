@@ -104,3 +104,18 @@ class UpdateView(APIView):
         serializer.save()
         return Response(serializer.data)
         
+        
+        
+
+# class Set2FAView(APIView):
+#     """
+#     Get the image of the QR Code
+#     """
+#     def post(self, request):
+#     user = getUserService(request)
+#     if user == None:
+#     return Response({"status": "fail", "message": f"No user with the corresponding username and password exists" }, 
+#     status=status.HTTP_404_NOT_FOUND)
+
+#     qr_code = getQRCodeService(user)
+#     return Response({"qr_code": qr_code})

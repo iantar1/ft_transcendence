@@ -4,7 +4,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image', 'logged_in', 'otp_base32']
         extra_kwargs = {'password': {'write_only': True}}#it will only be used for creating or updating data and will not be included in the serialized output
         
 
@@ -12,19 +12,20 @@ class UserSerializer(serializers.ModelSerializer):
     #     user = User.objects.create_user(**validated_data)
     #     return user
     
-    
     def create(self, validated_data):
-        user = User(
-            # id=validated_data['id'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            username=validated_data['username'],
-            # image = validated_data['image'],
-            email=validated_data['email'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
+        user = User.objects.create(**validated_data)
         return user
+        # user = User(
+        #     # id=validated_data['id'],
+        #     first_name=validated_data['first_name'],
+        #     last_name=validated_data['last_name'],
+        #     username=validated_data['username'],
+        #     # image = validated_data['image'],
+        #     email=validated_data['email'],
+        # )
+        # user.set_password(validated_data['password'])
+        # user.save()
+        # return user
     
 # {
 #     "first_name": "a",

@@ -41,6 +41,14 @@ INSTALLED_APPS = [
     'rest_framework',
     # 'corsheaders',
     # 'rest_framework_simplejwt',
+    # 'django_otp',
+    # 'django_otp.plugins.otp_static',
+    # 'django_otp.plugins.otp_totp',
+    # 'django_otp.plugins.otp_email',  # <- if you want email capability.
+    # 'two_factor',
+    # 'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
+    # 'two_factor.plugins.email',  # <- if you want email capability.
+    # 'two_factor.plugins.yubikey',  # <- for yubikey capability.
 ]
 
 
@@ -53,6 +61,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    
+    #tfa
+    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'django_otp.middleware.OTPMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -168,12 +180,17 @@ environ.Env.read_env()
 #     )
 # }
 
-from datetime import timedelta
+# from datetime import timedelta
 
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    }
+#     "AUTH_HEADER_TYPES": ("Bearer",),
+#     }
+
+
+
+# LOGIN_URL = 'two_factor:login'
+# LOGIN_REDIRECT_URL = 'two_factor:profile'

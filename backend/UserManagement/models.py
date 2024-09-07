@@ -6,6 +6,8 @@ class User(AbstractUser):
     username = models.CharField(max_length=50, unique=True)
     image = models.ImageField(upload_to='images', default='/images/default.png')
     email = models.EmailField(unique=True)
+    otp_base32 =  models.CharField(max_length = 200, null = True)
+    logged_in =   models.BooleanField(default = False)
     #a one to one relationship 
     
 
