@@ -18,6 +18,10 @@ class RegesterView(APIView):
         return Response(serializer.data)
     
 
+import random
+from datetime import timedelta
+from django.core.mail import send_mail
+from django.utils import timezone
 
 class LoginView(APIView):
     
@@ -31,26 +35,61 @@ class LoginView(APIView):
             raise AuthenticationFailed("user not found")
         if not user.check_password(password):
             raise AuthenticationFailed("incorrect password")
-        
-        #here 
-        # playlod = {
-        #     'id': user.id,
-        #     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),#it will despire after one minute
-        #     'iat': datetime.datetime.utcnow(),#date which the token is created 
+
+         # Generate OTP
+        otp = str(random.randint(100000, 999999))
+        user.otp = otp
+        user.otp_expiry_time = timezone.now() + timedelta(minutes=5)  # OTP expires in 5 minutes
+        user.save()
+
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP code is: {otp}',
+            'antartalha@gmail.com',  # Replace with your sender email
+            ['harej90946@ploncy.com'],  # Send to the user's email
+            fail_silently=False,
+        )
+        return Response({"message": "OTP sent to your email. Please enter the OTP to continue."})
+
+        # access_token = create_access_token(user.id)
+        # refresh_token = create_refresh_token(user.id)
+        # response = Response()
+        # response.set_cookie(key="access", value=access_token, httponly=True)#httponly=True means the backend will only get this cookie
+        # response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+        # response.data = {
+        #     "access":access_token,
+        #     "refresh":refresh_token
         # }
-        # token = jwt.encode(playlod, 'access_secret', algorithm='HS256')
+        # # httponly=True: becose we won't the frontend to access the token , only the backend
+        # return response
+            
+
+class VerifyOTPView(APIView):
+
+    def post(self, request):
+        otp = request.data['otp']
+        username = request.data['username']
+
+        user = User.objects.filter(username=username).first()
+
+        if user is None:
+            raise AuthenticationFailed("user not found")
+        if user.otp != otp or timezone.now() > user.otp_expiry_time:
+            raise AuthenticationFailed("Invalid or expired OTP")
+
+        # Generate tokens
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)
+
         response = Response()
-        response.set_cookie(key="access", value=access_token, httponly=True)#httponly=True means the backend will only get this cookie
+        response.set_cookie(key="access", value=access_token, httponly=True)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
         response.data = {
-            "access":access_token,
-            "refresh":refresh_token
+            "access": access_token,
+            "refresh": refresh_token
         }
-        # httponly=True: becose we won't the frontend to access the token , only the backend
+
         return response
-            
 
 
 class UserView(APIView):

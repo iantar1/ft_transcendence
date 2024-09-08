@@ -9,6 +9,7 @@ urlpatterns = [
     path('user/', UserView.as_view()),
     path('logout/', LogoutView.as_view()),
     path('update/', UpdateView.as_view()),
+    path('verify_otp/', VerifyOTPView.as_view()),
     path('intra/', intra_auth.home),
     path('', intra_auth.auth),
     # path('set-two-factor-auth/', views.Set2FAView.as_view()),``

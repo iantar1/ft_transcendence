@@ -173,6 +173,15 @@ env = environ.Env()
 environ.Env.read_env()
 
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'antartalha@gmail.com'
+EMAIL_HOST_PASSWORD = 'gwrz ffjc onjv aqdf'
+
+
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
 
@@ -194,3 +203,5 @@ environ.Env.read_env()
 
 # LOGIN_URL = 'two_factor:login'
 # LOGIN_REDIRECT_URL = 'two_factor:profile'
+
+#woumechtak@gmail.com
