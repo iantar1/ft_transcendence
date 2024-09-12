@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zyz*f+#nuu@%qz(&jvc!+)$jwdrl#am@px=mc#*l)0ctm@)_&3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -90,10 +90,13 @@ CORS_ALLOW_METHODS = [
 ]
 ROOT_URLCONF = 'config.urls'
 
+import os
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -179,7 +182,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'antartalha@gmail.com'
-EMAIL_HOST_PASSWORD = 'gwrz ffjc onjv aqdf'
+EMAIL_HOST_PASSWORD = 'cnoy ivmc yoyc rjii'
 
 
 # REST_FRAMEWORK = {
@@ -205,3 +208,23 @@ EMAIL_HOST_PASSWORD = 'gwrz ffjc onjv aqdf'
 # LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 #woumechtak@gmail.com
+
+
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+
+load_dotenv()
+
+
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+if not GOOGLE_CLIENT_ID:
+    raise ValueError(
+        'GOOGLE_CLIENT_ID is missing.' 
+        'Have you put it in a file at core/.env ?'
+    )
+
+# We need these lines below to allow the Google sign in popup to work.
+SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"

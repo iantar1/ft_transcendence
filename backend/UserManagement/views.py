@@ -46,7 +46,7 @@ class LoginView(APIView):
             'Your OTP Code',
             f'Your OTP code is: {otp}',
             'antartalha@gmail.com',  # Replace with your sender email
-            ['harej90946@ploncy.com'],  # Send to the user's email
+            [user.email],  # Send to the user's email
             fail_silently=False,
         )
         return Response({"message": "OTP sent to your email. Please enter the OTP to continue."})
