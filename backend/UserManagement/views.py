@@ -6,6 +6,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from .models import User
 import jwt, datetime
 from .utils import *
+from rest_framework import status
+
 # Create your views here.
 
 
@@ -15,7 +17,20 @@ class RegesterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        user_data = serializer.data
+        access_token = create_access_token(user_data.get('id'))
+        refresh_token = create_refresh_token(user_data.get('id'))
+
+        response = Response()
+        response.set_cookie(key="access", value=access_token, httponly=True)
+        response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+        response.data = {
+            "access": access_token,
+            "refresh": refresh_token
+        }
+        response.data.update(serializer.data)
+        return response
+        # return Response(serializer.data)
     
 
 import random
@@ -108,6 +123,28 @@ class UserView(APIView):
         user = User.objects.filter(id=playload['id']).first()
         serailiser = UserSerializer(user)
         return Response(serailiser.data)
+    
+    def delete(self, request):
+        token = request.COOKIES.get('access')
+        print(f"------->       token: {token}        <------")
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+
+        try:
+            payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+            print(f"------->       payload: {payload}        <------")
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+
+        user = User.objects.filter(id=payload['id']).first()
+
+    # should the user enter its password before deleting his account
+        
+        if user:
+            user.delete()
+            return Response({"detail": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        
+        raise AuthenticationFailed('User not found')
     
     
 class LogoutView(APIView):

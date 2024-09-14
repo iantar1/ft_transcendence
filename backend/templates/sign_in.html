@@ -66,10 +66,10 @@
         <p>Hi there 🙂 </p>
         <p>Click below to sign in with Google</p>
         <div id="g_id_onload"
-            data-client_id="313718335335-julk7f3stmjem55vhevd4h7juhmqn3ro.apps.googleusercontent.com"
+            data-client_id="242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com"
             data-context="signin"
-            data-ux_mode="popup"
-            data-login_uri="http://127.0.0.1:8000/auth-receiver"
+            data-ux_mode="redirect"
+            data-login_uri="http://localhost:8000/auth-receiver/"
             data-auto_prompt="false">
         </div>
 
@@ -80,9 +80,11 @@
             data-text="signin_with"
             data-size="large"
             data-logo_alignment="left">
-
         </div>
     </div>
+    
+    {% comment %} <script src="https://accounts.google.com/gsi/client" async defer></script> {% endcomment %}
+    
     {% endif %}
 </div>
 

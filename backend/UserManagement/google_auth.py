@@ -1,47 +1,112 @@
-# import os
-# from dotenv import load_dotenv
-
-
-
-GOOGLE_CLIENT_ID = "313718335335-julk7f3stmjem55vhevd4h7juhmqn3ro.apps.googleusercontent.com"
-
-
-import os
-
+import requests
+from .models import *
+from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-from google.oauth2 import id_token
-from google.auth.transport import requests
+from django.shortcuts import redirect, render
+from .models import *
+from django.http import JsonResponse
+from django.core import serializers
+import requests
+from config.settings import env
+import os
+from dotenv import load_dotenv
+from .serializers import UserSerializer
+from rest_framework.response import Response
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files import File
+from .utils import *
+from rest_framework.exceptions import AuthenticationFailed
+
+AUTH_PROVIDER_URI = "https://www.googleapis.com/oauth2/v1/certs"
+PROJECT_ID = "transcendence-432116"
+AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
+CLIENT_ID = "242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com"
+CLIENT_SECRET = "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"
+REDIRECT_URI = "http://127.0.0.1:8000/"
+OUUTH_TOKEN_URI = "https://oauth2.googleapis.com/token"
 
 
-@csrf_exempt
-def sign_in(request):
-    return render(request, 'sign_in.html')
+
+# AuthUri = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code"
+
+def home(request):
+    return redirect(AUTH_URI)
 
 
-@csrf_exempt
-def auth_receiver(request):
-    """
-    Google calls this URL after the user has signed in with their Google account.
-    """
-    print('Inside')
-    token = request.POST['credential']
+def storeUser(data_json)-> User:
+    # check if the user already exsit
+    existing_user = User.objects.filter(username=data_json.get("login")).first()
 
-    try:
-        user_data = id_token.verify_oauth2_token(
-            token, requests.Request(), GOOGLE_CLIENT_ID
+    if existing_user:
+        print("User already exists.")
+        return existing_user
+    response = requests.get(data_json.get("image", {}).get("link"))
+    if response.status_code == 200:
+        img_temp = NamedTemporaryFile(delete=True)
+        img_temp.write(response.content)
+        img_temp.flush()
+
+        # Extract the image filename from the URL
+        filename = os.path.basename(data_json.get("image", {}).get("link"))
+
+    user = User(
+            # id=data_json["id"],
+            first_name = data_json.get("first_name"),
+            last_name = data_json.get("last_name"),
+            email = data_json.get("email"),
+            image = File(img_temp, name=filename),#set default if you can't get the image
+            username = data_json.get("login")
         )
-    except ValueError:
-        return HttpResponse(status=403)
+    user.save()
+    return user
+    
 
-    # In a real app, I'd also save any new user here to the database.
-    # You could also authenticate the user here using the details from Google (https://docs.djangoproject.com/en/4.2/topics/auth/default/#how-to-log-a-user-in)
-    request.session['user_data'] = user_data
+def getData(access_token) -> User:
+    url = "https://accounts.google.com/gsi/client"#add this to env var
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+    response = requests.get(url, headers=headers)
+    print(f"the resposnse josn: {response.json()}")
+    return storeUser(response.json())
 
-    return redirect('sign_in')
+from rest_framework.renderers import JSONRenderer
 
+def auth(request):
+    
+    queryStr = request.GET.get('code')
 
-def sign_out(request):
-    del request.session['user_data']
-    return redirect('sign_in')
+    payload = {'grant_type':'authorization_code', 
+               'client_id':CLIENT_ID,
+               'client_secret':CLIENT_SECRET,
+               'code':queryStr,
+               'redirect_uri':REDIRECT_URI,}
+    r = requests.post(OUUTH_TOKEN_URI, data=payload)
+    print(f"here: {r.json()}")
+    # try:
+        # intra_access_token =  r.cookies.get('access_token')
+    intra_access_token = r.json().get('access_token')#['access_token']
+    user = getData(intra_access_token)
+    # except:
+    #     raise AuthenticationFailed('Unauthenticated')
+    print(f"------------------------>>>>>> {intra_access_token}")
+        
+    serializer = UserSerializer(user)
+    # user.use
+    response = Response(serializer.data)
+    response.accepted_renderer = JSONRenderer()
+    response.accepted_media_type = 'application/json'
+    response.renderer_context = {
+    'request': request,
+    'response': response
+    }
+    access_token = create_access_token(user.id)
+    response.set_cookie(key="access", value=access_token, httponly=True)
+    return response
+    return Response(serializer.data)
+
+# read the subject again
+# recreate a new intra auth
+# use jwt and set the cookie and redirct to home
+# if unthenticated user try to acess the /home rediract him to /register
+# authentcate with google 

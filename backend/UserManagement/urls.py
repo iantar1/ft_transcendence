@@ -12,15 +12,25 @@ urlpatterns = [
     path('user/', UserView.as_view()),
     path('logout/', LogoutView.as_view()),
     path('update/', UpdateView.as_view()),
+    path('delete_acount/', UserView.as_view()),
     path('verify_otp/', VerifyOTPView.as_view()),
     path('intra/', intra_auth.home),
-    # path('', intra_auth.auth),
+    path('', intra_auth.auth),#change the rediract uri
+
+    path('google/', google_auth.home),
+    # path('frinds/', ),
+    # path('add_frind/', ),
+    # path('delete_frind/', ),
+    
+    # path('add_win/', ),
+    # path('add_lose/', ),
+    # path('add_history/', ),
     
     # path('set-two-factor-auth/', views.Set2FAView.as_view()),``
     # path('intra/')
-    path('', google_auth.sign_in, name='sign_in'),
-    path('sign-out', google_auth.sign_out, name='sign_out'),
-    path('auth-receiver', google_auth.auth_receiver, name='auth_receiver'),
+    # path('', google_auth.sign_in, name='sign_in'),
+    # path('', google_auth.auth),
+    # path('auth-receiver/', google_auth.auth_receiver, name='auth_receiver'),
     
 
 ]
