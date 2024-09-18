@@ -126,13 +126,11 @@ class UserView(APIView):
     
     def delete(self, request):
         token = request.COOKIES.get('access')
-        print(f"------->       token: {token}        <------")
         if not token:
             raise AuthenticationFailed('Unauthenticated')
 
         try:
             payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-            print(f"------->       payload: {payload}        <------")
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Unauthenticated')
 
@@ -182,6 +180,19 @@ class UpdateView(APIView):
         
         
         
+
+#friedship management
+
+# list friends
+# send friend request (add frind)
+# list friend requests
+# accept friend request
+# cancel a friend request
+# block a user
+
+
+
+
 
 # class Set2FAView(APIView):
 #     """

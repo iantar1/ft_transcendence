@@ -18,7 +18,7 @@ urlpatterns = [
     path('', intra_auth.auth),#change the rediract uri
 
     path('google/', google_auth.home),
-    # path('frinds/', ),
+    # path('list_frinds/', ),
     # path('add_frind/', ),
     # path('delete_frind/', ),
     
