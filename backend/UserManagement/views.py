@@ -84,6 +84,10 @@ class VerifyOTPView(APIView):
             raise AuthenticationFailed("Session expired or user not found")
 
         user = User.objects.filter(id=user_id).first()
+
+         # Clear the session
+        # request.session.pop('otp_user_id', None)
+        request.session.flush()
         
         if user is None:
             raise AuthenticationFailed("user not found")
