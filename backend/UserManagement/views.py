@@ -57,6 +57,10 @@ class LoginView(APIView):
         user.otp_expiry_time = timezone.now() + timedelta(minutes=5)  # OTP expires in 5 minutes
         user.save()
 
+        # Store user ID in session
+        request.session['otp_user_id'] = user.id
+        
+
         send_mail(
             'Your OTP Code',
             f'Your OTP code is: {otp}',
@@ -66,27 +70,21 @@ class LoginView(APIView):
         )
         return Response({"message": "OTP sent to your email. Please enter the OTP to continue."})
 
-        # access_token = create_access_token(user.id)
-        # refresh_token = create_refresh_token(user.id)
-        # response = Response()
-        # response.set_cookie(key="access", value=access_token, httponly=True)#httponly=True means the backend will only get this cookie
-        # response.set_cookie(key="refresh", value=refresh_token, httponly=True)
-        # response.data = {
-        #     "access":access_token,
-        #     "refresh":refresh_token
-        # }
-        # # httponly=True: becose we won't the frontend to access the token , only the backend
-        # return response
-            
 
 class VerifyOTPView(APIView):
 
     def post(self, request):
         otp = request.data['otp']
-        username = request.data['username']
+        # username = request.data['username']
 
-        user = User.objects.filter(username=username).first()
+        # user = User.objects.filter(username=username).first()
+        user_id = request.session.get('otp_user_id')
 
+        if user_id is None:
+            raise AuthenticationFailed("Session expired or user not found")
+
+        user = User.objects.filter(id=user_id).first()
+        
         if user is None:
             raise AuthenticationFailed("user not found")
         if user.otp != otp or timezone.now() > user.otp_expiry_time:
