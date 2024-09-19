@@ -59,8 +59,19 @@ class Relationship(models.Model):
     def __str__(self):
         return f"{self.sender}-{self.receiver}-{self.status}"
 
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save, sender=Relationship)
+
+
+def print_email(sender, instance, **kwargs):
+    print("hello")
+    # print(instance.status)
     
-    
+def print_email1(sender, instance, **kwargs):
+    print("ksdjf;lksdf;lk")
+    # print(instance.status)
     
 # class Friendship(models.Model):
     

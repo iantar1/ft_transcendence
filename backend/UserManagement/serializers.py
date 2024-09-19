@@ -55,3 +55,7 @@ class UserSerializer(serializers.ModelSerializer):
 #     "email": "harej90946@ploncy.com",
 #     "password": "oka"
 # }
+# {
+#     "username": "a1",
+#     "password": "a"
+# }
