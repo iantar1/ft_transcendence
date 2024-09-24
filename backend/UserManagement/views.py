@@ -75,19 +75,19 @@ class VerifyOTPView(APIView):
 
     def post(self, request):
         otp = request.data['otp']
-        # username = request.data['username']
+        username = request.data['username']
 
-        # user = User.objects.filter(username=username).first()
-        user_id = request.session.get('otp_user_id')
+        user = User.objects.filter(username=username).first()
+        # user_id = request.session.get('otp_user_id')
 
-        if user_id is None:
-            raise AuthenticationFailed("Session expired or user not found")
+        # if user_id is None:
+        #     raise AuthenticationFailed("Session expired or user not found")
 
-        user = User.objects.filter(id=user_id).first()
+        # user = User.objects.filter(id=user_id).first()
 
          # Clear the session
         # request.session.pop('otp_user_id', None)
-        request.session.flush()
+        # request.session.flush()
         
         if user is None:
             raise AuthenticationFailed("user not found")
