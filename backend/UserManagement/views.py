@@ -52,14 +52,16 @@ class LoginView(APIView):
             raise AuthenticationFailed("incorrect password")
 
          # Generate OTP
+        otp_token = create_access_token(user.id)
         otp = str(random.randint(100000, 999999))
         user.otp = otp
         user.otp_expiry_time = timezone.now() + timedelta(minutes=5)  # OTP expires in 5 minutes
         user.save()
 
         # Store user ID in session
-        request.session['otp_user_id'] = user.id
-        
+        response = Response()
+        # request.session['otp_user_id'] = user.id
+        response.set_cookie(key="otp_token", value=otp_token, httponly=True)
 
         send_mail(
             'Your OTP Code',
@@ -68,6 +70,8 @@ class LoginView(APIView):
             [user.email],  # Send to the user's email
             fail_silently=False,
         )
+        response.data = {"message": "OTP sent to your email. Please enter the OTP to continue."}
+        return response
         return Response({"message": "OTP sent to your email. Please enter the OTP to continue."})
 
 
@@ -75,10 +79,24 @@ class VerifyOTPView(APIView):
 
     def post(self, request):
         otp = request.data['otp']
-        username = request.data['username']
+        # username = request.data['username']
 
-        user = User.objects.filter(username=username).first()
+        # user = User.objects.filter(username=username).first()
+        print(f"otp: {otp}")
+        otp_token = request.COOKIES.get('otp_token')
+        print(f"otp_token: {otp_token}")
+    
+        if not otp_token:
+            raise AuthenticationFailed('Unauthenticated')
+        try:
+            playload = jwt.decode(otp_token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
         # user_id = request.session.get('otp_user_id')
+
+        # print(f"user_id: {user_id}")
 
         # if user_id is None:
         #     raise AuthenticationFailed("Session expired or user not found")
@@ -99,6 +117,7 @@ class VerifyOTPView(APIView):
         refresh_token = create_refresh_token(user.id)
 
         response = Response()
+        response.delete_cookie('otp_token')
         response.set_cookie(key="access", value=access_token, httponly=True)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
         response.data = {
@@ -165,12 +184,12 @@ class UpdateView(APIView):
         token = request.COOKIES.get('access')
     
         if not token:
-            raise AuthenticationFailed('Unauthenticated-')
+            raise AuthenticationFailed('Unauthenticated')
         
         try:
             playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated+')
+            raise AuthenticationFailed('Unauthenticated')
         
     #check password and update it (password) (new password)
         

@@ -1,3 +1,5 @@
-backend/.venv 
+./backend/.venv
+./backend/.vev
+ 
 backend2/.venv
 #backend2/config/.env

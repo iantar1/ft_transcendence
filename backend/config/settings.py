@@ -64,6 +64,8 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
 ]
 
+SESSION_COOKIE_SAMESITE = None
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
