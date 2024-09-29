@@ -1,14 +1,5 @@
 
-
-const navigateTo = url => {
-
-    console.log("the url is : " + url);
-    history.pushState(null,null,url);
-    router();
-};
-
 export function rander(path) {
-    console.log(" ==> new path :" + path);
     const content  = document.getElementById('content');
     content.innerHTML = ``;
     switch(path){
@@ -67,6 +58,12 @@ const router  = async () => {
     }
 }
 
+const navigateTo = url => {
+
+    history.pushState(null,null,url);
+    router();
+};
+
 window.addEventListener('popstate',router);
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -74,14 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
        if (e.target.matches("[data-link]")){
         e.preventDefault();
         navigateTo(e.target.href);
-        console.log( "first path is : " +  location.pathname);
        }
     });
     router();
 });
-
-
-
 
 
 

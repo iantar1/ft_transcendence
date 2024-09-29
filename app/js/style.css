@@ -11,7 +11,7 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000000;
+  background:#222834;
   scroll-behavior: smooth;
   /* overflow: hidden; */
   overflow-x: hidden;
