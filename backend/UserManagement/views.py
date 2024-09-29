@@ -200,7 +200,17 @@ class UpdateView(APIView):
         return Response(serializer.data)
         
         
-        
+from django.dispatch  import receiver, Signal
+from django.core.signals import request_finished
+from django.http import HttpResponse
+
+def test(request):
+    return HttpResponse("key helooo")
+
+@receiver(request_finished)
+
+def post_resciver(sender, **kwargs):
+    print('HEEEEEEEEEE----------------------------')
 
 #friedship management
 
@@ -211,19 +221,3 @@ class UpdateView(APIView):
 # cancel a friend request
 # block a user
 
-
-
-
-
-# class Set2FAView(APIView):
-#     """
-#     Get the image of the QR Code
-#     """
-#     def post(self, request):
-#     user = getUserService(request)
-#     if user == None:
-#     return Response({"status": "fail", "message": f"No user with the corresponding username and password exists" }, 
-#     status=status.HTTP_404_NOT_FOUND)
-
-#     qr_code = getQRCodeService(user)
-#     return Response({"qr_code": qr_code})
