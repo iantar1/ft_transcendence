@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+
 
 class User(AbstractUser):
     # image = models.ImageField(upload_to ='image/')
@@ -11,6 +14,12 @@ class User(AbstractUser):
     # logged_in =   models.BooleanField(default = False)
     #a one to one relationship 
     
+
+def save_post_user(sender, instance, **kwargs):
+    print("a user has been saved")
+
+post_save.connect(save_post_user, sender=User)
+
 
 class Stats(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -59,8 +68,7 @@ class Relationship(models.Model):
     def __str__(self):
         return f"{self.sender}-{self.receiver}-{self.status}"
 
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
+
 
 @receiver(pre_save, sender=Relationship)
 

@@ -79,12 +79,8 @@ class VerifyOTPView(APIView):
 
     def post(self, request):
         otp = request.data['otp']
-        # username = request.data['username']
 
-        # user = User.objects.filter(username=username).first()
-        print(f"otp: {otp}")
         otp_token = request.COOKIES.get('otp_token')
-        print(f"otp_token: {otp_token}")
     
         if not otp_token:
             raise AuthenticationFailed('Unauthenticated')
@@ -94,19 +90,7 @@ class VerifyOTPView(APIView):
             raise AuthenticationFailed('Unauthenticated')
         
         user = User.objects.filter(id=playload['id']).first()
-        # user_id = request.session.get('otp_user_id')
-
-        # print(f"user_id: {user_id}")
-
-        # if user_id is None:
-        #     raise AuthenticationFailed("Session expired or user not found")
-
-        # user = User.objects.filter(id=user_id).first()
-
-         # Clear the session
-        # request.session.pop('otp_user_id', None)
-        # request.session.flush()
-        
+    
         if user is None:
             raise AuthenticationFailed("user not found")
         if user.otp != otp or timezone.now() > user.otp_expiry_time:
