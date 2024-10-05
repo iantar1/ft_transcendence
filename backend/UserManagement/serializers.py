@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, MatchHistory, Stats
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,7 +26,24 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class ImageBioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'bio', 'image', 'username']
     
+
+class MatchHistorySerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = MatchHistory
+        fields = ['']
+
+    def create(self, validated_data):
+        histoy = MatchHistory.objects.create(validated_data)
+        return super().create(validated_data)
+     
 # {
 #     "first_name": "a",
 #     "last_name": "a",

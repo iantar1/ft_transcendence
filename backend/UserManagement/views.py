@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .serializers import UserSerializer
+from .serializers import UserSerializer, ImageBioSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .models import User
@@ -72,7 +72,6 @@ class LoginView(APIView):
         )
         response.data = {"message": "OTP sent to your email. Please enter the OTP to continue."}
         return response
-        return Response({"message": "OTP sent to your email. Please enter the OTP to continue."})
 
 
 class VerifyOTPView(APIView):
@@ -182,7 +181,69 @@ class UpdateView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+class ChangePasswordView(APIView):
+    
+    def post(self, request):
+        token = request.COOKIES.get('access')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
         
+        try:
+            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
+        crrent_password = request.data['crrent_password']
+        new_password1 = request.data['new_password1']
+        new_password2 = request.data['new_password2']
+        if not user.check_password(crrent_password):
+            raise AuthenticationFailed("incorrect password")
+        if new_password1 != new_password2:
+            return Response("Password1 is different from Password2", status=400)
+        print(f'crrent: {crrent_password}')
+        print(f'new: {new_password1}')
+        user.set_password(new_password1)
+        return Response({"seccess":"the password changed successfuly"}, status=200)
+
+
+class ChangeBioImage(APIView):
+
+    def post(self, request):
+        token = request.COOKIES.get('access')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        try:
+            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
+        serializer = ImageBioSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+# {
+# "crrent_password":"test",
+# "new_password1":"test1",
+# "new_password2":"test1"
+# }
+
+class MatchHistoryView(APIView):
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        
+        pass
+
+
         
 from django.dispatch  import receiver, Signal
 from django.core.signals import request_finished

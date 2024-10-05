@@ -14,11 +14,16 @@ urlpatterns = [
     path('update/', UpdateView.as_view()),
     path('delete_acount/', UserView.as_view()),
     path('verify_otp/', VerifyOTPView.as_view()),
+    path('change_password/', ChangePasswordView.as_view()),
+    path('bio_image/', ChangeBioImage.as_view()),
     path('intra/', intra_auth.home),
     path('', intra_auth.auth),#change the rediract uri
 
+
     path('google/', google_auth.home),
     path('test/', views.test),
+
+
     # path('list_frinds/', ),
     # path('add_frind/', ),
     # path('delete_frind/', ),

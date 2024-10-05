@@ -11,6 +11,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     otp =  models.CharField(max_length = 6, null = True, blank=True)
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
     # logged_in =   models.BooleanField(default = False)
     #a one to one relationship 
     
@@ -31,7 +32,7 @@ class Stats(models.Model):
         return self.name
 
 class MatchHistory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    component = models.ForeignKey(User, on_delete=models.CASCADE)
 #on_delete=models.CASCADE: if a User object is deleted, all related MatchHistory objects will also be deleted.
     tmp_text = models.CharField(max_length=500, null=True)
     # 1v1 games, dates, and relevant details
