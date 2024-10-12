@@ -278,15 +278,15 @@ def get_user_by_token(token):
 #         return Response({"matchHistory": match_history_list})
         # return JsonResponse({"matchHistory": match_history_list}, safe=False)
 
-class MatchHistoryViewTemp(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('access')
-        user = get_user_by_token(token)
-        if user == None:
-            raise AuthenticationFailed('Unauthenticated')
-        match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
-        serializer = MatchHistorySerializer(match_history)
-        return Response(serializer.data)
+# class MatchHistoryViewTemp(APIView):
+#     def get(self, request):
+#         token = request.COOKIES.get('access')
+#         user = get_user_by_token(token)
+#         if user == None:
+#             raise AuthenticationFailed('Unauthenticated')
+#         match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
+#         serializer = MatchHistorySerializer(match_history)
+#         return Response(serializer.data)
 
 class MatchHistoryView(APIView):
     def get(self, request):
@@ -295,27 +295,8 @@ class MatchHistoryView(APIView):
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
         match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
+        match_history_list = MatchHistorySerializer(match_history, many=True).data
         
-        match_history_list = []
-        for match in match_history:
-            match_history_list.append({
-                "match_id": match.id,
-                "user1": {
-                    "username": match.user1.username,
-                    "image": match.user1.image.url  # Assuming User model has related profile with an image field
-                },
-                "user2": {
-                    "username": match.user2.username,
-                    "image": match.user2.image.url
-                },
-                "user1_score": match.user1_score,
-                "user2_score": match.user2_score,
-                "winner": {
-                    "username": match.winner.username,
-                    "image": match.winner.image.url
-                },
-                "played_at": match.played_at
-            })
         return Response({"matchHistory": match_history_list})
 
     def post(self, request):

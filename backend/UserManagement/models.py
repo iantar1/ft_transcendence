@@ -12,6 +12,7 @@ class User(AbstractUser):
     otp =  models.CharField(max_length = 6, null = True, blank=True)
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
+    score = models.PositiveBigIntegerField(null=True)
     # logged_in =   models.BooleanField(default = False)
     #a one to one relationship 
     
@@ -23,7 +24,7 @@ post_save.connect(save_post_user, sender=User)
 
 
 class Stats(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 #if a User object is deleted, all related Stats objects will also be deleted.
     wins = models.PositiveIntegerField(null=True)
     losses = models.PositiveIntegerField(null=True)

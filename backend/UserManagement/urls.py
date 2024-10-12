@@ -17,7 +17,7 @@ urlpatterns = [
     path('change_password/', ChangePasswordView.as_view()),
     path('bio_image/', ChangeBioImage.as_view()),
     path('intra/', intra_auth.home),
-    path('match_history/', MatchHistoryViewTemp.as_view()),
+    path('match_history/', MatchHistoryView.as_view()),
     path('', intra_auth.auth),#change the rediract uri
 
 
