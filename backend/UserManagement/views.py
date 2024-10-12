@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .serializers import UserSerializer, ImageBioSerializer
+from .serializers import *
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .models import User
+from .models import *
 import jwt, datetime
 from .utils import *
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 
@@ -229,22 +230,131 @@ class ChangeBioImage(APIView):
         return Response(serializer.data)
 
 
+def get_user_by_token(token):
+    if not token:
+        raise AuthenticationFailed('Unauthenticated')
+    
+    try:
+        playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed('Unauthenticated')
+    
+    return User.objects.filter(id=playload['id']).first()
+    
 # {
 # "crrent_password":"test",
 # "new_password1":"test1",
 # "new_password2":"test1"
 # }
 
+# class MatchHistoryView(APIView):
+#     def get(self, request):
+#         token = request.COOKIES.get('access')
+#         user = get_user_by_token(token)
+#         if user == None:
+#             raise AuthenticationFailed('Unauthenticated')
+#         match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
+        
+#         match_history_list = []
+#         for match in match_history:
+#             match_history_list.append({
+#                 "match_id": match.id,
+#                 "user1": {
+#                     "username": match.user1.username,
+#                     "image": match.user1.image.url  # Assuming User model has related profile with an image field
+#                 },
+#                 "user2": {
+#                     "username": match.user2.username,
+#                     "image": match.user2.image.url
+#                 },
+#                 "user1_score": match.user1_score,
+#                 "user2_score": match.user2_score,
+#                 "winner": {
+#                     "username": match.winner.username,
+#                     "image": match.winner.image.url
+#                 },
+#                 "played_at": match.played_at
+#             })
+#         return Response({"matchHistory": match_history_list})
+        # return JsonResponse({"matchHistory": match_history_list}, safe=False)
+
+class MatchHistoryViewTemp(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
+        serializer = MatchHistorySerializer(match_history)
+        return Response(serializer.data)
+
 class MatchHistoryView(APIView):
     def get(self, request):
-        pass
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
+        
+        match_history_list = []
+        for match in match_history:
+            match_history_list.append({
+                "match_id": match.id,
+                "user1": {
+                    "username": match.user1.username,
+                    "image": match.user1.image.url  # Assuming User model has related profile with an image field
+                },
+                "user2": {
+                    "username": match.user2.username,
+                    "image": match.user2.image.url
+                },
+                "user1_score": match.user1_score,
+                "user2_score": match.user2_score,
+                "winner": {
+                    "username": match.winner.username,
+                    "image": match.winner.image.url
+                },
+                "played_at": match.played_at
+            })
+        return Response({"matchHistory": match_history_list})
 
     def post(self, request):
-        
-        pass
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        #opponenet username
+        try:
+            opponent_username = request.data['opponent_username']
+            opponent_score = request.data['opponent_score']
+            user_score = request.data['user_score']
+
+        except:
+            raise ValidationError({'field error': 'you missed some fields'})
+        user2 = User.objects.filter(username=opponent_username).first()
+
+        if user2 is None:
+            raise ValidationError({'username error': 'This username does not exist'})
+
+        if user_score > opponent_score:
+            winner = user
+        else:
+            winner = user2
+
+        # Save the match history
+        history = MatchHistory(
+            user1=user,
+            user2=user2,
+            user1_score=user_score,
+            user2_score=opponent_score,
+            winner=winner
+        )
+        history.save()
+
+        return Response("The match history stored successfully", status=200)
 
 
-        
+    
 from django.dispatch  import receiver, Signal
 from django.core.signals import request_finished
 from django.http import HttpResponse
@@ -266,3 +376,8 @@ def post_resciver(sender, **kwargs):
 # cancel a friend request
 # block a user
 
+# {
+#     "opponent_username": "iantar",
+#     "opponent_score": 7,
+#     "user_score": 10
+# }

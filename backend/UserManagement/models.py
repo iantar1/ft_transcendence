@@ -25,20 +25,26 @@ post_save.connect(save_post_user, sender=User)
 class Stats(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 #if a User object is deleted, all related Stats objects will also be deleted.
-    wins = models.CharField(max_length=500, null=True)
-    losses = models.CharField(max_length=500,null=True)
+    wins = models.PositiveIntegerField(null=True)
+    losses = models.PositiveIntegerField(null=True)
+    total = models.IntegerField(null=True)# wins - losses (for the game rank, it can be negative) 
 
     def __str__(self):
         return self.name
 
 class MatchHistory(models.Model):
-    component = models.ForeignKey(User, on_delete=models.CASCADE)
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_user1')
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_user2')
+    user1_score = models.PositiveIntegerField(null=True)
+    user2_score = models.PositiveIntegerField(null=True)
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_winner')
+    played_at = models.DateField(auto_now=True)
+
 #on_delete=models.CASCADE: if a User object is deleted, all related MatchHistory objects will also be deleted.
-    tmp_text = models.CharField(max_length=500, null=True)
     # 1v1 games, dates, and relevant details
     
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return f"Match between {self.user1} and {self.user2} on {self.played_at}"
 
 
 

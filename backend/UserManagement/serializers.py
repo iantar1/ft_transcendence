@@ -5,7 +5,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
         fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image']
-        extra_kwargs = {'password': {'write_only': True}}#it will only be used for creating or updating data and will not be included in the serialized output
+        extra_kwargs = {'password': {'write_only': True}}
+        #it will only be used for creating or updating data and will not be included in the serialized output
         
 
     # def create(self, validated_data):
@@ -35,14 +36,24 @@ class ImageBioSerializer(serializers.ModelSerializer):
         fields = ['id', 'bio', 'image', 'username']
     
 
-class MatchHistorySerilizer(serializers.ModelSerializer):
+class PLayerMaatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'image', 'username']
+
+class MatchHistorySerializer(serializers.ModelSerializer):
+    user1 = PLayerMaatchSerializer()
+    user2 = PLayerMaatchSerializer()
+    winner = PLayerMaatchSerializer()
+
     class Meta:
         model = MatchHistory
-        fields = ['']
 
-    def create(self, validated_data):
-        histoy = MatchHistory.objects.create(validated_data)
-        return super().create(validated_data)
+        fields = ['user1', 'user2', 'user1_score', 'user2_score', 'winner']
+
+    # def create(self, validated_data):
+    #     histoy = MatchHistory.objects.create(validated_data)
+    #     return super().create(validated_data)
      
 # {
 #     "first_name": "a",
