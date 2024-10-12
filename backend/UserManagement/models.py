@@ -12,7 +12,7 @@ class User(AbstractUser):
     otp =  models.CharField(max_length = 6, null = True, blank=True)
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
-    score = models.PositiveBigIntegerField(null=True)
+    score = models.PositiveBigIntegerField(default=0)
     # logged_in =   models.BooleanField(default = False)
     #a one to one relationship 
     
@@ -24,14 +24,12 @@ post_save.connect(save_post_user, sender=User)
 
 
 class Stats(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="stats")
 #if a User object is deleted, all related Stats objects will also be deleted.
-    wins = models.PositiveIntegerField(null=True)
-    losses = models.PositiveIntegerField(null=True)
-    total = models.IntegerField(null=True)# wins - losses (for the game rank, it can be negative) 
-
-    def __str__(self):
-        return self.name
+    wins = models.PositiveIntegerField(default=0)
+    losses = models.PositiveIntegerField(default=0)
+    total = models.IntegerField(default=0)# wins - losses (for the game rank, it can be negative) 
+ 
 
 class MatchHistory(models.Model):
     user1 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_user1')
@@ -73,8 +71,6 @@ class Relationship(models.Model):
     receiver = models.ForeignKey(Profile,  on_delete=models.CASCADE, related_name='receiver')
     status = models.CharField(max_length=50, choices=STATUS_CHOICES)
         
-    def __str__(self):
-        return f"{self.sender}-{self.receiver}-{self.status}"
 
 
 

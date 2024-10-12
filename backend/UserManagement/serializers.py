@@ -25,7 +25,9 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
         )
         user.set_password(validated_data['password'])
+
         user.save()
+        Stats.objects.create(user=user)
         return user
 
 
@@ -50,6 +52,19 @@ class MatchHistorySerializer(serializers.ModelSerializer):
         model = MatchHistory
 
         fields = ['user1', 'user2', 'user1_score', 'user2_score', 'winner']
+
+
+
+
+class StatsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Stats
+        fields = ['wins', 'losses']
+
+
+
+
 
     # def create(self, validated_data):
     #     histoy = MatchHistory.objects.create(validated_data)

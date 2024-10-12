@@ -27,9 +27,9 @@ class RegesterView(APIView):
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
         response.data = {
             "access": access_token,
-            "refresh": refresh_token
+            "refresh": refresh_token,
+            **serializer.data
         }
-        response.data.update(serializer.data)
         return response
         # return Response(serializer.data)
     
@@ -247,46 +247,7 @@ def get_user_by_token(token):
 # "new_password2":"test1"
 # }
 
-# class MatchHistoryView(APIView):
-#     def get(self, request):
-#         token = request.COOKIES.get('access')
-#         user = get_user_by_token(token)
-#         if user == None:
-#             raise AuthenticationFailed('Unauthenticated')
-#         match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
-        
-#         match_history_list = []
-#         for match in match_history:
-#             match_history_list.append({
-#                 "match_id": match.id,
-#                 "user1": {
-#                     "username": match.user1.username,
-#                     "image": match.user1.image.url  # Assuming User model has related profile with an image field
-#                 },
-#                 "user2": {
-#                     "username": match.user2.username,
-#                     "image": match.user2.image.url
-#                 },
-#                 "user1_score": match.user1_score,
-#                 "user2_score": match.user2_score,
-#                 "winner": {
-#                     "username": match.winner.username,
-#                     "image": match.winner.image.url
-#                 },
-#                 "played_at": match.played_at
-#             })
-#         return Response({"matchHistory": match_history_list})
-        # return JsonResponse({"matchHistory": match_history_list}, safe=False)
 
-# class MatchHistoryViewTemp(APIView):
-#     def get(self, request):
-#         token = request.COOKIES.get('access')
-#         user = get_user_by_token(token)
-#         if user == None:
-#             raise AuthenticationFailed('Unauthenticated')
-#         match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
-#         serializer = MatchHistorySerializer(match_history)
-#         return Response(serializer.data)
 
 class MatchHistoryView(APIView):
     def get(self, request):
@@ -296,7 +257,7 @@ class MatchHistoryView(APIView):
             raise AuthenticationFailed('Unauthenticated')
         match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
         match_history_list = MatchHistorySerializer(match_history, many=True).data
-        
+
         return Response({"matchHistory": match_history_list})
 
     def post(self, request):
@@ -319,9 +280,11 @@ class MatchHistoryView(APIView):
 
         if user_score > opponent_score:
             winner = user
+            user.stats.wins += 1
         else:
             winner = user2
-
+            user.stats.losses += 1
+        user.stats.save()
         # Save the match history
         history = MatchHistory(
             user1=user,
@@ -331,11 +294,37 @@ class MatchHistoryView(APIView):
             winner=winner
         )
         history.save()
-
+        user.score += user_score
+        user.save()
         return Response("The match history stored successfully", status=200)
 
 
-    
+
+
+
+
+
+class StatsView(APIView):
+     
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        serialer = StatsSerializer(user.stats)
+        return Response(serialer.data, status=200)
+        pass
+
+
+
+
+
+
+
+
+
+
+
 from django.dispatch  import receiver, Signal
 from django.core.signals import request_finished
 from django.http import HttpResponse
