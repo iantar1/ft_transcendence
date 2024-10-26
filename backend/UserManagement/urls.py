@@ -20,6 +20,7 @@ urlpatterns = [
     path('match_history/', MatchHistoryView.as_view()),
     path('stats/', StatsView.as_view()),
     path('', intra_auth.auth),#change the rediract uri
+    path('accounts/google/login/callback/', google_auth.get_code),
 
 
     path('google/', google_auth.home),

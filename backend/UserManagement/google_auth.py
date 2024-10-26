@@ -19,47 +19,118 @@ from rest_framework.exceptions import AuthenticationFailed
 
 AUTH_PROVIDER_URI = "https://www.googleapis.com/oauth2/v1/certs"
 PROJECT_ID = "transcendence-432116"
-AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
+# AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
 CLIENT_ID = "242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com"
 CLIENT_SECRET = "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"
-REDIRECT_URI = "http://127.0.0.1:8000/"
 OUUTH_TOKEN_URI = "https://oauth2.googleapis.com/token"
 
+redirect_uri = "https://yourdomain.com/googleAuth/callback"  # This should match the URI on Google Cloud
 
+google_auth_url = "https://accounts.google.com/o/oauth2/auth"
+REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/login/callback/"
+
+AUTH_URI = f"{google_auth_url}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=profile%20email&response_type=code&access_type=offline"
 
 # AuthUri = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code"
 
 def home(request):
     return redirect(AUTH_URI)
 
+# views.py
+import requests
+from django.shortcuts import redirect
+from django.http import JsonResponse
 
-def storeUser(data_json)-> User:
+
+
+def google_callback(request):
+    # Retrieve the authorization code from the callback URL
+    code = request.GET.get('code')
+    if not code:
+        return JsonResponse({'error': 'Authorization code not provided'}, status=400)
+
+    # Exchange the authorization code for an access token
+    token_url = "https://oauth2.googleapis.com/token"
+    data = {
+        "code": code,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+        "redirect_uri": REDIRECT_URI,
+        "grant_type": "authorization_code"
+    }
+    response = requests.post(token_url, data=data)
+    token_response_data = response.json()
+
+    # Retrieve access token from the response
+    access_token = token_response_data.get("access_token")
+    if not access_token:
+        return JsonResponse({'error': 'Failed to retrieve access token'}, status=400)
+
+    # Use access token to get user info from Google
+    user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    user_info_response = requests.get(user_info_url, headers={"Authorization": f"Bearer {access_token}"})
+    user_data = user_info_response.json()
+
+    # Output user data (in production, you’d probably save this to your database or create a user session)
+    return JsonResponse(user_data)
+
+def get_code(request):
+    code = request.GET.get('code')
+    plyload = {
+        "code": code,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+        "redirect_uri": REDIRECT_URI,
+        "grant_type": "authorization_code"
+    }
+    response = requests.post(OUUTH_TOKEN_URI, data=plyload)
+    print(f"the resposnse josn: {response.json()}")
+    access_token = response.json().get('access_token')
+    userInfoJson = getUserInfo(access_token)
+    # User = storeUser(user)
+    print(f"the code: {code}")
+    user = storeUser(userInfoJson.json())
+    serializedUserData = UserSerializer(user)
+    return JsonResponse(serializedUserData.data)
+    return HttpResponse(user, content_type="application/json")
+
+def getUserInfo(access_token):
+    url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    userInfor = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
+    print(f"the resposnse josn: {userInfor.json()}")
+    return userInfor
+
+
+def storeUser(data)-> User:
     # check if the user already exsit
-    existing_user = User.objects.filter(username=data_json.get("login")).first()
+    existing_user = User.objects.filter(email=data.get("email")).first()
+    existing_user = User.objects.filter(username=data.get("given_name") + data.get("family_name")).first()
 
     if existing_user:
         print("User already exists.")
         return existing_user
-    response = requests.get(data_json.get("image", {}).get("link"))
+    response = requests.get(data.get("picture"))
     if response.status_code == 200:
-        img_temp = NamedTemporaryFile(delete=True)
+        img_temp = NamedTemporaryFile(delete=True, suffix='.png')
         img_temp.write(response.content)
         img_temp.flush()
 
         # Extract the image filename from the URL
-        filename = os.path.basename(data_json.get("image", {}).get("link"))
+        filename = os.path.basename(data.get("picture")) + ".png"
 
     user = User(
-            # id=data_json["id"],
-            first_name = data_json.get("first_name"),
-            last_name = data_json.get("last_name"),
-            email = data_json.get("email"),
+            # id=data["id"],
+            first_name = data.get("given_name"),
+            last_name = data.get("family_name"),
+            email = data.get("email"),
             image = File(img_temp, name=filename),#set default if you can't get the image
-            username = data_json.get("login")
+            username = data.get("given_name") + data.get("family_name")
         )
     user.save()
     return user
     
+def generateUserName(first_name, last_name):
+    return f"{first_name}_{last_name}"
 
 def getData(access_token) -> User:
     url = "https://accounts.google.com/gsi/client"#add this to env var
