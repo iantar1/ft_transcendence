@@ -1,5 +1,7 @@
 ./backend/.venv
 ./backend/.vev
+./.venv
+./chat
  
 backend2/.venv
 #backend2/config/.env
