@@ -1,4 +1,13 @@
+
 version: '3'
+
+volumes:
+  transcendance:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ahbajaou/Desktop/PingPong/frontend
+      o: bind
 
 services:
   backend:
@@ -7,23 +16,21 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
-#     networks:
-#       - ft_transcendence
-
-# networks:
-#   ft_transcendence:
-#     driver: bridge
+    # networks:
+    #   - ft_transcendence
   
+  frontend:
+    container_name: frontend
+    image: frontend
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - transcendance:/usr/share/nginx/html
 
-    
-  # frontend:
-  #   container_name: frontend
-  #   image: frontend
-  #   build: ./frontend
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - ft_transcendence
+    # networks:
+    #   ft_transcendence:
+    #     driver: bridge
   # game:
   #   container_name: game
   #   image: game
