@@ -14,12 +14,12 @@ class getstartedPage extends HTMLElement {
         justify-content: start;
         align-items: center;
         flex-direction: column;
-        overflow-x: hidden;
+        
     }
     #content{
         height: 100vh;
         width: 100vw;
-        flex-basis: 100%;
+        flex-basis: none;
         border-radius: 0;
     }
     .content-gsp{
@@ -27,10 +27,10 @@ class getstartedPage extends HTMLElement {
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column;      
+        flex-direction: column;
     }
     .title-firstpg{
-        font-size :5vw;
+        font-size :5rem;
     }
     .firstpage-para{
         width :90vw;
@@ -130,18 +130,22 @@ class getstartedPage extends HTMLElement {
     // class="progress" style="height: 100vh; width: 100vw;"
     // <img src="/images/back.png" class="progress" style="height: 100vh; width: 100vw;"></img>
     pageone = `
-        <div class="page-1 ">
-            <img src="/images/back.png" class="progress" style="height: 95vh; width: 100vw; background-size: cover;"></img>
+        <div class="d-flex justify-content-center align-items-end min-vh-100 w-100 text-white text-center "
+            style="
+            background-image: url('/images/back.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;">  
                 <div class="content-gsp" >
-                    <h1 class="title-firstpg fw-bold fs-sm-4" > PingPong to determine</h1>
-                    <h1 class="title-firstpg fw-bold fs-sm-4" >the galaxy's future. </h1>
+                    <h1 class="fw-bold fs-1"  style="text-shadow: 2px 2px 5px rgba(0, 0, 0, 1);font-size:2rem;"> PingPong to determine</h1>
+                    <h1 class="fw-bold "  style="text-shadow: 2px 2px 5px rgba(0, 0, 0, 1); font-size:2rem;">the galaxy's future. </h1>
                     <br>
                     <br>
-                    <p class="firstpage-para fw-bold fs-sm-4" >In a distant galaxy, peace hinges on the Grand Galactic Tournament of zero-gravity ping pong. The Zephron Empire aims to dominate. </p>
+                    <p class="firstpage-para fw-bold " style="font-size:1rem;" >In a distant galaxy, peace hinges on the Grand Galactic Tournament of zero-gravity ping pong. The Zephron Empire aims to dominate. </p>
                     <br>
                     <br>
-                    <button type="click" class="btn-firstpg btn btn-secondary" data-link >Get started</button>
-                </div>
+                    <button type="click" class="btn-firstpg btn btn-secondary mb-5 " data-link >Get started</button>
+                    </div>
             </div>
             `;
     // <img src="/images/ahbajaou.jpg">
@@ -150,7 +154,7 @@ class getstartedPage extends HTMLElement {
             <h1 class="fw-bold" ><span>Team</span> Members</h1>
             <br>
             <br>
-            <div class="team">
+            <div class="team d-flex flex-column flex-md-row justify-content-between">
 
             </div>
         </div>
@@ -183,7 +187,7 @@ class getstartedPage extends HTMLElement {
           const teamCart = document.querySelector('.team');
         form.forEach(element => {
             teamCart.innerHTML += `
-            <div class="cartTeam">
+            <div class="cartTeam ">
                 <div class="img-team" >
                      <img src=${element.img}>
                 </div>

@@ -9,6 +9,13 @@ volumes:
       device: /home/ahbajaou/Desktop/PingPong/frontend
       o: bind
 
+  back:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ahbajaou/Desktop/PingPong/backend
+      o: bind
+
 services:
   backend:
     container_name: backend
@@ -27,6 +34,7 @@ services:
       - "3000:3000"
     volumes:
       - transcendance:/usr/share/nginx/html
+      - back:/backend
 
     # networks:
     #   ft_transcendence:

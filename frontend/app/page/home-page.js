@@ -1,13 +1,26 @@
 
+// console.log("--somthing is cooking");
+
+import {readData} from './readData.js';
+
+// const attt = [1 , 3 , 3 , 7 ];
+// console.log(attt)
+// readData.setData(attt);
+
 console.log("inside home page");
+// console.log("------" + readData.getData());
 
 class homePage extends HTMLElement {
-
+    info = [
+        {
+            username : "CHEBCHOUB"
+        }
+    ];
     template = `
     <div class="content-home" >
     <div class="cart-home" >
             <img  class="img-home" src="/images/astro4.png">
-            <h3> <span class="title-home">Good evening,</span> CHEBCHOUB</h3>
+            <h3> <span class="title-home">Good evening,</span> ${this.info[0].username} </h3>
             <h1>Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
@@ -217,6 +230,18 @@ class homePage extends HTMLElement {
 
     }
     rander(){
+        console.log("inside home page");
+        
+        // console.log(readData.getData());
+        const arr = [readData.getData()]
+        console.log(arr['username']);
+        arr.forEach(element => {
+            console.log(element["email"]);
+            this.info = [{
+                username : element['username']
+            }
+            ]
+        });
         this.innerHTML = `
             <style>
             ${this.style}
@@ -290,3 +315,32 @@ class homePage extends HTMLElement {
 }
 
 customElements.define('home-page',homePage);
+
+    // const urlParams = new urlSearchParams(Window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(`here: ${window.location.search}`);
+
+
+async function getUserData()
+{
+    const accessToken = urlParams.get('access_token');
+
+    console.log(`first : ${accessToken}`);
+
+    const res =  await fetch("http://localhost:8000/user/", {
+        method: 'GET', 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+    const data = await res.json();
+    console.log(data);
+    const h3Element = document.querySelector('h3');
+
+    h3Element.innerHTML = h3Element.innerHTML.replace('CHEBCHOUB', data.username);
+    console.log(`title home : ${ele}`);
+    return data;
+}
+
+const data = getUserData();
