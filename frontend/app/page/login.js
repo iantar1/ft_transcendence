@@ -6,6 +6,7 @@ import {rander} from '../routing.js';
 import {readData} from './readData.js';
 
 const API_INTRA = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-68bcaf8c253732f9b6170cbd7f722c4ba37ed186edcfc06864478ef32dede1f9&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code';
+const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";
 
 class loginPage extends HTMLElement {
 
@@ -615,42 +616,43 @@ class loginPage extends HTMLElement {
             console.log("inside login page");
             const googleApi = document.querySelector(".redirapi_google");
             googleApi.addEventListener('click' , async (e) => {
-                console.log(googleApi);
-                try {
-                    // Prevent default button/link behavior
-                    e.preventDefault();
+                window.location.href = API_GOOGLE;
+                // console.log(googleApi);
+                // try {
+                //     // Prevent default button/link behavior
+                //     e.preventDefault();
             
-                    // Fetch the authentication endpoint from your backend
-                    const response = await fetch("http://localhost:8000/api/google/", {
-                        method: 'GET',
-                        credentials: 'include', // Important for cookies
-                        headers: {
-                            'Accept': 'application/json',
-                        }
-                    });
+                //     // Fetch the authentication endpoint from your backend
+                //     const response = await fetch("http://localhost:8000/api/google/", {
+                //         method: 'GET',
+                //         credentials: 'include', // Important for cookies
+                //         headers: {
+                //             'Accept': 'application/json',
+                //         }
+                //     });
             
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch authentication URL');
-                    }
+                //     if (!response.ok) {
+                //         throw new Error('Failed to fetch authentication URL');
+                //     }
             
-                    // Parse the response to get the authentication URL
-                    const authData = await response.json();
+                //     // Parse the response to get the authentication URL
+                //     const authData = await response.json();
                     
-                    // Redirect to the authentication URL
-                    if (authData.authorizationUrl) {
-                        // Option 1: Same window redirect
-                        window.location.href = authData.authorizationUrl;
+                //     // Redirect to the authentication URL
+                //     if (authData.authorizationUrl) {
+                //         // Option 1: Same window redirect
+                //         window.location.href = authData.authorizationUrl;
             
-                        // Option 2: If you want to open in a new window
-                        // window.open(authData.authorizationUrl, '_blank');
-                    } else {
-                        throw new Error('No authentication URL provided');
-                    }
-                } catch (error) {
-                    console.error("Authentication Error:", error);
-                    // Optional: Show user-friendly error message
-                    alert("Authentication failed. Please try again.");
-                }
+                //         // Option 2: If you want to open in a new window
+                //         // window.open(authData.authorizationUrl, '_blank');
+                //     } else {
+                //         throw new Error('No authentication URL provided');
+                //     }
+                // } catch (error) {
+                //     console.error("Authentication Error:", error);
+                //     // Optional: Show user-friendly error message
+                //     alert("Authentication failed. Please try again.");
+                // }
             });
         }
         rand(){

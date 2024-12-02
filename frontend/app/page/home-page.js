@@ -324,6 +324,7 @@ customElements.define('home-page',homePage);
 async function getUserData()
 {
     const accessToken = urlParams.get('access_token');
+    
 
     console.log(`first : ${accessToken}`);
 

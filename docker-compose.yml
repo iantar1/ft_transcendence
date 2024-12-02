@@ -6,14 +6,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/ahbajaou/Desktop/PingPong/frontend
+      device: /home/iantar/ft_transcendence/frontend
       o: bind
 
   back:
     driver: local
     driver_opts:
       type: none
-      device: /home/ahbajaou/Desktop/PingPong/backend
+      device: /home/iantar/ft_transcendence/backend
       o: bind
 
 services:
