@@ -72,7 +72,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
     'http://localhost:8000',  # Add the port where your frontend is running if different
-    'http://localhost:9000',
+    'http://localhost:3000',
 ]
 
 CORS_ALLOW_CREDENTIALS = True # make sure this is set to True 
@@ -250,4 +250,4 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 CORS_ALLOW_ALL_ORIGINS = True
 
 
-APPEND_SLASH=False
+APPEND_SLASH=True

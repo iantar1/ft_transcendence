@@ -73,23 +73,12 @@ def getData(access_token) -> User:
 
 from rest_framework.renderers import JSONRenderer
 
+from django.http import JsonResponse, HttpResponseRedirect
+from django.urls import reverse
+
 def auth(request):
-    
+
     queryStr = request.GET.get('code')
-    # token = request.COOKIES.get('access')
-    # if token:
-    #     try:
-    #         playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-    #         user = User.objects.filter(id=playload['id']).first()
-    #         if user:
-    #             serializer = UserSerializer(user)
-    #             response = Response(serializer.data)
-    #             response.accepted_renderer = JSONRenderer()
-    #             response.accepted_media_type = 'application/json'
-    #             return response
-    #     except jwt.ExpiredSignatureError:
-    #         pass
-            # raise AuthenticationFailed('Unauthenticated')
 
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
@@ -98,6 +87,7 @@ def auth(request):
                'redirect_uri':REDIRECT_URI,}
     r = requests.post(OUUTH_TOKEN_URI, data=payload)
     print(f"here: {r.json()}")
+    print("000000000000000000000000000000000000000000000000000000000000000000000000")
     # try:
         # intra_access_token =  r.cookies.get('access_token')
     intra_access_token = r.json().get('access_token')#['access_token']
@@ -108,17 +98,31 @@ def auth(request):
         
     serializer = UserSerializer(user)
     # user.use
-    response = Response(serializer.data)
-    response.accepted_renderer = JSONRenderer()
-    response.accepted_media_type = 'application/json'
-    response.renderer_context = {
-    'request': request,
-    'response': response
-    }
+    # response = Response(serializer.data)
+    # response.accepted_renderer = JSONRenderer()
+    # response.accepted_media_type = 'application/json'
+    # response.renderer_context = {
+    # 'request': request,
+    # 'response': response
+    # }
     access_token = create_access_token(user.id)
+
+    response = HttpResponseRedirect('http://localhost:3000/home')  # Redirect to frontend
     response.set_cookie(key="access", value=access_token, httponly=True)
+
+    # Pass access token and any other required data in the URL or headers
+    # Option 1: Passing token as URL parameters (not recommended for security)
+    # response['Location'] = f'http://localhost:3000/home?access_token={access_token}'
+    
+    # Option 2: Passing token via headers (more secure)
+    response['Authorization'] = f'Bearer {access_token}'
+    
+    # You can also add additional user data if needed
+    # response['X-User-Data'] = serializer.data
+
     return response
     return Response(serializer.data)
+    # return redirect("http://localhost:3000/login")
 
 # read the subject again
 # recreate a new intra auth

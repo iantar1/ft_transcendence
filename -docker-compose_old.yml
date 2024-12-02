@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  backend:
+    container_name: backend
+    image: backend
+    build: ./backend
+    ports:
+      - "8000:8000"
+#     networks:
+#       - ft_transcendence
+
+# networks:
+#   ft_transcendence:
+#     driver: bridge
+  
+
+    
+  # frontend:
+  #   container_name: frontend
+  #   image: frontend
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - ft_transcendence
+  # game:
+  #   container_name: game
+  #   image: game
+  #   build: ./game
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - ft_transcendence
+  # chat:
+  #   container_name: chat
+  #   image: chat
+  #   build: ./chat
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - ft_transcendence
