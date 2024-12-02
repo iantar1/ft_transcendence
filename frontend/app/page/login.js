@@ -3,6 +3,10 @@
 
 import {rander} from '../routing.js';
 
+import {readData} from './readData.js';
+
+const API_INTRA = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-68bcaf8c253732f9b6170cbd7f722c4ba37ed186edcfc06864478ef32dede1f9&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code';
+
 class loginPage extends HTMLElement {
 
     register = `
@@ -72,7 +76,7 @@ class loginPage extends HTMLElement {
                 </div>
                 <br>
                 <div class="social-icon" >
-                    <button class="redirapi_inta"   type="click"  ><span><img src="/images/icon/icon1.png"></span></button>
+                    <button class="redirapi_inta"  type="click"  ><span><img src="/images/icon/icon1.png"></span></button>
                     <button class="redirapi_google"   type="click"  ><span><img src="/images/icon/icon2.png"></span></button>
                 </div>
                 <br>
@@ -122,7 +126,7 @@ class loginPage extends HTMLElement {
     template = `
     <div class="carte-content">
             <div class="login-img">
-                <img src="/images/login.png">
+                <img class="" src="/images/login.png">
                 <div class="loginComment" >
                     
                 </div>
@@ -421,7 +425,7 @@ class loginPage extends HTMLElement {
             const formOtp = document.querySelector('#otp-code');
             
             // Add an event listener for OTP form submission
-            console.log(';;;;>><<>>><');
+            
             formOtp.addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent the default form submission
                 
@@ -445,16 +449,45 @@ class loginPage extends HTMLElement {
                     if (res.ok) {
                         console.log('--- OTP VERIFIED SUCCESSFULLY ---');
                         // // Add success logic, like redirecting to home page
-                        console.log('----home----');
-                        const data = await res.json();
-                        console.log("----here is res");
-                        console.log(data.access);
-                        console.log(data["access"]);
                         // document.cookie = data["access"];
                         // window.location.href = '/home'; 
                         // e.target.href = '/home';
                         // rander('/home');
-
+                        try{
+                            const res = await fetch("http://localhost:8000/api/user/", {
+                                method: 'GET', 
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    
+                                },
+                                credentials: 'include',
+                            })
+                            console.log(`res : ${res}`)
+                                if (res.ok) {
+                                    console.log('----DATA USER----');
+                                    console.log('--- USER DATA VERIFIED SUCCESSFULLY ---');
+                                    // // Add success logic, like redirecting to home page
+                                    const data = await res.json();
+                                    // randerPage(userData);
+                                    // console.log("----here is res");
+                                    console.log(data.access);
+                                    
+                                    document.cookie = `access=${data.access}`;
+                                    console.log(data);
+                                    // setData(data);
+                                    readData.setData(data);
+                                    // document.cookie = data["access"];
+                                    // window.location.href = '/home'; 
+                                    // e.target.href = '/home';
+                                    rander('/home');
+    
+                                } else {
+                                    console.log('--- USER VERIFICATION FAILED ---');
+                                }
+                        }
+                        catch(error) {
+                                console.log("Error verifying OTP:", error);
+                            }
                     } else {
                         console.log('--- OTP VERIFICATION FAILED ---');
                         // Display an error message on the OTP form
@@ -480,6 +513,9 @@ class loginPage extends HTMLElement {
                     let flag = true;
                     const fromData = new FormData(loginSub);
                     const data = Object.fromEntries(fromData);
+                    const arr = ['ahe','ceb',1337];
+                    readData.setData(arr);
+                    // rander('/home');
                     try{
                         const response = await fetch("http://localhost:8000/api/login/", {
                                 method: 'POST', 
@@ -491,19 +527,16 @@ class loginPage extends HTMLElement {
                                 body: JSON.stringify(data),
                             })
                             if (response.ok){ 
-                                    console.log(response.json());
-                                // handle response */ 
+           
                                         loginSub.remove();
                                         loginRegiste.remove();
                                         socialIcon.remove();
-                                        // pepe.remove();
-                                        // const el = document.querySelector('.login-cart');
-                               
-                                        pepe.innerHTML = `
+   
+        
+                                     pepe.innerHTML = `
                                             ${this.opt}
                                         `;
-                                        // el.appendChild(bb);
-                                        this.veryOtp();
+                                     this.veryOtp();
                                         
                                     }
                                     else{
@@ -522,47 +555,44 @@ class loginPage extends HTMLElement {
             console.log("inside login page");
             const intra = document.querySelector(".redirapi_inta");
             intra.addEventListener('click', async (e) => {
-                window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-68bcaf8c253732f9b6170cbd7f722c4ba37ed186edcfc06864478ef32dede1f9&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code';
+                console.log("--aoutffffff---")
+                window.location.href = API_INTRA;
                 // try {
-                    // Prevent default button/link behavior
-                    // e.preventDefault();
+                //     // Prevent default button/link behavior
+                //     e.preventDefault();
             
-                    // Fetch the authentication endpoint from your backend
-            //         const response = await fetch("http://localhost:8000/api/intra/", {
-            //             method: 'GET',
-            //             credentials: 'include', // Important for cookies
-            //             headers: {
-            //                 'Accept': 'application/json',
-            //             }
-            //         });
+                //     // Fetch the authentication endpoint from your backend
+                //     const response = await fetch("http://localhost:8000/api/intra/", {
+                //         method: 'GET',
+                //         credentials: 'include', // Important for cookies
+                //         headers: {
+                //             'Accept': 'application/json',
+                //         }
+                //     });
             
-            //         if (!response.ok) {
-            //             throw new Error('Failed to fetch authentication URL');
-            //         }
+                //     if (!response.ok) {
+                //         throw new Error('Failed to fetch authentication URL');
+                //     }
             
-            //         // Parse the response to get the authentication URL
-            //         const authData = await response.json();
+                //     // Parse the response to get the authentication URL
+                //     const authData = await response.json();
                     
-            //         // Redirect to the authentication URL
-            //         if (authData.authorizationUrl) {
-            //             // Option 1: Same window redirect
-            //             window.location.href = authData.authorizationUrl;
+                //     // Redirect to the authentication URL
+                //     if (authData.authorizationUrl) {
+                //         // Option 1: Same window redirect
+                //         window.location.href = authData.authorizationUrl;
             
-            //             // Option 2: If you want to open in a new window
-            //             // window.open(authData.authorizationUrl, '_blank');
-            //         } else {
-            //             throw new Error('No authentication URL provided');
-            //         }
-            //     } catch (error) {
-            //         console.error("Authentication Error:", error);
-            //         // Optional: Show user-friendly error message
-            //         alert("Authentication failed. Please try again.");
-            //     }
+                //         // Option 2: If you want to open in a new window
+                //         // window.open(authData.authorizationUrl, '_blank');
+                //     } else {
+                //         throw new Error('No authentication URL provided');
+                //     }
+                // } catch (error) {
+                //     console.error("Authentication Error:", error);
+                //     // Optional: Show user-friendly error message
+                //     alert("Authentication failed. Please try again.");
+                // }
             });
-
-
-
-
             // console.log("inside login page");
             // const intra = document.querySelector(".redirapi_inta");
             // intra.addEventListener('click', async (e) => {
@@ -667,7 +697,7 @@ class loginPage extends HTMLElement {
                     d.style.transition =  "1s";
                     const titleLogin = document.querySelector('.loginComment');
                     console.log(titleLogin);
-                    titleLogin.style.transition = "5s";
+                    titleLogin.style.transition = "1s";
                     titleLogin.style.left = "5%";
                     titleLogin.style.top = "50%";
                     titleLogin.innerHTML =  `<h1>Hello, Astro!</h1>`;

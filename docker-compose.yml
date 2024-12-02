@@ -6,13 +6,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/iantar/Desktop/ft_transcendence/frontend
+      device: /home/ahbajaou/Desktop/PingPong/frontend
       o: bind
-  backend:
+
+  back:
     driver: local
     driver_opts:
       type: none
-      device: /home/iantar/Desktop/ft_transcendence/backend
+      device: /home/ahbajaou/Desktop/PingPong/backend
       o: bind
 
 services:
@@ -22,10 +23,6 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
-    volumes:
-      - backend:/backend
-          
-
     # networks:
     #   - ft_transcendence
   
@@ -37,6 +34,7 @@ services:
       - "3000:3000"
     volumes:
       - transcendance:/usr/share/nginx/html
+      - back:/backend
 
     # networks:
     #   ft_transcendence:
