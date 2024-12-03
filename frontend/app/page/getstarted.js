@@ -14,7 +14,6 @@ class getstartedPage extends HTMLElement {
         justify-content: start;
         align-items: center;
         flex-direction: column;
-        
     }
     #content{
         height: 100vh;

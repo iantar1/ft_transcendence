@@ -1,20 +1,23 @@
 
 
+import {fetchUserData} from './readData.js';
+
+
 class profilePage extends HTMLElement {
 
     template = `
         <div class="content-profile">
                 <div class="cart-profile">
                     <div class="info-profile">
-                        <img src="../images/profile.png" >
-                        <h3>CHEBCHOUB</h3>
+                        <img id="img_intra" src="../images/profile.png" >
+                        <h3 id='username' >CHEBCHOUB</h3>
                         <button class="btn-profile" >Edit</button>
                     </div>
                     <div class="lvl-profile">
                         <div class="bio-profile">
                             <h5>Bio</h5>
                             <br>
-                            <h5>It has survived not only five centuries..</h5>
+                            <h5 id="BIO" ></h5>
                         </div>
                         <div class="lvl">
                             <h5 class="opa" > Lvl 13 <span class="lvl-prof">7 more game hours for level</span></h5>
@@ -534,6 +537,15 @@ class profilePage extends HTMLElement {
         }
     }
     render() {
+        console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
+        const uuss = async () => {
+            this.info = await fetchUserData();
+            console.log(this.info.image);
+            document.getElementById('username').textContent = this.info.username
+            document.getElementById('img_intra').src = this.info.image
+            document.getElementById('BIO').textContent = 'ash dal temchi lzine'
+        }
+        uuss();
         this.innerHTML = `
             ${this.template}
             ${this.templatTwo}

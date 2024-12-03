@@ -3,28 +3,32 @@
 
 import {readData} from './readData.js';
 
+import {fetchUserData} from './readData.js';
+
+// readData.getData();
 // const attt = [1 , 3 , 3 , 7 ];
 // console.log(attt)
 // readData.setData(attt);
+// const dd = await fetchUserData();
+// console.log(dd);
+// readData.getData();
+// const att = readData.getData()
+// console.log(att);
 
 console.log("inside home page");
 // console.log("------" + readData.getData());
 
 class homePage extends HTMLElement {
-    info = [
-        {
-            username : "CHEBCHOUB"
-        }
-    ];
+    info = [];
     template = `
-    <div class="content-home" >
+    <div class="content-home " >
     <div class="cart-home" >
             <img  class="img-home" src="/images/astro4.png">
-            <h3> <span class="title-home">Good evening,</span> ${this.info[0].username} </h3>
+            <h3 class="title-home" >Good evening, <span id="username" >CHEBCHOUB</span></h3>
             <h1>Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
-            <button class="btn-home" >let's play</button>
+            <button class="btn-home btn btn-secondary" >let's play</button>
         </div>
     </div>
     `;
@@ -32,6 +36,10 @@ class homePage extends HTMLElement {
         .nav-bar{
                 display :flex;
             }
+        .cart-home p{
+            font-size:180%;
+            width:50%;
+        }
         .content-home{
             gap :10px;
         }
@@ -53,36 +61,62 @@ class homePage extends HTMLElement {
             color : #384B70;
             text-shadow :2px 2px 2px black;
             font-size :100%;
-            margin-bottom :20px;
-        }
-        .cart-home h3{
-            margin-bottom :20px;
-        }
-        .cart-home p{
-            margin-bottom :20px;
-            font-size:180%;
-            width:49vw;
         }
         .cart-home h1{
             color : #384B70;
             font-size:5vw;
             text-shadow :2px 2px 2px black;
-            margin-bottom :20px;
-
         }
         .btn-home{
-            width :10%;
-            height:5vh;
+            width :200px;
+            height:50px;
             background-color: #384B70;
-            border-radius:15px;
+            border-radius:12px;
             border :none;
             font-size:100%;
-            margin-top :20px;
         }
+@media (min-width: 320px) and (max-width: 1024px) {
+                .nav-bar{
+                        flex-direction: row;
+                        width: 100vw;
+                        height: 10%;
+                        left:10%;
+                        position: relative;
+                        top: 80%;
+                }
+                .nav-02{
+                    display :none;
+                }
+                .fafa img{
+                    display :none;
+                }
+                .img-home{
+                    display :none;
+                }
+                .parent{
+                        flex-direction: column;
+                }
+                .cart-home{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        text-align :center;
+                        width:100vw;
+                        border-radius:5px;
+                }
+                .cart-home p{
+                    font-size:100%;
+                    width:100%;
+                }
+                .slide-cart{
+                        width :100%;
+                }
+            }
         `;
         // mask-image: linear-gradient(to right, transparent, #000, transparent);
     styleSlide = `
-            .slide-static-Home{
+        .slide-static-Home{
                 height :56vh;
                 display: flex;
                 justify-content: center;
@@ -99,7 +133,7 @@ class homePage extends HTMLElement {
                 justify-content: center;
                 flex-direction: row;
                 position :relative;
-            }
+            }     
         .slide-cart{
             display :flex;
             align-items :center;
@@ -204,6 +238,25 @@ class homePage extends HTMLElement {
             border-bottom :1px solid #FFF4;
 
         }
+        @media (min-width: 320px) and (max-width: 1024px) {
+                .slide-static-Home{
+                    flex-direction: column;
+                    height :100vh;
+                }
+        .slide-home{
+                height:100vh;
+                width :100%;
+                gap :100%;
+            }
+        .static-home{
+                height:100vh;
+                width:100%;
+                display :none;
+            }
+        .slide-cart{
+                       display :100%;
+                }
+        }   
         `;
     templateHome = `
         <div class="slide-static-Home">
@@ -230,18 +283,13 @@ class homePage extends HTMLElement {
 
     }
     rander(){
-        console.log("inside home page");
-        
-        // console.log(readData.getData());
-        const arr = [readData.getData()]
-        console.log(arr['username']);
-        arr.forEach(element => {
-            console.log(element["email"]);
-            this.info = [{
-                username : element['username']
-            }
-            ]
-        });
+        console.log("RANDER FUNCTION IS HERE");
+        const uuss = async () => {
+            this.info = await fetchUserData();
+            console.log(this.info);
+            document.getElementById('username').textContent = this.info.username
+        }
+        uuss();
         this.innerHTML = `
             <style>
             ${this.style}
@@ -317,31 +365,31 @@ class homePage extends HTMLElement {
 customElements.define('home-page',homePage);
 
     // const urlParams = new urlSearchParams(Window.location.search);
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log(`here: ${window.location.search}`);
+    // const urlParams = new URLSearchParams(window.location.search);
+    // console.log(`here: ${window.location.search}`);
 
 
-async function getUserData()
-{
-    const accessToken = urlParams.get('access_token');
+// async function getUserData()
+// {
+//     const accessToken = urlParams.get('access_token');
     
 
-    console.log(`first : ${accessToken}`);
+//     console.log(`first : ${accessToken}`);
 
-    const res =  await fetch("http://localhost:8000/user/", {
-        method: 'GET', 
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-    })
-    const data = await res.json();
-    console.log(data);
-    const h3Element = document.querySelector('h3');
+//     const res =  await fetch("http://localhost:8000/user/", {
+//         method: 'GET', 
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         credentials: 'include',
+//     })
+//     const data = await res.json();
+//     console.log(data);
+//     const h3Element = document.querySelector('h3');
 
-    h3Element.innerHTML = h3Element.innerHTML.replace('CHEBCHOUB', data.username);
-    console.log(`title home : ${ele}`);
-    return data;
-}
+//     h3Element.innerHTML = h3Element.innerHTML.replace('CHEBCHOUB', data.username);
+//     console.log(`title home : ${ele}`);
+//     return data;
+// }
 
-const data = getUserData();
+// const data = getUserData();

@@ -19,7 +19,31 @@ html , body{
 
 .fa-solid{
   margin-top: 30px;
+  color: #FFFFFF;
+}
 
+.fa-solid:hover{
+  color:#606061;
+
+}
+.parent{
+  display: flex;
+  gap: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-bar{
+  background-color: #293247 ;
+  flex-basis: 3%;
+  /* background-image: ; */
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  height: 95vh;
+  border-radius: 18px;
+  margin-right: 0;
 }
 
 .nav-02{
@@ -30,6 +54,19 @@ html , body{
   margin-bottom: 20px;
   /* align-items: center; */
 }
+
+
+#content{
+  flex-basis: 93%;
+  height: 95vh;
+  border-radius: 25px;
+}
+/* .nav-bar a:hover{
+  background: #293247 ;
+
+} */
+
+
 
 /* .cycle {
   position: absolute;
@@ -111,38 +148,3 @@ html , body{
 } */
 
 
-
-.parent{
-  display: flex;
-  gap: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.nav-bar{
-  background-color: #293247 ;
-  flex-basis: 3%;
-  /* background-image: ; */
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  height: 95vh;
-  border-radius: 18px;
-  margin-right: 0;
-}
-
-#content{
-  flex-basis: 93%;
-  height: 95vh;
-  border-radius: 25px;
-}
-/* .nav-bar a:hover{
-  background: #293247 ;
-
-} */
-
-.nav-bar a:hover{
-    scale: 1.1;
-    background-color: #293247
-}

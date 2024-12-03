@@ -126,9 +126,9 @@ class loginPage extends HTMLElement {
     `;
     template = `
     <div class="carte-content">
-            <div class="login-img">
-                <img class="" src="/images/login.png">
-                <div class="loginComment" >
+            <div class="login-img ">
+                <img class="d-none d-md-block" src="/images/login.png">
+                <div class="loginComment position-sm-relative  top-10 w-100 d-sm-block" ">
                     
                 </div>
             </div>
@@ -185,7 +185,7 @@ class loginPage extends HTMLElement {
         }
         .form-login-siwtch{
             width :100%;
-            height :70%;
+            height :73%;
             display :flex;
             align-items :center;
             justify-content: center;
@@ -345,7 +345,7 @@ class loginPage extends HTMLElement {
         }
         .login-cart{
             width :450px;
-            height:70%;
+            height:73%;
             border-radius :25px;
            background:    rgba(0, 0, 0, 0.1);
             display:flex;
@@ -381,6 +381,7 @@ class loginPage extends HTMLElement {
             top :50%;
             text-align :center;
             text-shadow: 4px 4px 2px black;
+            positon :relative;
         }
         .redirapi_inta , .redirapi_google{
           background:transparent;
