@@ -313,41 +313,5 @@ class StatsView(APIView):
             raise AuthenticationFailed('Unauthenticated')
         serialer = StatsSerializer(user.stats)
         return Response(serialer.data, status=200)
-        pass
+    
 
-
-
-
-
-
-
-
-
-
-
-from django.dispatch  import receiver, Signal
-from django.core.signals import request_finished
-from django.http import HttpResponse
-
-def test(request):
-    return HttpResponse("key helooo")
-
-@receiver(request_finished)
-
-def post_resciver(sender, **kwargs):
-    print('HEEEEEEEEEE----------------------------')
-
-#friedship management
-
-# list friends
-# send friend request (add frind)
-# list friend requests
-# accept friend request
-# cancel a friend request
-# block a user
-
-# {
-#     "opponent_username": "iantar",
-#     "opponent_score": 7,
-#     "user_score": 10
-# }
