@@ -42,24 +42,12 @@ def storeUser(data_json)-> User:
         return existing_user
     response = requests.get(data_json.get("image", {}).get("link"))
     if response.status_code == 200:
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
         img_temp = NamedTemporaryFile(delete=True)
         img_temp.write(response.content)
         img_temp.flush()
-    else
-        img_temp = data_json.get("image", {}).get("link")
 
         # Extract the image filename from the URL
-        filename = os.path.basename(data_json.get("image", {}).get("link"))
+    filename = os.path.basename(data_json.get("image", {}).get("link"))
 
     user = User(
             # id=data_json["id"],
@@ -98,7 +86,6 @@ def auth(request):
                'redirect_uri':REDIRECT_URI,}
     r = requests.post(OUUTH_TOKEN_URI, data=payload)
     print(f"here: {r.json()}")
-    print("000000000000000000000000000000000000000000000000000000000000000000000000")
     # try:
         # intra_access_token =  r.cookies.get('access_token')
     intra_access_token = r.json().get('access_token')#['access_token']

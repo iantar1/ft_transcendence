@@ -27,7 +27,6 @@ html , body{
 
 }
 .parent{
-  display: flex;
   gap: 20px;
   display: flex;
   justify-content: center;

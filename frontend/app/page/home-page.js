@@ -4,6 +4,8 @@
 import {readData} from './readData.js';
 
 import {fetchUserData} from './readData.js';
+import {fetchUserMatchHistory} from './readData.js';
+
 
 // readData.getData();
 // const attt = [1 , 3 , 3 , 7 ];
@@ -20,6 +22,7 @@ console.log("inside home page");
 
 class homePage extends HTMLElement {
     info = [];
+    match = [];
     template = `
     <div class="content-home " >
     <div class="cart-home" >
@@ -76,13 +79,21 @@ class homePage extends HTMLElement {
             font-size:100%;
         }
 @media (min-width: 320px) and (max-width: 1024px) {
+                .parent{
+                        display: flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        height :100%;
+                        width :100%;
+                }
                 .nav-bar{
-                        flex-direction: row;
-                        width: 100vw;
-                        height: 10%;
-                        left:10%;
-                        position: relative;
-                        top: 80%;
+                    width: 90vw;
+                    height: 10%;
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    flex-direction: row;
+                    z-index :1;
                 }
                 .nav-02{
                     display :none;
@@ -278,15 +289,59 @@ class homePage extends HTMLElement {
             </div>
             </div>
             `;
+        navBar = `
+        @media (min-width: 320px) and (max-width: 1024px) {
+                .nav-bar{
+                    width: 100vw;
+                    height: 10%;
+                    display: flex;
+                    justify-content: space-evenly;
+                    place-items :center;
+                    flex-direction: row;
+                    z-index :1;
+                    position :sticky;
+                    top :93.1%;
+                    border-radius :0px;
+                    flex-basis: 0%;
+                }
+                .nav-02{
+                    display :none;
+                }
+                .fafa{
+                    display :none;
+                }
+                .img-home{
+                    display :none;
+                }
+                .parent{
+                     display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    width: 100vw;
+                    height: 100%;
+                    position :staky;
+                }
+        }
+            `
     constructor(){
         super();
 
     }
+    // <style>
+    // ${this.style}
+    // ${this.styleSlide}
+    // ${this.styleStatic}
+    // </style>
+    // ${this.template}
+    // ${this.templateHome}
     rander(){
         console.log("RANDER FUNCTION IS HERE");
         const uuss = async () => {
             this.info = await fetchUserData();
+            this.match =  await fetchUserMatchHistory();
             console.log(this.info);
+            console.log(this.match);
             document.getElementById('username').textContent = this.info.username
         }
         uuss();
@@ -295,9 +350,10 @@ class homePage extends HTMLElement {
             ${this.style}
             ${this.styleSlide}
             ${this.styleStatic}
+            ${this.navBar}
             </style>
-            ${this.template}
-            ${this.templateHome}
+                ${this.template}
+                ${this.templateHome}
             `;
     }
     staticHome(){

@@ -141,8 +141,7 @@ class UserView(APIView):
 
         user = User.objects.filter(id=payload['id']).first()
 
-    # should the user enter its password before deleting his account
-        
+    # should the user enter its password before deleting his account 
         if user:
             user.delete()
             return Response({"detail": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)

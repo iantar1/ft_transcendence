@@ -610,3 +610,8 @@ class profilePage extends HTMLElement {
 }
 
 customElements.define('profile-page', profilePage);
+
+async function    getUserMatchHistory()
+{
+    
+}
