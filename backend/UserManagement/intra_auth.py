@@ -34,24 +34,18 @@ def home(request):
     return redirect(AUTH_URI)
 
 
-def storeUser(data_json)-> User:
+def createUpdateUser(data_json)-> User:
     # check if the user already exsit
-    # existing_user = User.objects.filter(username=data_json.get("login")).first()
+    existing_user = User.objects.filter(username=data_json.get("login")).first()
 
-    # if existing_user:
-    #     return existing_user
-    print(f'**************************8')
-    print(f'---------------++++++++++++++------')
+    if existing_user:
+        return existing_user
+
     response = requests.get(data_json.get("image", {}).get("link"))
     if response.status_code == 200:
-        print(f"Image fetched successfully, content length: {len(response.content)}")
         img_temp = NamedTemporaryFile()#IF the temporary file will be deleted once it's closed
         img_temp.write(response.content)
         img_temp.flush()
-        print(f'****************************')
-        print(f'here---------------------here')
-        print(f'****************************')
-
 
         # Extract the image filename from the URL
     filename = os.path.basename(data_json.get("image", {}).get("link"))
@@ -64,7 +58,16 @@ def storeUser(data_json)-> User:
             image = File(img_temp, name=filename),#set default if you can't get the image
             username = data_json.get("login")
         )
-    user.save()
+    user, created = User.objects.update_or_create(
+        id=data_json.get("login"),
+        email=data_json.get("email"),
+        defaults={'first_name':data_json.get("first_name"),
+                  'last_name':data_json.get("last_name"),
+                  'email':data_json.get("email"),
+                  'image':File(img_temp, name=filename),
+                  'username':data_json.get("login")},
+    )
+    # user.save()
     return user
     
 
@@ -75,7 +78,7 @@ def getData(access_token) -> User:
     }
     response = requests.get(url, headers=headers)
     print(f"the resposnse josn: {response.json()}")
-    return storeUser(response.json())
+    return createUpdateUser(response.json())
 
 from rest_framework.renderers import JSONRenderer
 
