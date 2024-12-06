@@ -23,6 +23,8 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/backend
     # networks:
     #   - ft_transcendence
   
@@ -33,8 +35,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - transcendance:/usr/share/nginx/html
-      - back:/backend
+      - ./frontend:/usr/share/nginx/html
 
     # networks:
     #   ft_transcendence:
