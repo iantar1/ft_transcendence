@@ -232,6 +232,7 @@ class profilePage extends HTMLElement {
                         }
                         .winorlose{
                             width :100%;
+                            background: none;
                         }
                         .userInfo{
                             flex-basis: 10%;
@@ -565,6 +566,7 @@ class profilePage extends HTMLElement {
                 position: fixed;
                 padding-bottom: 5%;
                 bottom :0;
+                z-index :1000;
             }
             .nav-02{
                 display :none;
