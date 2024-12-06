@@ -6,8 +6,8 @@ import {fetchUserData} from './readData.js';
 class profilePage extends HTMLElement {
 
     template = `
-        <div class="content-profile">
-                <div class="cart-profile">
+        <div class="content-profile .container">
+                <div class="cart-profile ">
                     <div class="info-profile">
                         <img id="img_intra" src="../images/profile.png" >
                         <h3 id='username' >CHEBCHOUB</h3>
@@ -16,13 +16,13 @@ class profilePage extends HTMLElement {
                     <div class="lvl-profile">
                         <div class="bio-profile">
                             <h5>Bio</h5>
-                            <br>
                             <h5 id="BIO" ></h5>
+                            <br>
                         </div>
                         <div class="lvl">
                             <h5 class="opa" > Lvl 13 <span class="lvl-prof">7 more game hours for level</span></h5>
                             <br>
-                            <div class="level"></div>
+                            <div class="level"></div><br>
                         </div>
                         <div class="achev">
                             <h5 > <span class="lvl-prof"> Achievement : </span>4 of 37</h5>
@@ -63,8 +63,7 @@ class profilePage extends HTMLElement {
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
-                gap :20px;
-
+                gap :0px;
             }
             .lvl-profile{
                 height :100%;
@@ -72,7 +71,7 @@ class profilePage extends HTMLElement {
                 display :flex;
                 justify-content: center;
                 flex-direction: column;
-                gap :75px;
+                gap :0px;
             }
             .level{
                 width :70%;
@@ -85,7 +84,7 @@ class profilePage extends HTMLElement {
                   opacity:0.4;
             }
             .achev{
-                gap :30px;
+                gap :8px;
                 display :flex;
                 align-items: center;
             }
@@ -95,7 +94,7 @@ class profilePage extends HTMLElement {
                 height :60px;
             }
             .ach{
-                width :10%;
+                width :60px;
                 height :60px;
                 border-radius :10px;
                 background-color: rgba(255, 255, 255, 0.384);
@@ -123,6 +122,15 @@ class profilePage extends HTMLElement {
                 top :-1%;
                 left :59%;
             }
+            @media (min-width: 320px) and (max-width: 1024px) {
+                    .img-profile{
+                        display :none;
+                    }
+                    .cart-profile{
+                        flex-direction: column;
+                        height :50vh;
+                    }
+            }
         </style>
     `;
     winorLose = `
@@ -139,7 +147,7 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 align-items :center;
                 flex-direction: row;
-                gap :35px;
+                gap :5%;
 
             }
             .userInfo{
@@ -149,7 +157,7 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 align-items :center;
                 flex-direction: row;
-                gap :10px;
+                gap :5%;
             }
             .name-user{
                 width :100px;
@@ -166,6 +174,7 @@ class profilePage extends HTMLElement {
                 display :flex;
                 justify-content: center;
                 align-items :center;
+                
             }
             .winIcon img{
                 width :30%;
@@ -179,6 +188,7 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 align-items :center;
                 flex-direction: column;
+                
             }
             .img-user{
                 width :60px;
@@ -186,15 +196,14 @@ class profilePage extends HTMLElement {
                 border-radius :15px;
                 border :5px solid rgba(56, 75, 112, 1);
                 overflow: hidden;
-                backdsground: url(/images/ah.png)  no-repeat center center;
             }
             .img-user img{
                 width :100%;
                 height :100%;
             }
             .score-user{
-                width :15%;
-                height :60%;
+                width :30px;
+                height :50px;
                 border-radius :10px;
                 background :rgba(217, 217, 217, 0.1);
                 display :flex;
@@ -210,11 +219,28 @@ class profilePage extends HTMLElement {
                 flex-direction: column;
 
             }
+            .noonehere{
+                display :none;
+            }
             .time-user img {
                 width :38%;
                 height :80%;
             }
-
+             @media (min-width: 320px) and (max-width: 1024px) {
+                        .name-user{
+                            display :none;
+                        }
+                        .winorlose{
+                            width :100%;
+                        }
+                        .userInfo{
+                            flex-basis: 10%;
+                            gap :1%;
+                        }
+                        .imgIcon{
+                            width :90px;
+                        }
+             }
         </style>
     `;
     gameRank = `
@@ -267,7 +293,7 @@ class profilePage extends HTMLElement {
         .gameRank{
                 width :50%;
                 height :52vh;
-                display :flex;
+                display :none;
                 align-items: center;
                 justify-content: center;
                 flex-direction: row;
@@ -525,6 +551,41 @@ class profilePage extends HTMLElement {
             }
         </style>
     `;
+    navar = `
+    @media (min-width: 320px) and (max-width: 1024px) {
+            .nav-bar{
+                width: 100%;
+                display: flex;
+                height :8%;
+                background:#666f80;
+                justify-content: space-evenly;
+                align-items: center;
+                flex-direction: row;
+                border-radius :0px;
+                position: fixed;
+                padding-bottom: 5%;
+                bottom :0;
+            }
+            .nav-02{
+                display :none;
+            }
+            .fafa{
+                display :none;
+            }
+            .img-home{
+                display :none;
+            }
+            body{
+                flex-direction: column-reverse;
+            }
+            #content{
+                width :100vw;
+                height :100vh;
+                border-radius :0px;
+                display :flex;
+            }
+    }
+        `
     constructor() {
         super();
     }
@@ -541,8 +602,9 @@ class profilePage extends HTMLElement {
         const uuss = async () => {
             this.info = await fetchUserData();
             console.log(this.info.image);
-            document.getElementById('username').textContent = this.info.username
-            document.getElementById('img_intra').src = this.info.image
+            document.getElementById('username').textContent = "CHEBCHOUB"
+            // document.getElementById('username').textContent = this.info.username
+            // document.getElementById('img_intra').src = this.info.image
             document.getElementById('BIO').textContent = 'ash dal temchi lzine'
         }
         uuss();
@@ -553,6 +615,9 @@ class profilePage extends HTMLElement {
             ${this.templatwoStyle}
             ${this.winorLoseStyle}
             ${this.gamerankStyle}
+            <style>
+            ${this.navar}
+            </style>
         `;
         // this.cycleRander();
         const form = [
@@ -565,20 +630,21 @@ class profilePage extends HTMLElement {
             losrWin.innerHTML += `
             <div class="userleft" >
                 <div class="userInfo" >
-                <div class="imgIcon" >
-                    <div class="img-user" >
-                        <img src="${element.img}" >
-                    </div>
-                    <div class="winIcon" >
-                        <img src="/images/icon/badge.png" >
-                    </div>
-                </div>
-                    <div class="name-user" >
-                        <h5>${element.player}</h5>
-                    </div>
-                    <div class="score-user" >
-                            <h2>0</h2>
-                    </div>
+                        <div class="imgIcon" >
+                            <div class="img-user" >
+                                <img src="${element.img}" >
+                            </div>
+                            <div class="winIcon" >
+                                <img src="/images/icon/badge.png" >
+                                <p class="noonehere" >ahbajaou</p>
+                            </div>
+                        </div>
+                        <div class="name-user" >
+                            <h5>${element.player}</h5>
+                        </div>
+                        <div class="score-user" >
+                                <h2>0</h2>
+                        </div>
                 </div>
                 <div class="time-user">
                     <img src="/images/icon/ping.png" >
@@ -597,6 +663,7 @@ class profilePage extends HTMLElement {
                         </div>
                         <div class="winIcon" >
                             <img src="/images/icon/lose.png" >
+                            <p class="noonehere" >ahbajaou</p>
                         </div>
                     </div>
                 </div>

@@ -14,7 +14,7 @@ html , body{
   background:#222834;
   scroll-behavior: smooth;
   /* overflow: hidden; */
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .fa-solid{
