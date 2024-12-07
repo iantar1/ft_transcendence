@@ -26,10 +26,11 @@ class profilePage extends HTMLElement {
                         </div>
                         <div class="achev">
                             <h5 > <span class="lvl-prof"> Achievement : </span>4 of 37</h5>
-                            <div class="ach"></div>
-                            <div class="ach"></div>
-                            <div class="ach"></div>
-                            <div class="ach"></div>
+                                <div class="ach"></div>
+                                <div class="ach"></div>
+                                <div class="ach"></div>
+                                <div class="ach"></div>
+                            
 
                         </div>
                     </div>
@@ -129,6 +130,11 @@ class profilePage extends HTMLElement {
                     .cart-profile{
                         flex-direction: column;
                         height :50vh;
+                        width :100vw;
+                        border-radius:0px;
+                    }
+                    .achev{
+                        
                     }
             }
         </style>
@@ -294,7 +300,7 @@ class profilePage extends HTMLElement {
         .gameRank{
                 width :50%;
                 height :52vh;
-                display :none;
+                display :flex;
                 align-items: center;
                 justify-content: center;
                 flex-direction: row;
@@ -308,6 +314,7 @@ class profilePage extends HTMLElement {
             flex-direction: column;
             gap :10px;
             height :100%;
+            width :100%;
         }
         .cycle-progress{
             display :flex;
@@ -320,7 +327,7 @@ class profilePage extends HTMLElement {
         .cont-progress{
             width :55%;
             height :100%;
-            display :flex;
+            display :none;
             align-items: center;
             justify-content: center;
             flex-direction: column;
@@ -342,8 +349,8 @@ class profilePage extends HTMLElement {
             gap :5px;
         }
         .cycle-base{
-            width :350px;
-            height :350px;
+            width :100%;
+            height :70%;
             border-radius :100%;
             background :rgba(26, 34, 50, 1);
             display: flex;
@@ -455,14 +462,14 @@ class profilePage extends HTMLElement {
             border-radius :25px;
             background :rgba(251, 135, 44, 1);
             position :relative;
-            top :120px;
+            top :25%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .progwinlos{
             width :100%;
-            height :120px;
+            height :45%;
             position :relative;
             left :0;
             top :200px;
@@ -519,6 +526,14 @@ class profilePage extends HTMLElement {
                     3px 3px 15px  rgba(251, 135, 44, 1), 
                     -3px -3px 15px rgba(113, 64, 208, 1);
         }
+        @media (min-width: 320px) and (max-width: 1024px) {
+                .gameRank{
+                    width :100%;
+                    border-radius :0px;
+                    height :100vh;
+
+                }
+             }
     </style>
     `;
     // background: radial-gradient(closest-side, rgba(34, 40, 52, 1) 80%, transparent 80% 100%),
@@ -550,6 +565,13 @@ class profilePage extends HTMLElement {
                 border-radius :25px;
                 gap :30px;
             }
+             @media (min-width: 320px) and (max-width: 1024px) {
+                .static-profile{
+                    flex-direction: column;
+                    height :100vh;
+                }
+
+             }
         </style>
     `;
     navar = `
@@ -606,7 +628,8 @@ class profilePage extends HTMLElement {
             console.log(this.info.image);
             document.getElementById('username').textContent = "CHEBCHOUB"
             // document.getElementById('username').textContent = this.info.username
-            // document.getElementById('img_intra').src = this.info.image
+            document.getElementById('img_intra').src = this.info.image
+            console.log(this.info.image);
             document.getElementById('BIO').textContent = 'ash dal temchi lzine'
         }
         uuss();

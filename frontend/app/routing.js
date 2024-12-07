@@ -4,6 +4,7 @@ export function rander(path) {
     history.pushState(null,null,path);
     const content  = document.getElementById('content');
     content.innerHTML = ``;
+    console.log("this is " + path);
     switch(path){
     case '/':
        content.appendChild(document.createElement('getstarted-page'));
@@ -22,11 +23,20 @@ export function rander(path) {
         break;
     case '/setting':
         content.appendChild(document.createElement('setting-page'));
+        break;
+        case '/logout':
+        content.appendChild(document.createElement('logout-page'));
           break;
     default:
       content.innerHTML = `<h1>404 page not found.</h1>`;
     }
 }
+
+// const bnt = document.querySelector('.btn');
+// bnt.addEventListener('click', (e) => {
+//     alert('logout here');
+// })
+
 const router  = async () => {
 
     const routes = [
@@ -36,6 +46,7 @@ const router  = async () => {
         {path : "/game", view: () => console.log("game")},
         {path : "/home", view: () => console.log("get")},
         {path : "/setting", view: () => console.log("get")},
+        {path : "/logout", view: () => console.log("logout")},
 
     ]
 
@@ -53,7 +64,7 @@ const router  = async () => {
             isMatch : true
         };
     }
-    for (let i = 0; i < 6; i++){
+    for (let i = 0; i < routes.length ; i++){
         if (location.pathname === isMatches[i].route.path){
             rander(isMatches[i].route.path);
         }

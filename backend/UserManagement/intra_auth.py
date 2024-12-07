@@ -36,10 +36,10 @@ def home(request):
 
 def createUpdateUser(data_json)-> User:
     # check if the user already exsit
-    existing_user = User.objects.filter(username=data_json.get("login")).first()
+    # existing_user = User.objects.filter(username=data_json.get("login")).first()
 
-    if existing_user:
-        return existing_user
+    # if existing_user:
+    #     return existing_user
 
     response = requests.get(data_json.get("image", {}).get("link"))
     if response.status_code == 200:
@@ -47,19 +47,21 @@ def createUpdateUser(data_json)-> User:
         img_temp.write(response.content)
         img_temp.flush()
 
+
+
         # Extract the image filename from the URL
     filename = os.path.basename(data_json.get("image", {}).get("link"))
     print(f'filename: {filename}')
-    user = User(
-            # id=data_json["id"],
-            first_name = data_json.get("first_name"),
-            last_name = data_json.get("last_name"),
-            email = data_json.get("email"),
-            image = File(img_temp, name=filename),#set default if you can't get the image
-            username = data_json.get("login")
-        )
+    # user = User(
+    #         # id=data_json["id"],
+    #         first_name = data_json.get("first_name"),
+    #         last_name = data_json.get("last_name"),
+    #         email = data_json.get("email"),
+    #         image = File(img_temp, name=filename),#set default if you can't get the image
+    #         username = data_json.get("login")
+    #     )
     user, created = User.objects.update_or_create(
-        id=data_json.get("login"),
+        username=data_json.get("login"),
         email=data_json.get("email"),
         defaults={'first_name':data_json.get("first_name"),
                   'last_name':data_json.get("last_name"),
