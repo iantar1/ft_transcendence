@@ -1,5 +1,4 @@
-
-class gamePage extends HTMLElement {
+class logoutPage extends HTMLElement {
 
     constructor(){
         super();
@@ -11,7 +10,7 @@ class gamePage extends HTMLElement {
                 display :flex;
             }
             </style>
-            <button type="button" class="btn btn-primary">game</button>
+            <button type="button" class="btn btn-primary">logout</button>
         `;
     }
     connectedCallback(){
@@ -19,4 +18,4 @@ class gamePage extends HTMLElement {
     }
 }
 
-customElements.define('game-page',gamePage);
+customElements.define('logout-page',logoutPage);

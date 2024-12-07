@@ -45,6 +45,7 @@ class homePage extends HTMLElement {
         }
         .content-home{
             gap :10px;
+            
         }
         .cart-home{
             height :39vh;
@@ -79,34 +80,6 @@ class homePage extends HTMLElement {
             font-size:100%;
         }
 @media (min-width: 320px) and (max-width: 1024px) {
-                .parent{
-                        display: flex;
-                        justify-content: flex-start;
-                        align-items: center;
-                        height :100%;
-                        width :100%;
-                }
-                .nav-bar{
-                    width: 90vw;
-                    height: 10%;
-                    display: flex;
-                    justify-content: flex-end;
-                    align-items: center;
-                    flex-direction: row;
-                    z-index :1;
-                }
-                .nav-02{
-                    display :none;
-                }
-                .fafa img{
-                    display :none;
-                }
-                .img-home{
-                    display :none;
-                }
-                .parent{
-                        flex-direction: column;
-                }
                 .cart-home{
                         display: flex;
                         justify-content: center;
@@ -262,10 +235,9 @@ class homePage extends HTMLElement {
         .static-home{
                 height:100vh;
                 width:100%;
-                display :none;
             }
         .slide-cart{
-                       display :100%;
+                   
                 }
         }   
         `;
@@ -293,16 +265,16 @@ class homePage extends HTMLElement {
         @media (min-width: 320px) and (max-width: 1024px) {
                 .nav-bar{
                     width: 100vw;
-                    height: 10%;
                     display: flex;
+                    height :8%;
+                    background:#666f80;
                     justify-content: space-evenly;
-                    place-items :center;
+                    align-items: center;
                     flex-direction: row;
-                    z-index :1;
-                    position :sticky;
-                    top :93.1%;
                     border-radius :0px;
-                    flex-basis: 0%;
+                    position: fixed;
+                    padding-bottom: 5%;
+                    bottom :0;
                 }
                 .nav-02{
                     display :none;
@@ -313,14 +285,14 @@ class homePage extends HTMLElement {
                 .img-home{
                     display :none;
                 }
-                .parent{
-                     display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    width: 100vw;
-                    height: 100%;
-                    position :staky;
+                body{
+                    flex-direction: column-reverse;
+                }
+                #content{
+                    width :100vw;
+                    height :100vh;
+                    border-radius :0px;
+                    display :flex;
                 }
         }
             `
