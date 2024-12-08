@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django_otp.middleware.OTPMiddleware',
+    'UserManagement.middleware.new_middleware',
 ]
 
 SESSION_COOKIE_SAMESITE = None
