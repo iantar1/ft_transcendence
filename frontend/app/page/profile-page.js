@@ -11,7 +11,7 @@ class profilePage extends HTMLElement {
                     <div class="info-profile">
                         <img id="img_intra" src="../images/profile.png" >
                         <h3 id='username' >CHEBCHOUB</h3>
-                        <button class="btn-profile" >Edit</button>
+                        <button type="button" class="btn btn-secondary">Edit</button>
                     </div>
                     <div class="lvl-profile">
                         <div class="bio-profile">
@@ -20,18 +20,20 @@ class profilePage extends HTMLElement {
                             <br>
                         </div>
                         <div class="lvl">
-                            <h5 class="opa" > Lvl 13 <span class="lvl-prof">7 more game hours for level</span></h5>
-                            <br>
-                            <div class="level"></div><br>
+                            <h5 class="opa" > Lvl 13 <span class="lvl-prof">7 more game hours for level</span></h5>              
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width:10%; box-shadow:-1px 10px 10px rgba(91, 192, 222, 0.7);"></div>
+                                <div class="progress-value">10%</div>
+                            </div>
                         </div>
                         <div class="achev">
                             <h5 > <span class="lvl-prof"> Achievement : </span>4 of 37</h5>
+                            <div class="achevmet-piece" >
                                 <div class="ach"></div>
                                 <div class="ach"></div>
                                 <div class="ach"></div>
                                 <div class="ach"></div>
-                            
-
+                            </div>
                         </div>
                     </div>
                     <div class="img-profile">
@@ -46,7 +48,7 @@ class profilePage extends HTMLElement {
                 display :flex;
                 }
             .content-profile{
-                gap:10px;
+                gap:5px;
             }
             .cart-profile{
                 height :39vh;
@@ -88,11 +90,15 @@ class profilePage extends HTMLElement {
                 gap :8px;
                 display :flex;
                 align-items: center;
+                margin-top :15px;
             }
             .achev h5 {
                 position :relative;
                 top: 46px;
                 height :60px;
+            }
+            .btn-secondary{
+                width :70%;
             }
             .ach{
                 width :60px;
@@ -123,24 +129,60 @@ class profilePage extends HTMLElement {
                 top :-1%;
                 left :59%;
             }
+            .achevmet-piece{
+                display :flex;
+                flex-direction: row;
+                gap :5px;
+            }
+            .progress{
+                height: 27px;
+                margin: 0;
+                overflow: visible;
+                border-radius: 50px;
+                background: #eaedf3;
+                box-shadow: inset 0 10px  10px rgba(244, 245, 250,0.9);
+            }
+            .progress .progress-bar{
+                border-radius: 50px;
+            }
+            .progress .progress-value{
+                position: relative;
+                left: -45px;
+                top: 4px;
+                font-size: 14px;
+                font-weight: bold;
+                color: #fff;
+                letter-spacing: 2px;
+            }
+            .progress-bar.active{
+            animation: reverse progress-bar-stripes 0.40s linear infinite, animate-positive 2s;
+            }
+            @-webkit-keyframes animate-positive{
+            0% { width: 0%; }
+            }
+            @keyframes animate-positive {
+            0% { width: 0%; }
+            }
             @media (min-width: 320px) and (max-width: 1024px) {
                     .img-profile{
                         display :none;
                     }
                     .cart-profile{
                         flex-direction: column;
-                        height :50vh;
+                        height :80vh;
                         width :100vw;
                         border-radius:0px;
                     }
                     .achev{
-                        
+                        display :flex;
+                        flex-direction: column;
                     }
             }
         </style>
     `;
     winorLose = `
     <div class="winorlose">
+            <br>
             <h3>Match History</h3>
     </div>
     `;
@@ -154,11 +196,12 @@ class profilePage extends HTMLElement {
                 align-items :center;
                 flex-direction: row;
                 gap :5%;
+     
 
             }
             .userInfo{
-                flex-basis: 30%;
                 height :100%;
+                width :10vw;
                 display :flex;
                 justify-content: center;
                 align-items :center;
@@ -194,7 +237,6 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 align-items :center;
                 flex-direction: column;
-                
             }
             .img-user{
                 width :60px;
@@ -223,7 +265,9 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 align-items :center;
                 flex-direction: column;
-
+            }
+            .time-user h6{
+                text-align :center;
             }
             .noonehere{
                 display :none;
@@ -247,26 +291,31 @@ class profilePage extends HTMLElement {
                         .imgIcon{
                             width :90px;
                         }
+                        .userInfo{
+                            height :100%;
+                            width :40vw;
+                        }
+                    .time-user{
+                        width :30%;
+                    }
+                .noonehere{
+                    display :flex;
+                }
+                .winIcon{
+                    display :flex;
+                    flex-direction: column;
+                    height :100%;
+                }
+            .imgIcon{
+                height :130px;
+            }
              }
         </style>
     `;
     gameRank = `
         <div class="gameRank">
             <div class="cycle-progress" >
-                <div class="cylcle-content" >
-                    <div class="cycleAndprofit" >
-                        <div class="small-cycle" ></div>
-                        <h5>Total Profit</h5>
-                    </div>
-                    <div class="cycle-base" >
-                    <div class="progress-bar">
-                    <span id="progress-text">0%</span>
-                    </div>
-                    </div>
-                    <div class="btn-average" >
-                        <h5>Average Profit</h5>
-                    </div>
-                </div>
+
             </div>
             <div class="cont-progress" >
                     <div class="maskoff">
@@ -333,105 +382,6 @@ class profilePage extends HTMLElement {
             flex-direction: column;
             gap :20px;
         }
-        .small-cycle{
-            width :8px;
-            height:8px;
-            border-radius :100%;
-            background: rgba(34, 236, 90, 1);
-            box-shadow: -2px -2px 7px rgba(34, 236, 90, 1),  
-                  1px 1px 7px rgba(34, 236, 90, 1); 
-        }
-        .cycleAndprofit{
-            width :100%;
-            display :flex;
-            align-items: center;
-            flex-direction: row;
-            gap :5px;
-        }
-        .cycle-base{
-            width :100%;
-            height :70%;
-            border-radius :100%;
-            background :rgba(26, 34, 50, 1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .btn-average{
-            width :60%;
-            height :12%;
-            border-radius :15px;
-            background :rgba(34, 40, 52, 1);
-            display :flex;
-            align-items: center;
-            justify-content: center;
-            font-size :20px;
-        }
-        .progress-container {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        /* Define the custom properties for win and lose progress */
-        @property --win-progress-value {
-          syntax: "<integer>";
-          initial-value: 0;
-          inherits: false;
-        }
-        
-        @property --lose-progress-value {
-          syntax: "<integer>";
-          initial-value: 0;
-          inherits: false;
-        }
-        
-        @keyframes progress {
-          to {
-            --win-progress-value: 50;
-            --lose-progress-value: 50;
-          }
-        }
-        
-        /* Styling for the combined progress bar */
-        .progress-bar {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        
-          width: 85%;
-          height: 85%;
-          border-radius: 50%;
-          background: 
-            radial-gradient(closest-side, rgba(26, 34, 50, 1) 79%, transparent 80% 100%),
-            conic-gradient(
-              from 0deg,
-              rgba(113, 217, 182, 1) calc(var(--win-progress-value) * 0.33%),
-              rgba(98, 182, 193, 1) calc(var(--win-progress-value) * 0.66%),
-              rgba(82, 131, 197, 1) calc(var(--win-progress-value) * 1%),
-              rgba(251, 135, 44, 1) 0 calc((var(--win-progress-value) + var(--lose-progress-value)) * 0.33%),
-              rgba(164, 92, 205, 1) 0 calc((var(--win-progress-value) + var(--lose-progress-value)) * 0.66%),
-              rgba(113, 64, 208, 1) 0 calc((var(--win-progress-value) + var(--lose-progress-value)) * 1%),
-              rgba(36, 48, 72, 1) 0
-            );
-          animation: progress 2s 1 forwards;
-        }
-        
-        /* Center text for the progress */
-        .progress-bar::before {
-          content: 'Win: ' var(--win-progress-value) '% | Lose: ' var(--lose-progress-value) '%';
-          font-size: 16px;
-        }
-        
-        #progress-text {
-            position: relative;
-            font-size: 34px;
-            color: white;
-            font-weight: bold;
-        }
-        
         .prog{
             width :426px;
             height :237px;
@@ -533,11 +483,122 @@ class profilePage extends HTMLElement {
                     height :100vh;
 
                 }
+            .cycle-progress{
+                display :flex;
+                width :100%;
              }
+    }
     </style>
     `;
-    // background: radial-gradient(closest-side, rgba(34, 40, 52, 1) 80%, transparent 80% 100%),
-    // conic-gradient(rgba(113, 217, 182, 1) calc(var(--progress-value) * 1%),rgba(36, 48, 72, 1) 0);
+    cycleProgress = `
+<div class="cycle blue">
+  <span class="cycle-left">
+    <span class="cycle-bar "></span>
+  </span>
+  <span class="cycle-right">
+    <span class="cycle-bar"></span>
+  </span>
+  <div class="cycle-value">90%</div>
+</div>
+
+<style>
+  .cycle {
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    background: none;
+    margin: 20px;
+    position: relative;
+    border-radius: 50%;
+  }
+
+  .cycle:after {
+    display: none;
+    content: "";
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 12px solid #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .cycle>span {
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
+
+  .cycle .cycle-left {
+    left: 0;
+  }
+
+  .cycle .cycle-bar {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border-width: 12px;
+    border-style: solid;
+    position: absolute;
+    top: 0;
+  }
+
+  .cycle .cycle-left .cycle-bar {
+    left: 100%;
+    border-top-right-radius: 80px;
+    border-bottom-right-radius: 80px;
+    border-left: 0;
+    transform-origin: center left;
+  }
+
+  .cycle .cycle-right {
+    right: 0;
+  }
+
+  .cycle .cycle-right .cycle-bar {
+    left: -100%;
+    border-top-left-radius: 80px;
+    border-bottom-left-radius: 80px;
+    border-right: 0;
+    transform-origin: center right;
+    animation: loading-1 1s ease-out forwards ;
+  }
+
+  .cycle .cycle-value {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: #222834;
+    font-size: 24px;
+    color: #fff;
+    line-height: 135px;
+    text-align: center;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+  }
+
+  .cycle.blue .cycle-bar {
+    border-color: #049dff;
+    
+  }
+
+  @keyframes loading-1 {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+  }
+</style>
+
+    `
     templatTwo = `
         <div class="static-profile">
             ${this.winorLose}
@@ -570,7 +631,11 @@ class profilePage extends HTMLElement {
                     flex-direction: column;
                     height :100vh;
                 }
-
+                .winorlose{
+                    width :100%;
+                    height :100vh;
+                border-radius :0px;
+                }
              }
         </style>
     `;
@@ -591,7 +656,13 @@ class profilePage extends HTMLElement {
                 z-index :1000;
             }
             .nav-02{
+                margin-top:30px;
+            }
+            .nav-02 .fa-right-from-bracket{
                 display :none;
+            }
+            nav a{
+                text-decoration: none;
             }
             .fafa{
                 display :none;
@@ -608,18 +679,9 @@ class profilePage extends HTMLElement {
                 border-radius :0px;
                 display :flex;
             }
-    }
-        `
+    }`
     constructor() {
         super();
-    }
-    cycleRander(){
-        // let progress = 87;  // Example progress value
-        const progressText = document.getElementById('progress-text');
-        
-        function updateProgress(percentage) {
-          progressText.textContent = `${percentage}%`;
-        }
     }
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
@@ -644,6 +706,9 @@ class profilePage extends HTMLElement {
             ${this.navar}
             </style>
         `;
+
+        this.querySelector('.cycle-progress').innerHTML = this.cycleProgress;   
+        // cycleProg();
         // this.cycleRander();
         const form = [
             { player: "ahbajaou",  img: "/images/ah.png"},
@@ -673,7 +738,8 @@ class profilePage extends HTMLElement {
                 </div>
                 <div class="time-user">
                     <img src="/images/icon/ping.png" >
-                    <h6>24-10-2030;20:23</h6>
+                    <h6>24-10-2030
+                        20:23</h6>
                 </div>
                 <div class="userInfo" >
                     <div class="score-user" >

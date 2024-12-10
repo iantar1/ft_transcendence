@@ -277,8 +277,15 @@ class homePage extends HTMLElement {
                     bottom :0;
                 }
                 .nav-02{
+                    margin-top:30px;
+                }
+                .nav-02 .fa-right-from-bracket{
                     display :none;
                 }
+            nav a{
+                text-decoration: none;
+                background: none;
+            }
                 .fafa{
                     display :none;
                 }
