@@ -282,6 +282,7 @@ class profilePage extends HTMLElement {
                         }
                         .winorlose{
                             width :100%;
+                            min-height :70%;
                             background: none;
                         }
                         .userInfo{
@@ -318,31 +319,32 @@ class profilePage extends HTMLElement {
 
             </div>
             <div class="cont-progress" >
-                    <div class="maskoff">
-                        <img src="/images/do.png" >
+                    <div class="cart" >
+                        <h4>Total Win</h4>
+                        <p>0</p>
+                        <h4>0%</h4>
                     </div>
-                    <div class="prog">
-                        <div class="progwinlos" >
-                                <div class="prog1 itempr">
-                                    <h5>50% Lose</h5>
-                                    <div class="lose prls" ></div>
-                                </div>
-                                <div class="prog2 itempr">
-                                    <h5>50% Lose</h5>
-                                    <div class="av prls" ></div>
-                                </div>
-                                <div class="prog3 itempr">
-                                    <h5>50% Lose</h5>
-                                    <div class="win prls" ></div>
-                                </div>
-                        </div>
-                        <img src="/images/sub.png" >
-                    </div>
-                    <div class="btn-prg" >
-                            <h3>Game Profit</h3>
+                    <div class="cart" >
+                        <h4>Total Lose</h4>
+                        <p>0</p>
+                        <h4>0%</h4>
                     </div>
             </div>
         </div>
+        <style>
+            .cart{
+                width :80%;
+                height :45%;
+                display :flex;
+                align-items: left;
+                justify-content: space-around;
+                flex-direction: column;
+                background:#222834;
+                border-radius :10px;
+                padding :5px;
+            }
+        
+        </style>
     `;
     gamerankStyle = `
     <style>
@@ -356,15 +358,6 @@ class profilePage extends HTMLElement {
                 background: #293247;
                 border-radius :25px;
             }
-        .cylcle-content{
-            display :flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap :10px;
-            height :100%;
-            width :100%;
-        }
         .cycle-progress{
             display :flex;
             align-items: center;
@@ -375,118 +368,29 @@ class profilePage extends HTMLElement {
         }
         .cont-progress{
             width :55%;
-            height :100%;
-            display :none;
+            height :90%;
+            display :flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            gap :20px;
-        }
-        .prog{
-            width :426px;
-            height :237px;
-            border-radius :25px;
-            backgdround:rgba(26, 34, 50, 1);
-            position :absolute;
-            top :45%;
-        }
-        .maskoff{
-            width :100px;
-            height :100px;
-            border-radius :70px;
-            background:rgba(26, 34, 50, 1);
-            position :relative;
-            left :0;
-            top :-16%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .maskoff img{
-            width :100%;
-            height :100%;
-        }
-        .btn-prg{
-            width :85%;
-            height :15%;
-            border-radius :25px;
-            background :rgba(251, 135, 44, 1);
-            position :relative;
-            top :25%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .progwinlos{
-            width :100%;
-            height :45%;
-            position :relative;
-            left :0;
-            top :200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: row;
-            
-        }
-        .prog2{
-            border-right :1px solid #fff;
-            border-left :1px solid #fff;
-        }
-        .itempr{
-            width :100%;
-            height :100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
             gap :10px;
-            font-size :18px;
-        }
-        .prls{
-            width :75%;
-            height :18%;
-            border-radius:15px;
-        }
-        .lose{
-                background: linear-gradient(
-            to right, 
-            rgba(113, 217, 182, 1), 
-            rgba(98, 182, 193, 1), 
-            rgba(82, 131, 197, 1)
-            );
-            box-shadow: 
-                    3px 3px 15px  rgba(113, 217, 182, 1), 
-                    -3px -3px 15px rgba(82, 131, 197, 1);
-        }
-        .av{
-            background:rgba(251, 135, 44, 1);
-            box-shadow: 
-                    3px 3px 15px  rgba(251, 135, 44, 1), 
-                    -3px -3px 15px rgba(251, 135, 44, 1);
-        }
-        .win{
-                background: linear-gradient(
-            to right, 
-            rgba(251, 135, 44, 1), 
-           rgba(164, 92, 205, 1), 
-            rgba(113, 64, 208, 1)
-            );
-            box-shadow: 
-                    3px 3px 15px  rgba(251, 135, 44, 1), 
-                    -3px -3px 15px rgba(113, 64, 208, 1);
+            
         }
         @media (min-width: 320px) and (max-width: 1024px) {
                 .gameRank{
                     width :100%;
                     border-radius :0px;
-                    height :100vh;
-
+                    min-height :60%;
+                    flex-direction: column
                 }
             .cycle-progress{
                 display :flex;
                 width :100%;
              }
+            .cont-progress{
+                width :100%;
+                height :100%;
+            }
     }
     </style>
     `;
@@ -634,7 +538,7 @@ class profilePage extends HTMLElement {
                 .winorlose{
                     width :100%;
                     height :100vh;
-                border-radius :0px;
+                    border-radius :0px;
                 }
              }
         </style>

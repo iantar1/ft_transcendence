@@ -48,7 +48,6 @@ class settingPage extends HTMLElement {
 
     settingOne = `
         <div class="settingOne" >
-            <h3>Account setting</h3>
             <br>
             <div class="nav-setting" >
             <br>
@@ -79,8 +78,15 @@ class settingPage extends HTMLElement {
     settingOneStyle = `
     <style>
     .nav-bar{
-        display :flex;
+            display :flex;
         }
+    @media (min-width: 992px) and (max-width: 1024px) {
+        .settingOne{
+        width :20%;
+        height :100%;
+        display :flex;
+    }
+    }
     .settingPage{
         width :100%;
         height :100%;
@@ -92,6 +98,7 @@ class settingPage extends HTMLElement {
     .settingOne{
         width :20%;
         height :100%;
+        display :flex;
     }
     .nav-setting{
         width :100%;
@@ -207,6 +214,9 @@ class settingPage extends HTMLElement {
     settingTwo = `
     <div class="settingTwo" >
     <div class="brr" ></div>
+    <div class="humbergr-bar" type="click">
+        <input type="checkbox"  role="button" aria-label="Display the menu" class="menu">
+    </div>
     <div class="infoSetting" >
                 <div class="avatar" >
                     <div class="editAvatar" >
@@ -224,9 +234,7 @@ class settingPage extends HTMLElement {
 
                     </div>
                 </div>
-            <div class="saveInfo" >
-                <button type="button" class="btn btn-light">Save</button>
-            </div>
+
     </div>
         </div>
     `   
@@ -237,7 +245,7 @@ class settingPage extends HTMLElement {
     }
     profEdit(){
         return `
-        <div class="formProf" >
+        <div class="formProf d-flex flex-column" >
             <form>
                 <label for="fname">Username</label><br><br>
                 <input type="text"  class="editUser" name="username"><br><br>
@@ -247,12 +255,15 @@ class settingPage extends HTMLElement {
         Share your knowledge by writing your own blog! 
       </textarea>
             </form>
+            <div class="saveInfo" >
+                <button type="button" class="btn btn-light">Save</button>
+            </div>
         </div>
         `;
     }
     passEdit(){
         return `
-        <div class="formProf" >
+        <div class="formProf d-flex flex-column" >
             <form>
                 <label for="fname">Old Password</label><br><br>
                 <input type="text"  class="editUser" name="username"><br><br>
@@ -261,6 +272,9 @@ class settingPage extends HTMLElement {
                 <label for="fname">New Password</label><br><br>
                 <input type="text"  class="editUser" name="username"><br><br>
             </form>
+            <div class="saveInfo" >
+                <button type="button" class="btn btn-light">Save</button>
+            </div>
         </div>
         
         `;
@@ -338,6 +352,20 @@ class settingPage extends HTMLElement {
         </div>
         `;
     }
+    displayNav(){
+        console.log('inside navigation')
+        const checkbox = document.querySelector('.menu').getAttribute('name');
+            const navnav = document.querySelector(".menu");
+            navnav.addEventListener('change' , (e) =>{
+                if (navnav.checked){
+                    document.querySelector('.menu').setAttribute("name", "noflag")
+                    document.querySelector('.settingOne').style.display = "flex";
+                }
+                else{                    
+                    document.querySelector('.settingOne').style.display = "none";
+                }
+            });
+    }
     render() {
         this.innerHTML = `
             <style>
@@ -352,7 +380,7 @@ class settingPage extends HTMLElement {
                 .saveInfo{
                     width :88%;
                     height :15%;
-                    display: flex;
+                    display: none;
                     justify-content: right;
                     align-items: center;
                     gap :10px;
@@ -413,7 +441,16 @@ class settingPage extends HTMLElement {
                     width :50%;
                     height :100%;
                 }
-
+                .formProf textarea{
+                     width :100%;
+                }
+                .formProf input{
+                     width :100%;
+                     height :12%;               
+                }
+                .humbergr-bar{
+                    display :none;
+                }
             </style>
             <div class="settingPage" >
                 ${this.settingOne}
@@ -423,13 +460,30 @@ class settingPage extends HTMLElement {
                 <style>
                 ${this.navar}
                 @media (min-width: 320px) and (max-width: 1024px){
-                    .settingOne{
-                        display :none;
+                  .settingPage{
+                        gap :0;
+                        border-radius :0px;
+                  }    
+                .settingOne{
+                        Display :none;
+                        width :100%;
+                        height :100%;
+                        z-index :1000;
+                        gap :0;
+                        position :absolute;
+                        left :0;
+                    }
+                    .nav-setting{
+                        border-radius :0px;
+                        background-color: rgb(0 0 0 / 0.5);
+                        color: #293247;
                     }
                     .settingTwo{
                         width :100vw;
-                        height :100vh;
                         background: #293247;
+                    }
+                    .NotKnow{
+                        display :none;
                     }
                     .infoSetting{
                         border-radius :0px;
@@ -444,15 +498,95 @@ class settingPage extends HTMLElement {
                     width :100%;
                     height :60%;              
                 }
-                .editInfo{
+                .editInfo {
                     width :100%;                
                 }
-                .formProf{
-                     width :100%;               
+                .formProf textarea{
+                     width :100%;
                 }
+                .formProf input{
+                     width :100%;
+                     height :12%;               
+                }
+                .imgInfo{
+                    width :60%;
+                }
+                .humbergr-bar{
+                    display :flex;
+                    position :absolute;
+                    top :1%;
+                    right :0;
+                }
+                    .hoverSetting:hover{
+        background:rgba(56, 75, 112, 0.2);
+        border-right :10px solid rgba(56, 75, 112, 1);
+    }
+                .menu {
+                    --s: 20px; /* control the size */
+                    --c: #fafafa; /* the color */
+                    z-index :1001;
+                    height: var(--s);
+                    aspect-ratio: 1;
+                    border: none;
+                    padding: 0;
+                    border-inline: calc(var(--s)/1.2) solid #0000; 
+                    box-sizing: content-box;
+                    --_g1: linear-gradient(var(--c) 20%,#0000 0 80%,var(--c) 0) 
+                            no-repeat content-box border-box;
+                    --_g2: radial-gradient(circle closest-side at 50% 12.5%,var(--c) 95%,#0000) 
+                            repeat-y content-box border-box;
+                    background: 
+                    var(--_g2) left  var(--_p,0px) top,
+                    var(--_g1) left  calc(var(--s)/10 + var(--_p,0px)) top,
+                    var(--_g2) right var(--_p,0px) top,
+                    var(--_g1) right calc(var(--s)/10 + var(--_p,0px)) top;
+                    background-size: 
+                    20% 80%,
+                    40% 100%;
+                    position: relative;
+                    clip-path: inset(0 25%);
+                    -webkit-mask: linear-gradient(90deg,#0000,#000 25% 75%,#0000);
+                    cursor: pointer;
+                    transition: 
+                    background-position .3s var(--_s,.3s), 
+                    clip-path 0s var(--_s,.6s);
+                    -webkit-appearance:none;
+                    -moz-appearance:none;
+                    appearance:none;
+                    }
+                    .menu:before,
+                    .menu:after {
+                    content:"";
+                    position: absolute;
+                    border-radius: var(--s);
+                    inset: 40% 0;
+                    background: var(--c);
+                    transition: transform .3s calc(.3s - var(--_s,.3s));
+                    }
+
+                    .menu:checked {
+                    clip-path: inset(0);
+                    --_p: calc(-1*var(--s));
+                    --_s: 0s;
+                    }
+                    .menu:checked:before {
+                    transform: rotate(45deg);
+                    }
+                    .menu:checked:after {
+                    transform: rotate(-45deg);
+                    }
+                    .menu:focus-visible {
+                    clip-path: none;
+                    -webkit-mask: none;
+                    border: none;
+                    outline: 2px solid var(--c);
+                    outline-offset: 5px;
+                    }
+
             }
                 </style>
             </div>
+            
 
             `;
             const hoverProf = document.querySelector('.profSetting');
@@ -489,6 +623,7 @@ class settingPage extends HTMLElement {
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.authEdit();
             });
+            this.displayNav();
     }
 
     connectedCallback() {

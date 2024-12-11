@@ -55,8 +55,13 @@ class gamePage extends HTMLElement {
                 display :flex;
             }
             ${this.navar}
+            #content{
+                    display :flex;
+                    align-items: center;
+                    justify-content: center;
+            }
             </style>
-            <button type="button" class="btn btn-primary">game</button>
+            <h6>Doesn't Support Mobile Screen!</h6>
         `;
     }
     connectedCallback(){
