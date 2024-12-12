@@ -41,7 +41,7 @@ class homePage extends HTMLElement {
             }
         .cart-home p{
             font-size:180%;
-            width:50%;
+            width:70%;
         }
         .content-home{
             gap :10px;
@@ -102,6 +102,7 @@ class homePage extends HTMLElement {
     styleSlide = `
         .slide-static-Home{
                 height :56vh;
+                flex-basis: 50%;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -109,35 +110,51 @@ class homePage extends HTMLElement {
             }
         .slide-home{
                 height:52vh;
-                width :50%;
-                overflow :hidden;
+                width :100%;
+                flex-basis: 50%;
                 mask-image: linear-gradient(to right, transparent, #000, transparent);
                 display :flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                overflow :hidden;
                 align-items :center;
                 justify-content: center;
-                flex-direction: row;
-                position :relative;
-            }     
+                white-space: nowrap;
+                position: relative;
+            } 
         .slide-cart{
             display :flex;
             align-items :center;
             justify-content: center;
             flex-direction: column;
-            height :280px;
-            width :22%;
+            height :40vh;
+            width :65%;
             border-radius: 18px;
             border :1px solid #FFF4;
             background: #7E7C7C;
             border-bottom: 80px solid #293247;
-            position :absolute;
-            left :100%;
+        }
+        .next{
+            position :relative;
+        }
+        .next-2{
+            right :0%;
+            animation: nwRun 5s linear infinite;
+        }
+        .next-1{
+            left :0%;
             animation: newRun 5s linear infinite;
-            animation-duration :30s;
-            transition: 1s;
+        }
+        @keyframes parent{
+            from {
+                left 100%;
+            }to{
+                left : -100%;
+            }
         }
         @keyframes newRun{
             from {
-                left 100%;
+                left 0%;
             }to{
                 left :-100%;
             }
@@ -191,8 +208,7 @@ class homePage extends HTMLElement {
         .static-home{
             height:90%;
             width:48%;
-            border-radius :25px;
-            border :1px solid #FFF4;
+            border-radius :8px;
             overflow: hidden;
             background: #293247;
 
@@ -228,23 +244,88 @@ class homePage extends HTMLElement {
                     height :100vh;
                 }
         .slide-home{
+                display :flex;
+                align-items :center;
+                justify-content: center;
+                flex-direction: row;
                 height:100vh;
-                width :100%;
-                gap :100%;
-            }
-        .static-home{
-                height:100vh;
-                width:100%;
+                width :100vw;
+                gap :5%;
+                border :1px solid #fff;
             }
         .slide-cart{
-                   
-                }
+            display :flex;
+            align-items :center;
+            justify-content: center;
+        }
+        .static-home{
+                height:50vh;
+                width:100%;
+            }
+
         }   
         `;
     templateHome = `
         <div class="slide-static-Home">
-            <div class="slide-home">
-
+            <div class="slide-home gap-4 ">
+                <div class="next next-1 d-flex flex-row justify-content-center align-items-center gap-4 w-100 h-100" >
+                    <div class="slide-cart ${'ictems' + 1}"  >
+                            <div class="img-slid">
+                                <img  src=${this.getData()}>
+                            </div>
+                            <div class="text-content">
+                                <p class="text-cart" >HELLO</p>
+                                <h5 class="text-cart" >Plat Now</h5>
+                            </div>
+                    </div>
+                    <div class="slide-cart ${'ictems' + 2}"  >
+                            <div class="img-slid">
+                                <img  src=${this.getData()}>
+                            </div>
+                            <div class="text-content">
+                                <p class="text-cart" >HELLO</p>
+                                <h5 class="text-cart" >Plat Now</h5>
+                            </div>
+                    </div>
+                    <div class="slide-cart ${'ictems' + 2}"  >
+                            <div class="img-slid">
+                                <img  src=${this.getData()}>
+                            </div>
+                            <div class="text-content">
+                                <p class="text-cart" >HELLO</p>
+                                <h5 class="text-cart" >Plat Now</h5>
+                            </div>
+                    </div>
+                </div>
+                <div class="next next-2 d-flex flex-row justify-content-center align-items-center gap-4 w-100 h-100" >
+                    <div class="slide-cart ${'ictems' + 1}"  >
+                            <div class="img-slid">
+                                <img  src=${this.getData()}>
+                            </div>
+                            <div class="text-content">
+                                <p class="text-cart" >HELLO TWO</p>
+                                <h5 class="text-cart" >Plat Now</h5>
+                            </div>
+                    </div>
+                    <div class="slide-cart ${'ictems' + 2}"  >
+                            <div class="img-slid">
+                                <img  src=${this.getData()}>
+                            </div>
+                            <div class="text-content">
+                                <p class="text-cart" >HELLO TWO</p>
+                                <h5 class="text-cart" >Plat Now</h5>
+                            </div>
+                    </div>
+                    <div class="slide-cart ${'ictems' + 2}"  >
+                            <div class="img-slid">
+                                <img  src=${this.getData()}>
+                            </div>
+                            <div class="text-content">
+                                <p class="text-cart" >HELLO TWO</p>
+                                <h5 class="text-cart" >Plat Now</h5>
+                            </div>
+                    </div>
+                </div>
             </div>
             <div class="static-home">
             <table class="nav-static">
@@ -267,7 +348,8 @@ class homePage extends HTMLElement {
                     width: 100vw;
                     display: flex;
                     height :8%;
-                    background:#666f80;
+                background-color: rgb(0 0 0 / 0.5);
+                color: #293247;
                     justify-content: space-evenly;
                     align-items: center;
                     flex-direction: row;
@@ -362,7 +444,7 @@ class homePage extends HTMLElement {
             });
         cartHome.innerHTML = cart;
     }
-    async getData(){
+    getData(){
         const data = [
             { name: "Jam Josh", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
             { name: "Justina Kap", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
@@ -373,26 +455,56 @@ class homePage extends HTMLElement {
             { name: "Chris Colt", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
             { name: "Jane Doe", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", }
           ];
-        var i = 0;
-        data.forEach(element => {
-            const cartHome = document.querySelector('.slide-home');
-            i++;
-            cartHome.innerHTML += `
-            <div class="slide-cart ${'items' + i}" >
-                    <div class="img-slid">
-                        <img  src=${element.img}>
-                    </div>
-                    <div class="text-content">
-                        <p class="text-cart" >${element.name}</p>
-                        <h5 class="text-cart" >${element.title}</h5>
-                    </div>
-            </div>
-        `;
-        });
+          return data
+        // var i = 0;
+        // data.forEach(element => {
+            // const test = '';
+        //     const cartHome = document.querySelector('.slide-home');
+        //     // i++;
+        //     cartHome.innerHTML = `
+        //     <div class="slide-cart ${'ictems' + 1}" >
+        //             <div class="img-slid">
+        //                 <img  src=${data[0].img}>
+        //             </div>
+        //             <div class="text-content">
+        //                 <p class="text-cart" >${data[0].name}</p>
+        //                 <h5 class="text-cart" >${data[0].title}</h5>
+        //             </div>
+        //     </div>
+        //     <div class="slide-cart ${'itcems' + 1}" >
+        //             <div class="img-slid">
+        //                 <img  src=${data[0].img}>
+        //             </div>
+        //             <div class="text-content">
+        //                 <p class="text-cart" >${data[0].name}</p>
+        //                 <h5 class="text-cart" >${data[0].title}</h5>
+        //             </div>
+        //     </div>
+        //     <div class="slide-cart ${'itcems' + 1}" >
+        //             <div class="img-slid">
+        //                 <img  src=${data[0].img}>
+        //             </div>
+        //             <div class="text-content">
+        //                 <p class="text-cart" >${data[0].name}</p>
+        //                 <h5 class="text-cart" >${data[0].title}</h5>
+        //             </div>
+        //     </div>
+        //     <div class="slide-cart ${'itcems' + 1}" >
+        //             <div class="img-slid">
+        //                 <img  src=${data[0].img}>
+        //             </div>
+        //             <div class="text-content">
+        //                 <p class="text-cart" >${data[0].name}</p>
+        //                 <h5 class="text-cart" >${data[0].title}</h5>
+        //             </div>
+        //     </div>
+        // `;
+     
+        // });
     }
     connectedCallback(){
         this.rander();
-        this.getData();
+        // this.getData();
         this.staticHome();
     }
 }

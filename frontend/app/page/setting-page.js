@@ -7,7 +7,8 @@ class settingPage extends HTMLElement {
                 width: 100%;
                 display: flex;
                 height :8%;
-                background:#666f80;
+                background-color: rgb(0 0 0 / 0.5);
+                color: #293247;
                 justify-content: space-evenly;
                 align-items: center;
                 flex-direction: row;
@@ -255,10 +256,14 @@ class settingPage extends HTMLElement {
         Share your knowledge by writing your own blog! 
       </textarea>
             </form>
+            </div>
+            <br>
             <div class="saveInfo" >
                 <button type="button" class="btn btn-light">Save</button>
             </div>
-        </div>
+            <br>
+            <br>
+            <br>
         `;
     }
     passEdit(){
@@ -272,10 +277,10 @@ class settingPage extends HTMLElement {
                 <label for="fname">New Password</label><br><br>
                 <input type="text"  class="editUser" name="username"><br><br>
             </form>
+            </div>
             <div class="saveInfo" >
                 <button type="button" class="btn btn-light">Save</button>
             </div>
-        </div>
         
         `;
     }
@@ -349,7 +354,10 @@ class settingPage extends HTMLElement {
                 <input type="checkbox">
                 <span class="slider round"></span>
             </label>
-        </div>
+            </div>
+            <div class="saveInfo" >
+                <button type="button" class="btn btn-light">Save</button>
+            </div>
         `;
     }
     displayNav(){
@@ -378,12 +386,13 @@ class settingPage extends HTMLElement {
                     height :55%;
                 }
                 .saveInfo{
-                    width :88%;
+                    width :95%;
                     height :15%;
-                    display: none;
+                    display: flex;
                     justify-content: right;
                     align-items: center;
-                    gap :10px;
+                    margin-top :8px;
+                    gap :0px;
                 }
                 .savebtn{
                     width :18%;
@@ -407,7 +416,10 @@ class settingPage extends HTMLElement {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    gap :20px;
+                    gap :5px;
+                }
+                .btnInfo button{
+                    font-size :14px;
                 }
                 .imgInfo img{
                     width :80%;
@@ -510,6 +522,10 @@ class settingPage extends HTMLElement {
                 }
                 .imgInfo{
                     width :60%;
+                }
+                .saveInfo{
+                    margin-top :0px;
+
                 }
                 .humbergr-bar{
                     display :flex;

@@ -549,7 +549,8 @@ class profilePage extends HTMLElement {
                 width: 100%;
                 display: flex;
                 height :8%;
-                background:#666f80;
+                background-color: rgb(0 0 0 / 0.5);
+                color: #293247;
                 justify-content: space-evenly;
                 align-items: center;
                 flex-direction: row;
