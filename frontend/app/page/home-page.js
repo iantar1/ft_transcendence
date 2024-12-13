@@ -7,6 +7,8 @@ import {fetchUserData} from './readData.js';
 import {fetchUserMatchHistory} from './readData.js';
 
 
+
+// console.log(${img_1});
 // readData.getData();
 // const attt = [1 , 3 , 3 , 7 ];
 // console.log(attt)
@@ -71,14 +73,19 @@ class homePage extends HTMLElement {
             font-size :100%;
         }
         .cart-home h1{
-            color : rgba(228, 5, 47, 1);
+            font-family: "Pong War", "Freeware";;
             font-size:5vw;
-            text-shadow :2px 2px 2px #000;
+            letter-spacing: 2px;
+            color: var(--red);
+            font-shadow: 2px 2px 5px rgba(255, 255, 255, 1);
+            z-index :2000;
+
         }
         .btn-home{
             width :200px;
             height:50px;
             background-color: rgba(228, 5, 47, 1);
+
             border-radius:12px;
             border :none;
             font-size:100%;
@@ -172,9 +179,9 @@ class homePage extends HTMLElement {
             height: 300px;
             margin: 0 15px;
             background:  linear-gradient(0deg, 
-  rgb(4, 28,68, 1) 100%, 
-  rgba(56, 75, 112, 0.2) 100%
-);
+            rgb(4, 28,68, 1) 100%, 
+            rgba(56, 75, 112, 0.2) 100%
+             );
             color: white;
             font-size: 24px;
             border-radius: 5px;
@@ -201,7 +208,7 @@ class homePage extends HTMLElement {
             width:48%;
             border-radius :8px;
             overflow: hidden;
-            background:rgba(56, 75, 112, 0.2);
+            background:var(--blue);
         }
         .Player-img{
             height :44px;
@@ -264,29 +271,41 @@ class homePage extends HTMLElement {
             <div class="scroll-track">
                 <div class="scroll-item">
                     <button class="btn-home btn btn-secondary " >let's play</button>
-                    <div class="track-items" ></div>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/champion.png">
+                    </div>
                 </div>
                 <div class="scroll-item">
                     <button class="btn-home btn btn-secondary " >let's play</button>
-                    <div class="track-items" ></div>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/game-controller.png">
+                    </div>
                 </div>
                 <div class="scroll-item">
                     <button class="btn-home btn btn-secondary " >let's play</button>
-                    <div class="track-items" ></div>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/onevsone.png">
+                    </div>
                 </div>
             </div>
             <div class="scroll-track">
                 <div class="scroll-item">
                     <button class="btn-home btn btn-secondary " >let's play</button>
-                    <div class="track-items" ></div>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/champion.png">
+                    </div>
                 </div>
                 <div class="scroll-item">
                     <button class="btn-home btn btn-secondary " >let's play</button>
-                    <div class="track-items" ></div>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/game-controller.png">
+                    </div>
                 </div>
                 <div class="scroll-item">
                     <button class="btn-home btn btn-secondary " >let's play</button>
-                    <div class="track-items" ></div>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/onevsone.png">
+                    </div>
                 </div>
             </div>
         </div>

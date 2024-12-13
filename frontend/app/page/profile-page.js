@@ -11,7 +11,7 @@ class profilePage extends HTMLElement {
                     <div class="info-profile">
                         <img id="img_intra" src="../images/profile.png" >
                         <h3 id='username' >CHEBCHOUB</h3>
-                        <button type="button" class="btn btn-secondary">Edit</button>
+                            <button class="btn-home btn btn-secondary " >Edit</button>
                     </div>
                     <div class="lvl-profile">
                         <div class="bio-profile">
@@ -52,7 +52,7 @@ class profilePage extends HTMLElement {
             }
             .cart-profile{
                 height :39vh;
-                background: #293247;
+            background:var(--bluenes);
                 border-radius:25px;
                 padding :15px;
                 display :flex;
@@ -111,13 +111,16 @@ class profilePage extends HTMLElement {
                 height :50%;
                 border-radius:50%;
             }
-            .btn-profile{
-                width :52%;
-                height :12%;
-                background-color: rgba(56, 75, 112, 1);
-                border :none;
-                border-radius:15px;
-            }
+        .btn-home{
+            width :200px;
+            height:50px;
+            background-color: rgba(228, 5, 47, 1);
+
+            border-radius:12px;
+            border :none;
+            font-size:100%;
+            z-index :2000;
+        }
             .img-profile{
                 height :100%;
                 flex-basis: 40%;
@@ -526,7 +529,7 @@ class profilePage extends HTMLElement {
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
-                background: #293247;
+                background:var(--bluenes);
                 border-radius :25px;
                 gap :30px;
             }
