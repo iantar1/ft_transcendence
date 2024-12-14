@@ -109,7 +109,7 @@ animation: zoom 16s alternate infinite;
 
 
 #content{
-  flex-basis: 93%;
+  flex-basis: 90%;
   height: 95vh;
   border-radius: 25px;
 }

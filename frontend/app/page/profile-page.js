@@ -9,8 +9,8 @@ class profilePage extends HTMLElement {
         <div class="content-profile .container">
                 <div class="cart-profile ">
                     <div class="info-profile">
-                        <img id="img_intra" src="../images/profile.png" >
-                        <h3 id='username' >CHEBCHOUB</h3>
+                        <img id="img_intra" src="" >
+                        <h3 id='username' ></h3>
                             <button class="btn-home btn btn-secondary " >Edit</button>
                     </div>
                     <div class="lvl-profile">
@@ -20,9 +20,8 @@ class profilePage extends HTMLElement {
                             <br>
                         </div>
                         <div class="lvl">
-                            <h5 class="opa" > Lvl 13 <span class="lvl-prof">7 more game hours for level</span></h5>              
                             <div class="progress">
-                                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width:10%; box-shadow:-1px 10px 10px rgba(91, 192, 222, 0.7);"></div>
+                                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width:10%; box-shadow:none;"></div>
                                 <div class="progress-value">10%</div>
                             </div>
                         </div>
@@ -51,10 +50,15 @@ class profilePage extends HTMLElement {
                 gap:5px;
             }
             .cart-profile{
-                height :39vh;
-            background:var(--bluenes);
-                border-radius:25px;
-                padding :15px;
+            height :39vh;
+            background: linear-gradient(-80deg, 
+            rgb(4, 28,68, 1) 5%, 
+            rgba(56, 75, 112, 0.2) 100%
+            );
+            border-radius:5px;
+            overflow :hidden;
+            padding :5px;
+            z-index :2000;
                 display :flex;
                 justify-content: center;
                 align-items: center;
@@ -75,13 +79,6 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 flex-direction: column;
                 gap :0px;
-            }
-            .level{
-                width :70%;
-                height :16px;
-                background-color: rgba(255, 255, 255, 0.384);
-                border-left :180px solid rgba(56, 75, 112, 1);
-                border-radius :15px;
             }
             .lvl-profile .lvl-prof{
                   opacity:0.4;
@@ -107,8 +104,9 @@ class profilePage extends HTMLElement {
                 background-color: rgba(255, 255, 255, 0.384);
             }
             .info-profile img{
-                width :52%;
-                height :50%;
+                max-width: 130px;
+                height: 130px;
+                object-fit: cover;
                 border-radius:50%;
             }
         .btn-home{
@@ -127,9 +125,9 @@ class profilePage extends HTMLElement {
             }
             .img-profile img{
                 width :40vw;
-                height :42.5%;
+                height :41vh;
                 position :absolute;
-                top :-1%;
+                top :0%;
                 left :59%;
             }
             .achevmet-piece{
@@ -138,15 +136,18 @@ class profilePage extends HTMLElement {
                 gap :5px;
             }
             .progress{
-                height: 27px;
+                height: 15px;
+                width :320px;
+                 background:rgb(0 0 0 / 0.5);
                 margin: 0;
                 overflow: visible;
-                border-radius: 50px;
-                background: #eaedf3;
-                box-shadow: inset 0 10px  10px rgba(244, 245, 250,0.9);
+                border-radius: 10px;
             }
             .progress .progress-bar{
-                border-radius: 50px;
+                border-radius: 10px;
+                 background:var(--red);
+                 box-shadow :none;
+                 
             }
             .progress .progress-value{
                 position: relative;
@@ -175,6 +176,10 @@ class profilePage extends HTMLElement {
                         height :80vh;
                         width :100vw;
                         border-radius:0px;
+                    }
+                    .lvl-profile{
+                        height :30%;
+                        border :1px solid red; 
                     }
                     .achev{
                         display :flex;
@@ -596,7 +601,7 @@ class profilePage extends HTMLElement {
         const uuss = async () => {
             this.info = await fetchUserData();
             console.log(this.info.image);
-            document.getElementById('username').textContent = "CHEBCHOUB"
+            document.getElementById('username').textContent = this.info.username
             // document.getElementById('username').textContent = this.info.username
             document.getElementById('img_intra').src = this.info.image
             console.log(this.info.image);

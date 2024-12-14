@@ -42,12 +42,12 @@ class homePage extends HTMLElement {
                 display :flex;
             }
         .cart-home p{
-            font-size:180%;
+            font-size:100%;
+            font-family: "Pong War", "Freeware";
             width:70%;
         }
         .content-home{
             gap :10px;
-            
         }
         .cart-home{
             height :39vh;
@@ -57,8 +57,9 @@ class homePage extends HTMLElement {
             );
             border-radius:5px;
             overflow :hidden;
-            padding :15px;
+            padding :5px;
             z-index :2000;
+            padding-left:15px;
         }
         .img-home{
             position :absolute;
@@ -73,13 +74,13 @@ class homePage extends HTMLElement {
             font-size :100%;
         }
         .cart-home h1{
-            font-family: "Pong War", "Freeware";;
+            font-family: "Pong War", "Freeware";
             font-size:5vw;
             letter-spacing: 2px;
             color: var(--red);
             font-shadow: 2px 2px 5px rgba(255, 255, 255, 1);
             z-index :2000;
-
+            height :25%;
         }
         .btn-home{
             width :200px;
@@ -102,8 +103,11 @@ class homePage extends HTMLElement {
                         border-radius:5px;
                 }
                 .cart-home p{
-                    font-size:100%;
+                    font-size:80%;
                     width:100%;
+                }
+                .cart-home h1{
+                    font-size:7vw;
                 }
                 .slide-cart{
                         width :100%;
