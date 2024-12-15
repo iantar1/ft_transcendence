@@ -126,9 +126,8 @@ class loginPage extends HTMLElement {
     `;
     template = `
     <div class="carte-content">
-            <div class="login-img ">
-                <img class="d-none d-md-block" src="/images/login.png">
-                <div class="loginComment position-sm-relative  top-10 w-100 d-sm-block" ">
+            <div class="login-img">
+                <div class="loginComment">
                     
                 </div>
             </div>
@@ -358,7 +357,7 @@ class loginPage extends HTMLElement {
         }
         .login-img{
             height :100%;
-            width :50%;
+            width :100%;
             display :flex;
             align-items :center;
             justify-content: center;
@@ -372,15 +371,19 @@ class loginPage extends HTMLElement {
             flex-basis: 50%;
             height :100%;
         }
+        .loginComment h1{
+                font-family: "Pong War", "Freeware";
+                font-size :80px;
+                width :100%;
+                transition: all 1s ease-out;
+        }
         .loginComment{
-            width :40%;
-            font-size :50px;
-            position :absolute;
+            positon :relative;
+            width :80%;
             left :50%;
-            top :50%;
+            top :10%;
             text-align :center;
             text-shadow: 4px 4px 2px black;
-            positon :relative;
         }
         .redirapi_inta , .redirapi_google{
           background:transparent;
