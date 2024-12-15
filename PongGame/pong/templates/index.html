@@ -1,0 +1,118 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block style_src %}{% static 'pong/css/style.css' %}{% endblock %}
+
+{% block title %}PongGame{% endblock %}
+
+{% block content %}
+    <!-- Three.js -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+
+    <!-- FontLoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/FontLoader.js"></script>
+    
+    
+    <!-- TextGeometry -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/geometries/TextGeometry.js"></script>
+    
+    <!-- OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- GLTFLoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <!-- Load fflate library -->
+    <script src="https://cdn.jsdelivr.net/npm/fflate@0.7.4/umd/index.min.js"></script>
+    
+    <!-- FBXLoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script> -->
+    
+    <!-- Postprocessing dependencies -->
+    {% comment %} <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+
+    <!-- Shaders -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+     {% endcomment %}
+    <!-- RGBELoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+    
+    <!-- Stats (FPS counter) -->
+    <script src="https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js"></script>
+    
+    <!-- lil-gui -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+    
+    
+    <div class="canvas_container" id="CC">
+        <div id="game-title">Pong Wars</div>
+        <canvas id="spaceship"></canvas>
+        <canvas id="pongCanvas" style="display: none;"></canvas>
+        <game-start></game-start>
+    </div>
+
+    {% comment %} create game over section {% endcomment %}
+    <div id="gameOver" style="display: none;">
+        <h1>Game Over</h1>
+        <p id="winner"></p>
+        <p id="score"></p>
+        <button action="/" id="playAgain">Play Again</button>
+    </div>
+
+    {% comment %} Waiting for opponent section {% endcomment %}
+    <div id="waiting" style="display: none;">
+        <div class="left_user">
+            <div class="user_info">
+                <p>username</p>
+                <div class="user_image"></div>
+            </div>
+        </div>
+        <div class="midel_info">
+            <p>Waiting for opponent...</p>
+            <div class="loader"></div>
+        </div>
+        <div class="right_user">
+            <div class="user_info">
+                <p>username</p>
+                <div class="user_image"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="countdown" style="display: none;">
+    </div>
+    
+    <!-- Tournament -->
+    <div id="registration" style="display: none;">
+        <h2>Tournament Registration</h2>
+        <form id="registrationForm">
+            <input type="text" name="alias" placeholder="Enter your alias" required />
+            <button type="submit">Register</button>
+        </form>
+        <p id="playerList"></p>
+    </div>
+    <div id="tournament" style="display: none;">
+        <h2>Tournament Matches</h2>
+        <div id="current-match"></div>
+        <h3>Upcoming Matches</h3>
+        <ul id="match-schedule"></ul>
+    </div>
+
+
+    <script src="{% static 'pong/js/loby.js' %}"></script>
+    <script src="{% static 'pong/js/spaceShip.js' %}"></script>
+    <script src="{% static 'pong/js/aimode.js' %}"></script>
+    <script src="{% static 'pong/js/online.js' %}"></script>
+    <script src="{% static 'pong/js/local_1vs1.js' %}"></script>
+    <script src="{% static 'pong/js/online1vs1.js' %}"></script>
+
+    <footer>
+        PongWars game by arahmoun, 2024 c. &#169;
+    </footer>
+{% endblock %}
