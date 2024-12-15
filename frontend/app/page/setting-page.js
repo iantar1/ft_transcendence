@@ -95,6 +95,7 @@ class settingPage extends HTMLElement {
         align-items: center;
         justify-content: center;
         gap :30px;
+        z-index :2000;
     }
     .settingOne{
         width :20%;
@@ -104,13 +105,14 @@ class settingPage extends HTMLElement {
     .nav-setting{
         width :100%;
         height :50%;
-        background: #293247;
-        border-radius :25px;
+        background: var(--bluenes);
+        border-radius :5px;
         display :flex;
         align-items: center;
         justify-content: start;
         flex-direction: column;
         gap :10px;
+        z-index :2000;
     }
     .hoverSetting{
         width :100%;
@@ -141,14 +143,23 @@ class settingPage extends HTMLElement {
     .infoSetting{
         width :100%;
         height :96%;
-        background: #293247;
-        border-radius :25px;
+        background: var(--bluenes);
+        border-radius :5px;
         
     }
     .settingTwo{
         width :80%;
         height :100%;
     }
+    .btn-home{
+            width :200px;
+            height:50px;
+            background-color: rgba(228, 5, 47, 1);
+            border-radius:5px;
+            border :none;
+            font-size:100%;
+            z-index :2000;
+        }
     </style>
     `;
     settintransStyle = `
@@ -165,9 +176,13 @@ class settingPage extends HTMLElement {
                 height :90%;
             }
             .formProf input {
-                background: rgba(34, 40, 52, 1) ;
+                background-color: rgb(0 0 0 / 0.5);
                 border :none;
                 border-radius :15px;
+            }
+            .formProf textarea{
+                background-color: rgb(0 0 0 / 0.5);
+        
             }
             .formProf label{
                 font-size :18px;
@@ -214,7 +229,6 @@ class settingPage extends HTMLElement {
     // </div>
     settingTwo = `
     <div class="settingTwo" >
-    <div class="brr" ></div>
     <div class="humbergr-bar" type="click">
         <input type="checkbox"  role="button" aria-label="Display the menu" class="menu">
     </div>
@@ -225,8 +239,8 @@ class settingPage extends HTMLElement {
                             <img src="../images/profile.png" >
                         </div>
                         <div class="btnInfo" >
-                            <button type="button" class="btn btn-secondary">Upload New</button>
-                            <button type="button" class="btn btn-light">Delete Avatar</button>
+                            <button class="btn-home btn btn-secondary " >Upload New</button>
+                            <button class="btn-home btn btn-secondary " >Delete Avatar</button>
                         </div>
                     </div>
                 </div>
@@ -259,7 +273,7 @@ class settingPage extends HTMLElement {
             </div>
             <br>
             <div class="saveInfo" >
-                <button type="button" class="btn btn-light">Save</button>
+                    <button class="btn-home btn btn-secondary " >Save</button>
             </div>
             <br>
             <br>
@@ -279,7 +293,8 @@ class settingPage extends HTMLElement {
             </form>
             </div>
             <div class="saveInfo" >
-                <button type="button" class="btn btn-light">Save</button>
+                    <button class="btn-home btn btn-secondary " >Save</button>
+
             </div>
         
         `;
@@ -356,7 +371,7 @@ class settingPage extends HTMLElement {
             </label>
             </div>
             <div class="saveInfo" >
-                <button type="button" class="btn btn-light">Save</button>
+                <button class="btn-home btn btn-secondary " >Save</button>
             </div>
         `;
     }
@@ -393,6 +408,7 @@ class settingPage extends HTMLElement {
                     align-items: center;
                     margin-top :8px;
                     gap :0px;
+                    z-index :-1;
                 }
                 .savebtn{
                     width :18%;
@@ -419,7 +435,8 @@ class settingPage extends HTMLElement {
                     gap :5px;
                 }
                 .btnInfo button{
-                    font-size :14px;
+                    font-size :18px;
+                    width :58%;
                 }
                 .imgInfo img{
                     width :80%;
@@ -458,7 +475,8 @@ class settingPage extends HTMLElement {
                 }
                 .formProf input{
                      width :100%;
-                     height :12%;               
+                     height :12%;
+                        background:rgb(0 0 0 / 0.5);               
                 }
                 .humbergr-bar{
                     display :none;
@@ -487,28 +505,29 @@ class settingPage extends HTMLElement {
                     }
                     .nav-setting{
                         border-radius :0px;
-                        background-color: rgb(0 0 0 / 0.5);
+                        background-color: #000;
                         color: #293247;
+                        z-index :3000;
                     }
                     .settingTwo{
                         width :100vw;
-                        background: #293247;
                     }
                     .NotKnow{
                         display :none;
                     }
                     .infoSetting{
                         border-radius :0px;
-                        height :100vh;
-                        
-                }
+                        height :100vh;    
+                    }
                 .editAvatar{
                     width :100%;
                     height :80%;
                 }
                 .btnInfo{
                     width :100%;
-                    height :60%;              
+                    height :60%;
+                    flex-direction: column;
+                    z-index :0;
                 }
                 .editInfo {
                     width :100%;                

@@ -45,6 +45,7 @@ class profilePage extends HTMLElement {
         <style>
             .nav-bar{
                 display :flex;
+
                 }
             .content-profile{
                 gap:5px;
@@ -177,10 +178,7 @@ class profilePage extends HTMLElement {
                         width :100vw;
                         border-radius:0px;
                     }
-                    .lvl-profile{
-                        height :30%;
-                        border :1px solid red; 
-                    }
+
                     .achev{
                         display :flex;
                         flex-direction: column;
@@ -190,7 +188,6 @@ class profilePage extends HTMLElement {
     `;
     winorLose = `
     <div class="winorlose">
-            <br>
             <h3>Match History</h3>
     </div>
     `;
@@ -204,8 +201,6 @@ class profilePage extends HTMLElement {
                 align-items :center;
                 flex-direction: row;
                 gap :5%;
-     
-
             }
             .userInfo{
                 height :100%;
@@ -215,6 +210,9 @@ class profilePage extends HTMLElement {
                 align-items :center;
                 flex-direction: row;
                 gap :5%;
+            }
+            .userPart{
+               min-height :50vh;
             }
             .name-user{
                 width :100px;
@@ -289,9 +287,10 @@ class profilePage extends HTMLElement {
                             display :none;
                         }
                         .winorlose{
-                            width :100%;
-                            min-height :70%;
+                            width :100vw;
+                            min-height :50vh;
                             background: none;
+                            overflow: hidden;
                         }
                         .userInfo{
                             flex-basis: 10%;
@@ -307,6 +306,7 @@ class profilePage extends HTMLElement {
                     .time-user{
                         width :30%;
                     }
+                
                 .noonehere{
                     display :flex;
                 }
@@ -347,9 +347,9 @@ class profilePage extends HTMLElement {
                 align-items: left;
                 justify-content: space-around;
                 flex-direction: column;
-                background:#222834;
+                 background:rgb(0 0 0 / 0.5);
                 border-radius :10px;
-                padding :5px;
+                padding :10px;
             }
         
         </style>
@@ -358,13 +358,14 @@ class profilePage extends HTMLElement {
     <style>
         .gameRank{
                 width :50%;
-                height :52vh;
+                height :50vh;
                 display :flex;
                 align-items: center;
                 justify-content: center;
                 flex-direction: row;
-                background: #293247;
+                background: var(--bluenes);
                 border-radius :25px;
+                z-index :2000;
             }
         .cycle-progress{
             display :flex;
@@ -387,13 +388,14 @@ class profilePage extends HTMLElement {
         @media (min-width: 320px) and (max-width: 1024px) {
                 .gameRank{
                     width :100%;
+                    height :100vh;
                     border-radius :0px;
-                    min-height :60%;
                     flex-direction: column
                 }
             .cycle-progress{
                 display :flex;
                 width :100%;
+                height :40%;
              }
             .cont-progress{
                 width :100%;
@@ -403,15 +405,15 @@ class profilePage extends HTMLElement {
     </style>
     `;
     cycleProgress = `
-<div class="cycle blue">
-  <span class="cycle-left">
-    <span class="cycle-bar "></span>
-  </span>
-  <span class="cycle-right">
-    <span class="cycle-bar"></span>
-  </span>
-  <div class="cycle-value">90%</div>
-</div>
+    <div class="cycle blue">
+    <span class="cycle-left">
+        <span class="cycle-bar "></span>
+    </span>
+    <span class="cycle-right">
+        <span class="cycle-bar"></span>
+    </span>
+    <div class="cycle-value">90%</div>
+    </div>
 
 <style>
   .cycle {
@@ -484,7 +486,7 @@ class profilePage extends HTMLElement {
     width: 90%;
     height: 90%;
     border-radius: 50%;
-    background: #222834;
+    background:rgb(0 0 0 / 0.5);
     font-size: 24px;
     color: #fff;
     line-height: 135px;
@@ -495,8 +497,7 @@ class profilePage extends HTMLElement {
   }
 
   .cycle.blue .cycle-bar {
-    border-color: #049dff;
-    
+    border-color: var(--red);
   }
 
   @keyframes loading-1 {
@@ -538,13 +539,15 @@ class profilePage extends HTMLElement {
                 border-radius :25px;
                 gap :30px;
             }
+                
              @media (min-width: 320px) and (max-width: 1024px) {
                 .static-profile{
                     flex-direction: column;
                     height :100vh;
+                    border-radius :0px;
                 }
                 .winorlose{
-                    width :100%;
+                    width :100vw;
                     height :100vh;
                     border-radius :0px;
                 }
@@ -566,7 +569,7 @@ class profilePage extends HTMLElement {
                 position: fixed;
                 padding-bottom: 5%;
                 bottom :0;
-                z-index :1000;
+                z-index :2001;
             }
             .nav-02{
                 margin-top:30px;

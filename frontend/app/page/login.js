@@ -149,13 +149,12 @@ class loginPage extends HTMLElement {
             width :100%;
             height :100%;
             border-radius :25px;
-
         }
         #login-register{
             width :300px;
             height :40px;
-            background: #7E7C7C;
-            border-radius :25px;
+            background: var(--dark);
+            border-radius :5px;
             display :flex;
             align-items :center;
             justify-content: space-around;
@@ -172,8 +171,8 @@ class loginPage extends HTMLElement {
             top :0;
             width :50%;
             height :100%;
-            background-color: #384B70;
-            border-radius :25px;
+            background-color: var(--red);
+            border-radius :5px;
         }
         .login-content{
             width :100%;
@@ -346,8 +345,8 @@ class loginPage extends HTMLElement {
         .login-cart{
             width :450px;
             height:73%;
-            border-radius :25px;
-           background:    rgba(0, 0, 0, 0.1);
+            border-radius :5px;
+            background: var(--bluenes);
             display:flex;
             justify-content: center;
             align-items: center;
