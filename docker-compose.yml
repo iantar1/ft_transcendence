@@ -11,7 +11,16 @@ services:
       - ./backend:/backend
     # networks:
     #   - ft_transcendence
-  
+
+  ponggame:
+    container_name: ponggame
+    image: ponggame
+    build: ./PongGame
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./PongGame:/app
+
   frontend:
     container_name: frontend
     image: frontend
