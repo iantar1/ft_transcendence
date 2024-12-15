@@ -43,8 +43,7 @@ class loginPage extends HTMLElement {
                         <label>Password</label>
                     </div>
                     <span class="otp-error" ></span>
-                    <br>
-                    <br>
+       
                     <button id="register" class="form-btn"  type="click" data-link >Register</button>
                 </form>
             `;
@@ -63,8 +62,7 @@ class loginPage extends HTMLElement {
                     <label>Password</label>
                 </div>
                 <span class="otp-error" ></span>
-                <br>
-                <br>
+
                     <input id="formLogin2" class="form-btn" type="submit" value="Log in"  />
                 </form>
                 `;
@@ -147,11 +145,11 @@ class loginPage extends HTMLElement {
             z-index :1;
             width :100%;
             height :100%;
-            border-radius :25px;
+            border-radius :5px;
         }
         #login-register{
             width :300px;
-            height :40px;
+            height :60px;
             background: var(--dark);
             border-radius :5px;
             display :flex;
@@ -183,7 +181,7 @@ class loginPage extends HTMLElement {
         }
         .form-login-siwtch{
             width :100%;
-            height :73%;
+            height :600px;
             display :flex;
             align-items :center;
             justify-content: center;
@@ -207,9 +205,8 @@ class loginPage extends HTMLElement {
             width :100%;
         }
         .form-btn{
-            border-radius: 8px;
-            box-shadow: 0 2px 5px 0 #000;
-            background: #384B70;
+            border-radius: 5px;
+            background: var(--red);
             font-size: 18px;
             height: 41px;
             padding: 0 11px;
@@ -342,14 +339,16 @@ class loginPage extends HTMLElement {
             display :none;
         }
         .login-cart{
+            padding-top :5px;
             width :450px;
-            height:73%;
+            height:90vh;
             border-radius :5px;
             background: var(--bluenes);
             display:flex;
             justify-content: center;
             align-items: center;
             flex-direction:column;
+
         }        
         .login-img img{
             width :100%;
@@ -373,13 +372,13 @@ class loginPage extends HTMLElement {
         }
         .loginComment h1{
                 font-family: "Pong War", "Freeware";
-                font-size :80px;
+                font-size :5vw;
                 width :100%;
                 transition: all 1s ease-out;
         }
         .loginComment{
             positon :relative;
-            width :80%;
+            width :100%;
             left :50%;
             top :10%;
             text-align :center;
@@ -392,6 +391,11 @@ class loginPage extends HTMLElement {
         .redirapi_inta:hover , .redirapi_google:hover{
             scale :1.1;
         }
+         @media (min-width: 320px) and (max-width: 1024px) {
+            .loginComment, .login-img{
+                display :none;
+            }
+         }
     `;
     constructor() {
         super();

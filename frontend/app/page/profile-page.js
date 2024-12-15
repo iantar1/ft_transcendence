@@ -186,9 +186,77 @@ class profilePage extends HTMLElement {
             }
         </style>
     `;
+    // const form = [
+    //     { player: "ahbajaou",  img: "/images/ah.png"},
+    //     { player: "arahmoun", img: "/images/ara.png"},
+    //     { player: "iantar", img: "/images/iantar.jpeg"}
+    //   ];
     winorLose = `
     <div class="winorlose">
-            <h3>Match History</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Player 1</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Player 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                        Mark
+                    </td>
+                    <td>10</td>
+                    <td>Win</td>
+                    <td>2024-03-15</td>
+                    <td>14:30</td>
+                    <td>Lose</td>
+                    <td>5</td>
+                    <td>
+                    <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                    Otto
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                        Jacob
+                    </td>
+                    <td>7</td>
+                    <td>Lose</td>
+                    <td>2024-03-16</td>
+                    <td>16:45</td>
+                    <td>Win</td>
+                    <td>12</td>
+                    <td>
+                    <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                    Thornton
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                        Larry
+                    </td>
+                    <td>15</td>
+                    <td>Win</td>
+                    <td>2024-03-17</td>
+                    <td>11:15</td>
+                    <td>Lose</td>
+                    <td>3</td>
+                    <td>
+                    <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                    Bird
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     `;
     winorLoseStyle = `
@@ -291,6 +359,7 @@ class profilePage extends HTMLElement {
                             min-height :50vh;
                             background: none;
                             overflow: hidden;
+
                         }
                         .userInfo{
                             flex-basis: 10%;
@@ -364,7 +433,7 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 flex-direction: row;
                 background: var(--bluenes);
-                border-radius :25px;
+                border-radius :5px;
                 z-index :2000;
             }
         .cycle-progress{
@@ -530,13 +599,13 @@ class profilePage extends HTMLElement {
             }
             .winorlose{
                 width :50%;
-                height :52vh;
+                height :50vh;
                 display :flex;
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
                 background:var(--bluenes);
-                border-radius :25px;
+                border-radius :5px;
                 gap :30px;
             }
                 
@@ -631,7 +700,7 @@ class profilePage extends HTMLElement {
             { player: "arahmoun", img: "/images/ara.png"},
             { player: "iantar", img: "/images/iantar.jpeg"}
           ];
-        const losrWin = document.querySelector('.winorlose');
+        const losrWin = document.querySelector('.winorlos');
         form.forEach(element => {
             losrWin.innerHTML += `
             <div class="userleft" >

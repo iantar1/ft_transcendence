@@ -9,7 +9,7 @@ class getstartedPage extends HTMLElement {
             }
     .page-1{
         width: 100vw;
-        height :1820px;
+        height :100vh;
         display: flex;
         justify-content: start;
         align-items: center;
@@ -30,8 +30,6 @@ class getstartedPage extends HTMLElement {
         flex-direction: column;
         background:var( --bluenes);
         font-family: "Pong War", "Freeware";
-
-
     }
      .titlehome2{
         font-family: "Pong War", "Freeware";
@@ -61,7 +59,7 @@ class getstartedPage extends HTMLElement {
         <style>
             .page-2{
                 width :100%;
-                height :50vh;
+                height :70vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
