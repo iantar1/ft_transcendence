@@ -1,4 +1,6 @@
 
+
+
 export function rander(path) {
     // navigateTo(path);
     history.pushState(null,null,path);

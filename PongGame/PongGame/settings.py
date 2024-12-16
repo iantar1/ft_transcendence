@@ -29,6 +29,7 @@ ALLOWED_HOSTS = ["*"]
 
 LOGIN_URL = '/login/'
 
+X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:5050/'
 
 # Application definition
 

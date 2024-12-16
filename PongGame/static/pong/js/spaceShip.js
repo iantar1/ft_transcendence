@@ -7,8 +7,8 @@ window.spaceShip = function () {
 
     const scene = new THREE.Scene();
 
-    let width = window.innerWidth * 0.8;
-    let height = window.innerHeight * 0.8;
+    let width = canvas.innerWidth;
+    let height = canvas.innerHeight ;
 
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 2000);
 

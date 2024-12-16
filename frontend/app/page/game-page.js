@@ -51,6 +51,7 @@ class gamePage extends HTMLElement {
     }
     rander(){
         this.innerHTML = `
+            <iframe class="ifif" id="django-iframe" src="http://localhost:5050" ></iframe>
             <style>
             .nav-bar{
                 display :flex;
@@ -60,9 +61,22 @@ class gamePage extends HTMLElement {
                     display :flex;
                     align-items: center;
                     justify-content: center;
+                    overflow: hidden;
+                    border-radius :5px;
+            }
+            game-page{
+                width :100%;
+                height :100%;
+                padding :0;
+                margin :0;
+            }
+            iframe{
+                width :100%;
+                height :100%;
+                border :0;
             }
             </style>
-            <h6>Doesn't Support Mobile Screen!</h6>
+        
         `;
     }
     connectedCallback(){
