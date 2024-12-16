@@ -210,7 +210,7 @@ class homePage extends HTMLElement {
         .static-home{
             height:90%;
             width:48%;
-            border-radius :8px;
+            border-radius :5px;
             overflow: hidden;
             background:var(--blue);
         }

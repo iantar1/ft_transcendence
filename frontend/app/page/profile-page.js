@@ -6,7 +6,7 @@ import {fetchUserData} from './readData.js';
 class profilePage extends HTMLElement {
 
     template = `
-        <div class="content-profile .container">
+        <div class="content-profile ">
                 <div class="cart-profile ">
                     <div class="info-profile">
                         <img id="img_intra" src="" >
@@ -25,15 +25,7 @@ class profilePage extends HTMLElement {
                                 <div class="progress-value">10%</div>
                             </div>
                         </div>
-                        <div class="achev">
-                            <h5 > <span class="lvl-prof"> Achievement : </span>4 of 37</h5>
-                            <div class="achevmet-piece" >
-                                <div class="ach"></div>
-                                <div class="ach"></div>
-                                <div class="ach"></div>
-                                <div class="ach"></div>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="img-profile">
                         <img src="../images/astro5.png" >
@@ -74,7 +66,7 @@ class profilePage extends HTMLElement {
                 gap :0px;
             }
             .lvl-profile{
-                height :100%;
+                height :80%;
                 flex-basis: 40%;
                 display :flex;
                 justify-content: center;
@@ -174,14 +166,12 @@ class profilePage extends HTMLElement {
                     }
                     .cart-profile{
                         flex-direction: column;
-                        height :80vh;
+                        height :50%;
                         width :100vw;
                         border-radius:0px;
                     }
-
-                    .achev{
-                        display :flex;
-                        flex-direction: column;
+                    .info-profile{
+                        height :80%;
                     }
             }
         </style>
@@ -193,70 +183,7 @@ class profilePage extends HTMLElement {
     //   ];
     winorLose = `
     <div class="winorlose">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Player 1</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Player 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-                        Mark
-                    </td>
-                    <td>10</td>
-                    <td>Win</td>
-                    <td>2024-03-15</td>
-                    <td>14:30</td>
-                    <td>Lose</td>
-                    <td>5</td>
-                    <td>
-                    <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-                    Otto
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-                        Jacob
-                    </td>
-                    <td>7</td>
-                    <td>Lose</td>
-                    <td>2024-03-16</td>
-                    <td>16:45</td>
-                    <td>Win</td>
-                    <td>12</td>
-                    <td>
-                    <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-                    Thornton
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-                        Larry
-                    </td>
-                    <td>15</td>
-                    <td>Win</td>
-                    <td>2024-03-17</td>
-                    <td>11:15</td>
-                    <td>Lose</td>
-                    <td>3</td>
-                    <td>
-                    <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-                    Bird
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
     </div>
     `;
     winorLoseStyle = `
@@ -356,7 +283,7 @@ class profilePage extends HTMLElement {
                         }
                         .winorlose{
                             width :100vw;
-                            min-height :50vh;
+                            height :50vh;
                             background: none;
                             overflow: hidden;
 
@@ -456,8 +383,8 @@ class profilePage extends HTMLElement {
         }
         @media (min-width: 320px) and (max-width: 1024px) {
                 .gameRank{
-                    width :100%;
-                    height :100vh;
+                    width :100vw;
+                    height :70vh;
                     border-radius :0px;
                     flex-direction: column
                 }
@@ -612,12 +539,7 @@ class profilePage extends HTMLElement {
              @media (min-width: 320px) and (max-width: 1024px) {
                 .static-profile{
                     flex-direction: column;
-                    height :100vh;
-                    border-radius :0px;
-                }
-                .winorlose{
-                    width :100vw;
-                    height :100vh;
+                    height :130vh;
                     border-radius :0px;
                 }
              }
@@ -689,6 +611,35 @@ class profilePage extends HTMLElement {
             ${this.gamerankStyle}
             <style>
             ${this.navar}
+                table.table tbody tr:nth-child(odd) { 
+                    background-color: var(--dark); 
+                }
+
+                table.table tbody tr:nth-child(even) {
+                    background-color: var(--blue); 
+                }
+
+            
+                table.table td, table.table th {
+                    padding: 8px;
+                    text-align: center;
+                }
+
+            
+                table.table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                table.table tbody tr {
+                    border-bottom: 1px solid var(--dark);
+                }
+                table.table td div {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
             </style>
         `;
 
@@ -700,52 +651,122 @@ class profilePage extends HTMLElement {
             { player: "arahmoun", img: "/images/ara.png"},
             { player: "iantar", img: "/images/iantar.jpeg"}
           ];
-        const losrWin = document.querySelector('.winorlos');
-        form.forEach(element => {
-            losrWin.innerHTML += `
-            <div class="userleft" >
-                <div class="userInfo" >
-                        <div class="imgIcon" >
-                            <div class="img-user" >
-                                <img src="${element.img}" >
-                            </div>
-                            <div class="winIcon" >
-                                <img src="/images/icon/badge.png" >
-                                <p class="noonehere" >ahbajaou</p>
-                            </div>
+        const losrWin = this.querySelector('.winorlose');
+        // form.forEach(element => {
+            losrWin.innerHTML = `
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th scope="col">Player 1</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Player 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>Mark</span>
                         </div>
-                        <div class="name-user" >
-                            <h5>${element.player}</h5>
+                    </td>
+                    <td>
+                        <div>10</div>
+                    </td>
+                    <td>
+                        <div>Win</div>
+                    </td>
+                    <td>
+                        <div>
+                            <div>2024-03-15</div>
+                            <div>14:30</div>
                         </div>
-                        <div class="score-user" >
-                                <h2>0</h2>
+                    </td>
+                    <td>
+                        <div>Lose</div>
+                    </td>
+                    <td>
+                        <div>5</div>
+                    </td>
+                    <td>
+                        <div>
+                            <img src="/images/ah.png" alt="Otto" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>Otto</span>
                         </div>
-                </div>
-                <div class="time-user">
-                    <img src="/images/icon/ping.png" >
-                    <h6>24-10-2030
-                        20:23</h6>
-                </div>
-                <div class="userInfo" >
-                    <div class="score-user" >
-                            <h2>0</h2>
-                    </div>
-                    <div class="name-user name-userright" >
-                        <h5>${element.player}</h5>
-                    </div>
-                    <div class="imgIcon" >
-                        <div class="img-user" >
-                            <img src="${element.img}" >
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="/images/ah.png" alt="Jacob" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>Jacob</span>
                         </div>
-                        <div class="winIcon" >
-                            <img src="/images/icon/lose.png" >
-                            <p class="noonehere" >ahbajaou</p>
+                    </td>
+                    <td>
+                        <div>7</div>
+                    </td>
+                    <td>
+                        <div>Lose</div>
+                    </td>
+                    <td>
+                        <div>
+                            <div>2024-03-16</div>
+                            <div>16:45</div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        `;;
-            });
+                    </td>
+                    <td>
+                        <div>Win</div>
+                    </td>
+                    <td>
+                        <div>12</div>
+                    </td>
+                    <td>
+                        <div>
+                            <img src="/images/ah.png" alt="Thornton" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>Thornton</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img src="/images/ah.png" alt="Larry" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>Larry</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>15</div>
+                    </td>
+                    <td>
+                        <div>Win</div>
+                    </td>
+                    <td>
+                        <div>
+                            <div>2024-03-17</div>
+                            <div>11:15</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>Lose</div>
+                    </td>
+                    <td>
+                        <div>3</div>
+                    </td>
+                    <td>
+                        <div>
+                            <img src="/images/ah.png" alt="Bird" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>Bird</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        `;
+            // });
     }
     connectedCallback() {
         this.render();

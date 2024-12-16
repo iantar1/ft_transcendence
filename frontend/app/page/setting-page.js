@@ -1,4 +1,6 @@
 
+import {fetchUserData} from './readData.js';
+
 
 class settingPage extends HTMLElement {
     navar = `
@@ -142,7 +144,7 @@ class settingPage extends HTMLElement {
     }
     .infoSetting{
         width :100%;
-        height :96%;
+        height :90%;
         background: var(--bluenes);
         border-radius :5px;
         
@@ -159,6 +161,7 @@ class settingPage extends HTMLElement {
             border :none;
             font-size:100%;
             z-index :2000;
+            font-weight: ;
         }
     </style>
     `;
@@ -170,6 +173,8 @@ class settingPage extends HTMLElement {
                 display :flex;
                 align-items: center;
                 justify-content: center;
+                font-weight: 100;
+                
             }
             .formProf form{
                 width :90%;
@@ -186,10 +191,10 @@ class settingPage extends HTMLElement {
             }
             .formProf label{
                 font-size :18px;
-
+        
             }
             textarea{
-                height :70%;
+                height :40%;
                 width :80%;
                 background: rgba(34, 40, 52, 1) ;
                 border-radius :15px;
@@ -236,7 +241,7 @@ class settingPage extends HTMLElement {
                 <div class="avatar" >
                     <div class="editAvatar" >
                         <div class="imgInfo" >
-                            <img src="../images/profile.png" >
+                            <img id="imgSetting" src="" >
                         </div>
                         <div class="btnInfo" >
                             <button class="btn-home btn btn-secondary " >Upload New</button>
@@ -439,9 +444,10 @@ class settingPage extends HTMLElement {
                     width :58%;
                 }
                 .imgInfo img{
-                    width :80%;
-                    height :100%;
-                    border-radius:50%;
+               max-width: 130px;
+                height: 130px;
+                object-fit: cover;
+                border-radius:50%;
                 }
                 .imgInfo{
                     width :40%;
@@ -659,6 +665,12 @@ class settingPage extends HTMLElement {
                 editInfo.innerHTML = this.authEdit();
             });
             this.displayNav();
+            const uuss = async () => {
+                this.info = await fetchUserData();
+                document.getElementById('imgSetting').src = this.info.image
+            
+            }
+            uuss();
     }
 
     connectedCallback() {
