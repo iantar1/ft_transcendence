@@ -173,7 +173,7 @@ class settingPage extends HTMLElement {
                 display :flex;
                 align-items: center;
                 justify-content: center;
-                font-weight: 100;
+           
                 
             }
             .formProf form{
@@ -424,24 +424,21 @@ class settingPage extends HTMLElement {
                     border-radius :15px;
                 }
                 .editAvatar{
-                    width :50%;
+                    width :80%;
                     height :100%;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    gap:10px;
+                    gap:5px;
                 }
                 .btnInfo{
-                    width :60%;
+                    width :80%;
                     height :80%;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    gap :5px;
-                }
-                .btnInfo button{
-                    font-size :18px;
-                    width :58%;
+                    gap :10px;
+                   
                 }
                 .imgInfo img{
                max-width: 130px;
@@ -550,7 +547,7 @@ class settingPage extends HTMLElement {
                 }
                 .saveInfo{
                     margin-top :0px;
-
+                   
                 }
                 .humbergr-bar{
                     display :flex;
