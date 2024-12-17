@@ -3,6 +3,7 @@ import {fetchUserData} from './readData.js';
 
 
 class settingPage extends HTMLElement {
+    
     navar = `
     @media (min-width: 320px) and (max-width: 1024px) {
             .nav-bar{
@@ -169,16 +170,16 @@ class settingPage extends HTMLElement {
                 <style>
             .formProf{
                 width :100%;
-                height :100%;
+                height :90%;
                 display :flex;
                 align-items: center;
                 justify-content: center;
-           
                 
             }
             .formProf form{
                 width :90%;
                 height :90%;
+                font-family: "Gill Sans", sans-serif;
             }
             .formProf input {
                 background-color: rgb(0 0 0 / 0.5);
@@ -191,7 +192,8 @@ class settingPage extends HTMLElement {
             }
             .formProf label{
                 font-size :18px;
-        
+                font-family: "Gill Sans", sans-serif;
+
             }
             textarea{
                 height :40%;
@@ -244,8 +246,29 @@ class settingPage extends HTMLElement {
                             <img id="imgSetting" src="" >
                         </div>
                         <div class="btnInfo" >
-                            <button class="btn-home btn btn-secondary " >Upload New</button>
-                            <button class="btn-home btn btn-secondary " >Delete Avatar</button>
+                            <button type="click" id="openPopupBtn" class="btn-home fiter btn btn-secondary " >Upload New</button>
+                            <button id="deleteimg" class="btn-home fiter btn btn-secondary " >Delete Avatar</button>
+                        </div>
+
+                        <!-- Popup Overlay -->
+                        <div id="popupOverlay" class="popup-overlay"></div>
+
+                        <!-- Popup Container -->
+                        <div id="popup" class="popup">
+                            <span id="popupClose" class="popup-close">&times;</span>
+                            <h2>Upload</h2>
+                            
+                            <!-- File Input -->
+                            <input type="file" id="imageUpload" accept="image/*" class="file-input">
+                            <label for="imageUpload" class="file-input-label">Choose Image</label>
+                            
+                            <!-- Image Preview -->
+                            <img id="imagePreview" alt="Image Preview">
+                            
+                            <div>
+                                <button class="btn-home " id="uploadBtn" style="display:none;">Upload</button><br>
+                                <button class="btn-home " id="closePopupBtn">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -257,6 +280,65 @@ class settingPage extends HTMLElement {
 
     </div>
         </div>
+        <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--dark);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 4000;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        /* Overlay background */
+        .popup-overlay {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            backdrop-filter: blur(8px); /* Blur everything behind the overlay */
+            z-index: 999; /* Ensure overlay is on top */
+        }
+        /* Popup close button */
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        /* Button styling */
+
+        /* Image preview */
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 20px 0;
+            display: none;
+        }
+        /* File input styling */
+        .file-input {
+            display: none;
+        }
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        </style>
     `   
     hiddeHover(name){
         const hoverProf = document.querySelector(name);
@@ -269,19 +351,16 @@ class settingPage extends HTMLElement {
             <form>
                 <label for="fname">Username</label><br><br>
                 <input type="text"  class="editUser" name="username"><br><br>
-                <label for="lname">Bio</label><br><br>
+                <label for="lname">Bio</label>
                 <textarea rows="10" 
                 name="blog">
-        Share your knowledge by writing your own blog! 
-      </textarea>
+                Share your knowledge by writing your own blog! 
+                </textarea>
             </form>
             </div>
-            <br>
             <div class="saveInfo" >
-                    <button class="btn-home btn btn-secondary " >Save</button>
+                    <button class="btn-home fiter btn btn-secondary " >Save</button>
             </div>
-            <br>
-            <br>
             <br>
         `;
     }
@@ -290,15 +369,15 @@ class settingPage extends HTMLElement {
         <div class="formProf d-flex flex-column" >
             <form>
                 <label for="fname">Old Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br><br>
+                <input type="text"  class="editUser" name="username"><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br><br>
+                <input type="text"  class="editUser" name="username"><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br><br>
+                <input type="text"  class="editUser" name="username"><br>
             </form>
             </div>
             <div class="saveInfo" >
-                    <button class="btn-home btn btn-secondary " >Save</button>
+                    <button class="btn-home fiter btn btn-secondary " >Save</button>
 
             </div>
         
@@ -376,8 +455,8 @@ class settingPage extends HTMLElement {
             </label>
             </div>
             <div class="saveInfo" >
-                <button class="btn-home btn btn-secondary " >Save</button>
-            </div>
+                <button class="btn-home fiter btn btn-secondary " >Save</button>
+           </div>
         `;
     }
     displayNav(){
@@ -393,6 +472,88 @@ class settingPage extends HTMLElement {
                     document.querySelector('.settingOne').style.display = "none";
                 }
             });
+    }
+
+    async imgEffect(){
+        const openPopupBtn = document.getElementById('openPopupBtn');
+        const popup = document.getElementById('popup');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupClose = document.getElementById('popupClose');
+        const closePopupBtn = document.getElementById('closePopupBtn');
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        // Function to open the popup
+        function openPopup() {
+            popup.style.display = 'block';
+            popupOverlay.style.display = 'block';
+            // Reset form
+            imageUpload.value = '';
+            imagePreview.style.display = 'none';
+            imagePreview.src = '';
+            uploadBtn.style.display = 'none';
+                const elements = document.querySelectorAll('.fiter');
+                elements.forEach((el) => {
+                    el.style.filter = 'blur(8px)';
+                });
+            }
+        // Function to close the popup
+        function closePopup() {
+            popup.style.display = 'none';
+            popupOverlay.style.display = 'none';
+            const elements = document.querySelectorAll('.fiter');
+            elements.forEach((el) => {
+                el.style.filter = 'none';
+            });
+
+        }
+
+        // Image upload event listener
+        imageUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Create a file reader
+                const reader = new FileReader();
+                
+                // Read the image file
+                reader.readAsDataURL(file);
+                
+                // When file is loaded
+                reader.onload = function(e) {
+                    // Show image preview
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    
+                    // Show upload button
+                    uploadBtn.style.display = 'inline-block';
+                }
+            }
+        });
+
+        // Upload button event listener (you would typically send this to a server)
+        uploadBtn.addEventListener('click', function() {
+            // Simulate upload (replace with actual upload logic)
+            alert('Image ready to upload! (In a real app, this would send to a server)');
+            const file = imageUpload.files[0];
+            
+            // Here you would typically:
+            // 1. Create FormData
+            // const formData = new FormData();
+            // formData.append('image', file);
+            
+            // 2. Send to server with fetch or XMLHttpRequest
+            // fetch('/upload', {
+            //     method: 'POST',
+            //     body: formData
+            // })
+        });
+
+        // Event listeners to open and close the popup
+        openPopupBtn.addEventListener('click', openPopup);
+        popupClose.addEventListener('click', closePopup);
+        closePopupBtn.addEventListener('click', closePopup);
+        popupOverlay.addEventListener('click', closePopup);
     }
     render() {
         this.innerHTML = `
@@ -472,6 +633,7 @@ class settingPage extends HTMLElement {
                 .editInfo{
                     width :50%;
                     height :100%;
+
                 }
                 .formProf textarea{
                      width :100%;
@@ -479,7 +641,7 @@ class settingPage extends HTMLElement {
                 .formProf input{
                      width :100%;
                      height :12%;
-                        background:rgb(0 0 0 / 0.5);               
+                    background:rgb(0 0 0 / 0.5);               
                 }
                 .humbergr-bar{
                     display :none;
@@ -668,6 +830,7 @@ class settingPage extends HTMLElement {
             
             }
             uuss();
+            this.imgEffect();
     }
 
     connectedCallback() {

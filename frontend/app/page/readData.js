@@ -73,3 +73,29 @@ export async function fetchUserMatchHistory() {
         return []; // Return an empty array in case of an error
     }
 }
+
+
+export async function postInfo(alias,redir){
+
+    console.log("post function");
+    const form = document.querySelector(alias);
+    const fromData = new FormData(form);
+    const data = Object.fromEntries(fromData);
+    try{
+        const res = await fetch("http://localhost:8000/api/${redir}", {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        if (res.ok) {
+                console.log('POST METHOD HAS BEEN SUCCESS')
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
+
+}

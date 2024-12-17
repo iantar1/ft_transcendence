@@ -51,7 +51,7 @@ class gamePage extends HTMLElement {
     }
     rander(){
         this.innerHTML = `
-            <iframe class="ifif" id="django-iframe" src="http://10.53.80.168:8000" ></iframe>
+            <iframe class="ifif" id="django-iframe" src="http://10.32.129.124:8000" ></iframe>
             <style>
             .nav-bar{
                 display :flex;

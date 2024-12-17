@@ -420,7 +420,7 @@ class loginPage extends HTMLElement {
                     if (res.ok) {
                             
                     } else {
-;
+                                        
                     }
                 } catch(error) {
                     console.log("Error verifying OTP:", error);
@@ -565,61 +565,8 @@ class loginPage extends HTMLElement {
             intra.addEventListener('click', async (e) => {
                 console.log("--aoutffffff---")
                 window.location.href = API_INTRA;
-                // try {
-                //     // Prevent default button/link behavior
-                //     e.preventDefault();
-            
-                //     // Fetch the authentication endpoint from your backend
-                //     const response = await fetch("http://localhost:8000/api/intra/", {
-                //         method: 'GET',
-                //         credentials: 'include', // Important for cookies
-                //         headers: {
-                //             'Accept': 'application/json',
-                //         }
-                //     });
-            
-                //     if (!response.ok) {
-                //         throw new Error('Failed to fetch authentication URL');
-                //     }
-            
-                //     // Parse the response to get the authentication URL
-                //     const authData = await response.json();
-                    
-                //     // Redirect to the authentication URL
-                //     if (authData.authorizationUrl) {
-                //         // Option 1: Same window redirect
-                //         window.location.href = authData.authorizationUrl;
-            
-                //         // Option 2: If you want to open in a new window
-                //         // window.open(authData.authorizationUrl, '_blank');
-                //     } else {
-                //         throw new Error('No authentication URL provided');
-                //     }
-                // } catch (error) {
-                //     console.error("Authentication Error:", error);
-                //     // Optional: Show user-friendly error message
-                //     alert("Authentication failed. Please try again.");
-                // }
+
             });
-            // console.log("inside login page");
-            // const intra = document.querySelector(".redirapi_inta");
-            // intra.addEventListener('click', async (e) => {
-            //     try {
-            //         // Prevent default link/button behavior
-            //         e.preventDefault();
-            
-            //         // Redirect directly to the 42 OAuth authorization URL
-            //         const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http://localhost:8000/&response_type=code`;
-                    
-            //         // Option 1: Window redirect
-            //         window.location.href = authUrl;
-            
-            //         // Option 2: If you prefer opening in a new window
-            //         // window.open(authUrl, '_blank');
-            //     } catch (error) {
-            //         console.error("Authentication error:", error);
-            //     }
-            // });
             console.log("inside login page");
             const googleApi = document.querySelector(".redirapi_google");
             googleApi.addEventListener('click' , async (e) => {
