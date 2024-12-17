@@ -247,7 +247,7 @@ class settingPage extends HTMLElement {
                         </div>
                         <div class="btnInfo" >
                             <button type="click" id="openPopupBtn" class="btn-home fiter btn btn-secondary " >Upload New</button>
-                            <button id="deleteimg" class="btn-home fiter btn btn-secondary " >Delete Avatar</button>
+                            <button type="click" id="deleteimg" class="btn-home fiter btn btn-secondary " >Delete Avatar</button>
                         </div>
 
                         <!-- Popup Overlay -->
@@ -348,7 +348,7 @@ class settingPage extends HTMLElement {
     profEdit(){
         return `
         <div class="formProf d-flex flex-column" >
-            <form>
+            <form id="myForm" >
                 <label for="fname">Username</label><br><br>
                 <input type="text"  class="editUser" name="username"><br><br>
                 <label for="lname">Bio</label>
@@ -356,10 +356,10 @@ class settingPage extends HTMLElement {
                 name="blog">
                 Share your knowledge by writing your own blog! 
                 </textarea>
+                <div class="saveInfo" >
+                        <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
+                </div>
             </form>
-            </div>
-            <div class="saveInfo" >
-                    <button class="btn-home fiter btn btn-secondary " >Save</button>
             </div>
             <br>
         `;
@@ -367,18 +367,17 @@ class settingPage extends HTMLElement {
     passEdit(){
         return `
         <div class="formProf d-flex flex-column" >
-            <form>
+            <form id="myForm" >
                 <label for="fname">Old Password</label><br><br>
                 <input type="text"  class="editUser" name="username"><br>
                 <label for="fname">New Password</label><br><br>
                 <input type="text"  class="editUser" name="username"><br>
                 <label for="fname">New Password</label><br><br>
                 <input type="text"  class="editUser" name="username"><br>
+                <div class="saveInfo" >
+                        <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
+                </div>
             </form>
-            </div>
-            <div class="saveInfo" >
-                    <button class="btn-home fiter btn btn-secondary " >Save</button>
-
             </div>
         
         `;
@@ -455,7 +454,7 @@ class settingPage extends HTMLElement {
             </label>
             </div>
             <div class="saveInfo" >
-                <button class="btn-home fiter btn btn-secondary " >Save</button>
+                <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
            </div>
         `;
     }
@@ -554,6 +553,52 @@ class settingPage extends HTMLElement {
         popupClose.addEventListener('click', closePopup);
         closePopupBtn.addEventListener('click', closePopup);
         popupOverlay.addEventListener('click', closePopup);
+    }
+    deleteImage(){
+        const img = document.getElementById('deleteimg')
+        console.log(img);
+        img.addEventListener('click' , (e) => {
+            console.log('HERE HERE DELETE IMAGE');
+        });
+    }
+    infoPost(){
+        // console.log('HERE WE CAN POST YOUR DATA')
+        // const buttons = document.querySelector('#postData');
+        //     buttons.addEventListener('click', () => {
+        //         alert('Button clicked!');
+        //     });
+        document.querySelector('#myForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission and page reload
+        
+            const form = event.target; // Reference to the form
+            const formData = new FormData(form); // Collect form data
+        
+            // Convert FormData to a JSON object
+            const jsonObject = {};
+            formData.forEach((value, key) => {
+                jsonObject[key] = value;
+            });
+        
+            // Log the JSON data
+            console.log('Form Data as JSON:', jsonObject);
+        
+            // Example of sending JSON data with Fetch API
+            // fetch('https://example.com/submit', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(jsonObject), // Convert object to JSON string
+            // })
+            // .then((response) => response.json())
+            // .then((data) => {
+            //     console.log('Success:', data);
+            // })
+            // .catch((error) => {
+            //     console.error('Error:', error);
+            // });
+        });
+        
     }
     render() {
         this.innerHTML = `
@@ -803,6 +848,8 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.profEdit();
+            this.infoPost();
+
 
             });
             const passEdit = document.querySelector('.passSetting');
@@ -813,6 +860,8 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.passEdit();
+            this.infoPost();
+
             });
             const authEdit = document.querySelector('.authSetting');
             authEdit.addEventListener('click' , (e) => {
@@ -822,6 +871,8 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.passSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.authEdit();
+            this.infoPost();
+
             });
             this.displayNav();
             const uuss = async () => {
@@ -831,6 +882,8 @@ class settingPage extends HTMLElement {
             }
             uuss();
             this.imgEffect();
+            this.deleteImage();
+            this.infoPost();
     }
 
     connectedCallback() {
