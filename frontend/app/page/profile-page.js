@@ -4,7 +4,7 @@ import {fetchUserData} from './readData.js';
 
 
 class profilePage extends HTMLElement {
-
+    statsHistory = [];
     template = `
         <div class="content-profile ">
                 <div class="cart-profile ">
@@ -183,7 +183,22 @@ class profilePage extends HTMLElement {
     //   ];
     winorLose = `
     <div class="winorlose">
+        <table class="table editTabel" >
+            <thead>
+                <tr>
+                    <th scope="col">Player</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Player</th>
+                </tr>
+            </thead>
+            <tbody class="players" >
 
+            </tbody>
+        </table>
     </div>
     `;
     winorLoseStyle = `
@@ -535,7 +550,6 @@ class profilePage extends HTMLElement {
                 border-radius :5px;
                 gap :30px;
             }
-                
              @media (min-width: 320px) and (max-width: 1024px) {
                 .static-profile{
                     flex-direction: column;
@@ -590,6 +604,56 @@ class profilePage extends HTMLElement {
     constructor() {
         super();
     }
+    statsPlayer(){
+        this.statsHistory = [
+            { player: "ahbajaou",  img: "/images/ah.png"},
+            { player: "arahmoun", img: "/images/ara.png"},
+            { player: "iantar", img: "/images/iantar.jpeg"}
+          ];
+
+        const onevsone = document.querySelector('.players');
+        console.log(onevsone);
+        let from = '';
+        this.statsHistory.forEach(element => {
+                // console.log('hhhhhhhhhh');
+                from += `
+                    <tr>
+                        <td>
+                            <div>
+                                <img src="${element.img}" alt="Larry" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                                <span>${element.player}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div>15</div>
+                        </td>
+                        <td>
+                            <div>Win</div>
+                        </td>
+                        <td>
+                            <div>
+                                <div>2024-03-17</div>
+                                <div>11:15</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>Lose</div>
+                        </td>
+                        <td>
+                            <div>3</div>
+                        </td>
+                        <td>
+                            <div>
+                                <img src="${element.img}" alt="Bird" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                                <span>${element.player}</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+        });
+        console.log(from)
+        onevsone.innerHTML = from;
+    }
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
@@ -621,7 +685,7 @@ class profilePage extends HTMLElement {
 
             
                 table.table td, table.table th {
-                    padding: 8px;
+                    padding: 2%;
                     text-align: center;
                 }
 
@@ -629,6 +693,7 @@ class profilePage extends HTMLElement {
                 table.table {
                     border-collapse: collapse;
                     width: 100%;
+                    font-size :75%;
                 }
 
                 table.table tbody tr {
@@ -646,136 +711,14 @@ class profilePage extends HTMLElement {
         this.querySelector('.cycle-progress').innerHTML = this.cycleProgress;   
         // cycleProg();
         // this.cycleRander();
-        const form = [
-            { player: "ahbajaou",  img: "/images/ah.png"},
-            { player: "arahmoun", img: "/images/ara.png"},
-            { player: "iantar", img: "/images/iantar.jpeg"}
-          ];
-        const losrWin = this.querySelector('.winorlose');
-        // form.forEach(element => {
-            losrWin.innerHTML = `
-        <table class="table" >
-            <thead>
-                <tr>
-                    <th scope="col">Player 1</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Player 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div>
-                            <img src="/images/ah.png" alt="Mark" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                            <span>Mark</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div>10</div>
-                    </td>
-                    <td>
-                        <div>Win</div>
-                    </td>
-                    <td>
-                        <div>
-                            <div>2024-03-15</div>
-                            <div>14:30</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div>Lose</div>
-                    </td>
-                    <td>
-                        <div>5</div>
-                    </td>
-                    <td>
-                        <div>
-                            <img src="/images/ah.png" alt="Otto" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                            <span>Otto</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div>
-                            <img src="/images/ah.png" alt="Jacob" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                            <span>Jacob</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div>7</div>
-                    </td>
-                    <td>
-                        <div>Lose</div>
-                    </td>
-                    <td>
-                        <div>
-                            <div>2024-03-16</div>
-                            <div>16:45</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div>Win</div>
-                    </td>
-                    <td>
-                        <div>12</div>
-                    </td>
-                    <td>
-                        <div>
-                            <img src="/images/ah.png" alt="Thornton" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                            <span>Thornton</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div>
-                            <img src="/images/ah.png" alt="Larry" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                            <span>Larry</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div>15</div>
-                    </td>
-                    <td>
-                        <div>Win</div>
-                    </td>
-                    <td>
-                        <div>
-                            <div>2024-03-17</div>
-                            <div>11:15</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div>Lose</div>
-                    </td>
-                    <td>
-                        <div>3</div>
-                    </td>
-                    <td>
-                        <div>
-                            <img src="/images/ah.png" alt="Bird" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                            <span>Bird</span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        `;
+        // losrWin.appendChild(onevsone);
             // });
     }
     connectedCallback() {
         this.render();
+        this.statsPlayer();
     }
 }
 
 customElements.define('profile-page', profilePage);
 
-async function    getUserMatchHistory()
-{
-    
-}

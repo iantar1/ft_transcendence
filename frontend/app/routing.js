@@ -1,4 +1,5 @@
 
+// import { gamePage } from "./page/game-page.js";
 
 
 export function rander(path) {
@@ -22,6 +23,7 @@ export function rander(path) {
         break;
     case '/game':
         content.appendChild(document.createElement('game-page'));
+        // content.innerHTML = gamePage();
         break;
     case '/setting':
         content.appendChild(document.createElement('setting-page'));
@@ -90,61 +92,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     router();
 });
-
-
-
-
-
-
-
-
-// function rander(route){
-//   const content = document.getElementById("content");
-//   content.innerHTML = '';
-//   content.className = 'content';
-//   switch(route){
-//     case '/':
-//       // content.appendChild(document.createElement('getstarted-page'));
-//       content.innerHTML = `<h1>this is home page</h1>`;
-//       break;
-//     case '/prof':
-//       content.innerHTML = `<h1>this is prof page</h1>`;
-//       break;
-//     case '/game':
-//         content.innerHTML = `<h1>this is game page</h1>`;
-//         break;
-//     case '/setting':
-//           content.innerHTML = `<h1>this is setting page</h1>`;
-//           break;
-//     default:
-//       content.innerHTML = `<h1>404 page not found.</h1>`;
-
-//   }
-// }
-
-// function navigate(event) {
-//   event.preventDefault();
-//   const path = event.target.getAttribute('href');
-//   window.history.pushState({}, '', path);
-//   handleRoute();
-// }
-
-// function handleRoute(){
-//   const route  = window.location.pathname;
-//   console.log(route);
-//   rander(route);
-// }
-// document.addEventListener('DOMContentLoaded', () => {
-//   document.querySelectorAll('a[data-link]').forEach(link => {
-//       link.addEventListener('click', navigate);
-//   });
-// });
-
-// window.addEventListener('popstate',handleRoute);
-
-// window.addEventListener('load', () => {
-//   if (!window.location.pathname){
-//     window.history.replaceState({},'','/');
-//   }
-//   handleRoute();
-// });

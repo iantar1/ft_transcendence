@@ -91,7 +91,7 @@ animation: zoom 16s alternate infinite;
   flex-basis: 3%;
   z-index: 4000;
   /* background-image: ; */
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   height: 95vh;

@@ -4,7 +4,7 @@
 import {readData} from './readData.js';
 
 import {fetchUserData} from './readData.js';
-import {fetchUserMatchHistory} from './readData.js';
+// import {fetchUserMatchHistory} from './readData.js';
 
 
 
@@ -29,7 +29,7 @@ class homePage extends HTMLElement {
     <div class="content-home " >
     <div class="cart-home" >
             <img  class="img-home" src="/images/astro4.png">
-            <h3 class="title-home" >Good evening, <span id="username" >CHEBCHOUB</span></h3>
+            <h3 class="title-home" >Good evening, <span id="username" ></span></h3>
             <h1>Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
@@ -206,6 +206,7 @@ class homePage extends HTMLElement {
             text-align :center;
         }
         `;
+    matchHistory = [];
     styleStatic = `
         .static-home{
             height:90%;
@@ -233,7 +234,7 @@ class homePage extends HTMLElement {
             border-bottom :1px solid #FFF4;
         }
         td {
-            height :6vh;
+            height :8vh;
             text-align:left;
             padding-left :10px;
             border-bottom :1px solid #FFF4;
@@ -388,9 +389,9 @@ class homePage extends HTMLElement {
         console.log("RANDER FUNCTION IS HERE");
         const uuss = async () => {
             this.info = await fetchUserData();
-            this.match =  await fetchUserMatchHistory();
-            console.log(this.info);
-            console.log(this.match);
+            // this.match =  await fetchUserData('match_history');
+            // console.log(this.info);
+            // console.log("---->" + this.match);
             document.getElementById('username').textContent = this.info.username
         }
         uuss();
@@ -406,7 +407,7 @@ class homePage extends HTMLElement {
             `;
     }
     staticHome(){
-        const form = [
+         this.matchHistory = [
             { player: "Jam Josh", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
             { player: "Justina Kap", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
             { player: "Chris Colt", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
@@ -417,7 +418,7 @@ class homePage extends HTMLElement {
           ];
           const cartHome = document.querySelector('.table-content');
           let cart = '';
-        form.forEach(element => {
+        this.matchHistory.forEach(element => {
             cart += `
                 <tr>
                     <td>
@@ -432,67 +433,15 @@ class homePage extends HTMLElement {
             });
         cartHome.innerHTML = cart;
     }
-    getData(){
-        const data = [
-            { name: "Jam Josh", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Justina Kap", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Chris Colt", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Jane Doe", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Jam Josh", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Justina Kap", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Chris Colt", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Jane Doe", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", }
-          ];
-          return data
-        // var i = 0;
-        // data.forEach(element => {
-            // const test = '';
-        //     const cartHome = document.querySelector('.slide-home');
-        //     // i++;
-        //     cartHome.innerHTML = `
-        //     <div class="slide-cart ${'ictems' + 1}" >
-        //             <div class="img-slid">
-        //                 <img  src=${data[0].img}>
-        //             </div>
-        //             <div class="text-content">
-        //                 <p class="text-cart" >${data[0].name}</p>
-        //                 <h5 class="text-cart" >${data[0].title}</h5>
-        //             </div>
-        //     </div>
-        //     <div class="slide-cart ${'itcems' + 1}" >
-        //             <div class="img-slid">
-        //                 <img  src=${data[0].img}>
-        //             </div>
-        //             <div class="text-content">
-        //                 <p class="text-cart" >${data[0].name}</p>
-        //                 <h5 class="text-cart" >${data[0].title}</h5>
-        //             </div>
-        //     </div>
-        //     <div class="slide-cart ${'itcems' + 1}" >
-        //             <div class="img-slid">
-        //                 <img  src=${data[0].img}>
-        //             </div>
-        //             <div class="text-content">
-        //                 <p class="text-cart" >${data[0].name}</p>
-        //                 <h5 class="text-cart" >${data[0].title}</h5>
-        //             </div>
-        //     </div>
-        //     <div class="slide-cart ${'itcems' + 1}" >
-        //             <div class="img-slid">
-        //                 <img  src=${data[0].img}>
-        //             </div>
-        //             <div class="text-content">
-        //                 <p class="text-cart" >${data[0].name}</p>
-        //                 <h5 class="text-cart" >${data[0].title}</h5>
-        //             </div>
-        //     </div>
-        // `;
-     
-        // });
+    async getData(){
+        // const data = fetchUserMatchHistory();
+        // const data = fetchUserData('match_history');
+        // console.log("inside history fitch");
+        // console.log(data);
     }
     connectedCallback(){
         this.rander();
-        // this.getData();
+        this.getData();
         this.staticHome();
     }
 }

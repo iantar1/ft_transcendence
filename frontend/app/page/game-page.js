@@ -53,9 +53,6 @@ class gamePage extends HTMLElement {
         this.innerHTML = `
             <iframe class="ifif" id="django-iframe" src="http://10.32.129.124:8000" ></iframe>
             <style>
-            .nav-bar{
-                display :flex;
-            }
             ${this.navar}
             #content{
                     display :flex;
