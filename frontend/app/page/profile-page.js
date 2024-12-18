@@ -55,6 +55,8 @@ class profilePage extends HTMLElement {
                 display :flex;
                 justify-content: center;
                 align-items: center;
+                gap:15px;
+            
             }
             .info-profile{
                 height :100%;
