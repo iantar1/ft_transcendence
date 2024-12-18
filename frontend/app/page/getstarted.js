@@ -1,4 +1,4 @@
-import {rander} from '../routing.js';
+// import {rander} from '../routing.js';
 
 
 class getstartedPage extends HTMLElement {
@@ -162,7 +162,7 @@ class getstartedPage extends HTMLElement {
                 <p class="firstpage-para fw-bold " style="font-size:1rem;" >In a distant galaxy, peace hinges on the Grand Galactic Tournament of zero-gravity ping pong. The Zephron Empire aims to dominate. </p>
             
                 <br>
-                <button type="click" class="btn-firstpg btn btn-secondary mb-5 " data-link >Get started</button>
+                <a type="click" href="/login" class="btn-firstpg btn btn-secondary mb-5 " data-link >Get started</a>
             </div>
             `;
     // <img src="/images/ahbajaou.jpg">
@@ -191,9 +191,9 @@ class getstartedPage extends HTMLElement {
         ${this.pagetwo}
         `;
         const sub = document.querySelector('.btn-firstpg');
-        sub.addEventListener("click" , (e) => {
-           e.target.href = '/login';
-        });
+        // sub.addEventListener("click" , (e) => {
+        //    e.target.href = '/login';
+        // });
         const form = [
             { player: "ahbajaou",  img: "/images/ah.jpg"},
             { player: "arahmoun", img: "/images/ara.png"},

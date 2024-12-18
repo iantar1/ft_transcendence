@@ -99,3 +99,9 @@ export async function postInfo(alias,redir){
     }
 
 }
+
+
+export function checkLogin(flag){
+
+    return flag;
+}
