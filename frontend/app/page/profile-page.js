@@ -2,9 +2,44 @@
 
 import {fetchUserData} from './readData.js';
 
+const addFriends = () => {
+    const elem = document.getElementsByClassName('.img-profile')
+    console.log("----> " +  elem);
+    const data = [
+        {img :"/images/ah.png", status : true ,name :"ahbajaou",}
+    ]
+    return     elem.innerHTML = `
+
+    <div class="addfriend d-flex justify-content-center align-items-center flex-column" style="gap :10px; height: 95%; width :85%;background:var(--dark); border-radius :5px;" >
+        <div class="flag" style="font-size :100%; border-radius :5px; width :70%; height :10%; background:var(--red); display: flex; justify-content: center; align-items: center;" >
+            <i style="color: #fff;" class="fa-solid fa-user-plus"></i>
+        </div>
+        <div class="scrollable-div" style="height :80%; width :95%; overflow-x :hidden; overflow-y: auto;" >
+                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
+                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+                </div>
+                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
+                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+                </div>
+                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
+                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+                </div>
+                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
+                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+                </div>
+        </div>
+
+    </div>
+    `;
+}
 
 class profilePage extends HTMLElement {
     statsHistory = [];
+    frienSection = addFriends();
     template = `
         <div class="content-profile ">
                 <div class="cart-profile ">
@@ -27,8 +62,8 @@ class profilePage extends HTMLElement {
                         </div>
 
                     </div>
-                    <div class="img-profile">
-                        <img src="../images/astro5.png" >
+                    <div  class="img-profile d-flex justify-content-center align-items-center flex-column">
+                        ${this.frienSection}
                     </div>
                 </div>
         </div>
@@ -39,6 +74,30 @@ class profilePage extends HTMLElement {
                 display :flex;
 
                 }
+
+                /* Webkit Browsers (Chrome, Edge, Safari) */
+                .scrollable-div::-webkit-scrollbar {
+                    width: 6px; /* Narrow scrollbar for a mobile-like feel */
+                }
+        
+                .scrollable-div::-webkit-scrollbar-thumb {
+                    background: #999; /* Thumb color */
+                    border-radius: 10px; /* Rounded thumb for a smooth look */
+                }
+        
+                .scrollable-div::-webkit-scrollbar-thumb:hover {
+                    background: #666; /* Darker color on hover */
+                }
+        
+                .scrollable-div::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track for minimalistic style */
+                }
+            .flag .fa-solid {
+                margin: 0;
+                padding: 0;
+                position: static; /* Reset any default positioning */
+                vertical-align: middle; /* Ensure alignment within the flexbox */
+            }
             .content-profile{
                 gap:5px;
             }
@@ -60,7 +119,7 @@ class profilePage extends HTMLElement {
             }
             .info-profile{
                 height :100%;
-                flex-basis: 20%;
+                flex-basis: 40%;
                 display :flex;
                 align-items: center;
                 justify-content: center;
@@ -69,7 +128,7 @@ class profilePage extends HTMLElement {
             }
             .lvl-profile{
                 height :80%;
-                flex-basis: 40%;
+                flex-basis: 50%;
                 display :flex;
                 justify-content: center;
                 flex-direction: column;
@@ -116,7 +175,7 @@ class profilePage extends HTMLElement {
         }
             .img-profile{
                 height :100%;
-                flex-basis: 40%;
+                flex-basis: 10%; 
             }
             .img-profile img{
                 width :40vw;
@@ -167,13 +226,19 @@ class profilePage extends HTMLElement {
                         display :none;
                     }
                     .cart-profile{
-                        flex-direction: column;
+                        flex-direction: column-reverse;
                         height :50%;
                         width :100vw;
                         border-radius:0px;
                     }
                     .info-profile{
                         height :80%;
+                    }
+                    .addfriend{
+                        height :10%;
+                        width :80%;
+                        flex-direction: row;
+                        border :1px solid;
                     }
             }
         </style>
@@ -724,3 +789,198 @@ class profilePage extends HTMLElement {
 
 customElements.define('profile-page', profilePage);
 
+
+// <!DOCTYPE html>
+// <html>
+// <head>
+//     <style>
+//         .profile-card {
+//             max-width: 320px;
+//             padding: 1.5rem;
+//             background: white;
+//             border-radius: 8px;
+//             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+//             margin: 20px auto;
+//         }
+
+//         .profile-container {
+//             display: flex;
+//             flex-direction: column;
+//             align-items: center;
+//             gap: 1rem;
+//         }
+
+//         .profile-image-container {
+//             position: relative;
+//         }
+
+//         .profile-image {
+//             width: 96px;
+//             height: 96px;
+//             border-radius: 50%;
+//             object-fit: cover;
+//             border: 2px solid #e5e7eb;
+//         }
+
+//         .profile-image-fallback {
+//             width: 96px;
+//             height: 96px;
+//             border-radius: 50%;
+//             background: #f3f4f6;
+//             display: flex;
+//             align-items: center;
+//             justify-content: center;
+//             border: 2px solid #e5e7eb;
+//         }
+
+//         .status-badge {
+//             position: absolute;
+//             bottom: -8px;
+//             right: 0;
+//             padding: 4px 8px;
+//             border-radius: 9999px;
+//             font-size: 12px;
+//             font-weight: bold;
+//             color: white;
+//         }
+
+//         .english {
+//             background-color: #22c55e;
+//         }
+
+//         .not-english {
+//             background-color: #ef4444;
+//         }
+
+//         .profile-name {
+//             font-size: 1.25rem;
+//             font-weight: 600;
+//             color: #1f2937;
+//             margin: 0;
+//         }
+
+//         .profile-subtitle {
+//             font-size: 0.875rem;
+//             color: #6b7280;
+//             margin: 0;
+//         }
+
+//         .stats-container {
+//             width: 100%;
+//             padding-top: 1rem;
+//             border-top: 1px solid #e5e7eb;
+//             margin-top: 1rem;
+//         }
+
+//         .stats-grid {
+//             display: flex;
+//             justify-content: space-around;
+//             text-align: center;
+//         }
+
+//         .stat-label {
+//             font-size: 0.875rem;
+//             color: #6b7280;
+//             margin: 0;
+//         }
+
+//         .stat-value {
+//             font-weight: 600;
+//             color: #1f2937;
+//             margin: 0;
+//         }
+
+//         .toggle-button {
+//             margin-top: 1rem;
+//             padding: 8px 16px;
+//             background: #3b82f6;
+//             color: white;
+//             border: none;
+//             border-radius: 4px;
+//             cursor: pointer;
+//         }
+
+//         .toggle-button:hover {
+//             background: #2563eb;
+//         }
+//     </style>
+// </head>
+// <body>
+//     <div id="app"></div>
+
+//     <script>
+//         function createProfileCard(container, {
+//             name = "John Doe",
+//             isEnglish = true,
+//             imageUrl = null
+//         } = {}) {
+//             function getProfileHTML() {
+//                 return `
+//                     <div class="profile-card">
+//                         <div class="profile-container">
+//                             <div class="profile-image-container">
+//                                 ${imageUrl 
+//                                     ? `<img src="/api/placeholder/96/96" alt="Profile" class="profile-image">`
+//                                     : `<div class="profile-image-fallback">
+//                                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af">
+//                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+//                                             <circle cx="12" cy="7" r="4"></circle>
+//                                         </svg>
+//                                        </div>`
+//                                 }
+//                                 <span class="status-badge ${isEnglish ? 'english' : 'not-english'}">
+//                                     ${isEnglish ? 'English' : 'Not English'}
+//                                 </span>
+//                             </div>
+                            
+//                             <div style="text-align: center">
+//                                 <h3 class="profile-name">${name}</h3>
+//                                 <p class="profile-subtitle">User Profile</p>
+//                             </div>
+
+//                             <div class="stats-container">
+//                                 <div class="stats-grid">
+//                                     <div>
+//                                         <p class="stat-label">Status</p>
+//                                         <p class="stat-value">${isEnglish ? 'Active' : 'Inactive'}</p>
+//                                     </div>
+//                                     <div>
+//                                         <p class="stat-label">Member Since</p>
+//                                         <p class="stat-value">2024</p>
+//                                     </div>
+//                                 </div>
+//                             </div>
+                            
+//                             <button class="toggle-button" id="toggleStatus">
+//                                 Toggle English Status
+//                             </button>
+//                         </div>
+//                     </div>
+//                 `;
+//             }
+
+//             // Initial render
+//             container.innerHTML = getProfileHTML();
+
+//             // Add event listener for toggle button
+//             const toggleButton = container.querySelector('#toggleStatus');
+//             toggleButton.addEventListener('click', () => {
+//                 isEnglish = !isEnglish;
+//                 container.innerHTML = getProfileHTML();
+                
+//                 // Reattach event listener after re-render
+//                 container.querySelector('#toggleStatus')
+//                     .addEventListener('click', toggleButton.onclick);
+//             });
+//         }
+
+//         // Initialize the profile card
+//         const appContainer = document.getElementById('app');
+//         createProfileCard(appContainer, {
+//             name: "John Doe",
+//             isEnglish: true,
+//             imageUrl: null
+//         });
+//     </script>
+// </body>
+// </html>
