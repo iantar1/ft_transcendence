@@ -2,34 +2,184 @@
 
 import {fetchUserData} from './readData.js';
 
+
+function serachBar(){
+    return `
+    <style>
+        #search-container {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #results {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #results li {
+            color: black;
+            font-size: 16px;
+            padding: 5px 0;
+            cursor: pointer; /* Pointer cursor to indicate clickable items */
+            text-decoration: none;
+        }
+        #results li:hover {
+            background-color: #f0f0f0; /* Highlight on hover */
+        }
+        /* Popup Styles */
+        #popup {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #popup button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #popup button:hover {
+            background-color: #0056b3;
+        }
+        /* Overlay to dim background */
+        #overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+    <div id="search-container">
+        <input type="text" id="search-bar" placeholder="Search here..." />
+        <div id="results"></div>
+    </div>
+
+    <!-- Popup and Overlay -->
+    <div id="overlay"></div>
+    <div id="popup">
+        <p id="popup-text"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+    `;
+}
+
+function slidFriend(){
+    const searchBarr = serachBar();
+    return `
+        <style>
+        .logout-popup {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logout-popup-content {
+            background: var(--blue);
+            padding: 30px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        .btn-home{
+            background: var(--red);
+        }
+        .paratext{
+            font-size :90%;
+        }
+        .confirmtext{
+            color :var(--red);   
+        }
+
+    </style>
+        <div id="logoutPopup" class="logout-popup">
+            <div class="logout-popup-content">
+                ${searchBarr}
+                <button type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
+            </div>
+        </div>
+                `
+                
+            };
+
 const addFriends = () => {
     const elem = document.getElementsByClassName('.img-profile')
-    console.log("----> " +  elem);
+    const popuping = slidFriend();
     const data = [
         {img :"/images/ah.png", status : true ,name :"ahbajaou",}
     ]
     return     elem.innerHTML = `
 
-    <div class="addfriend d-flex justify-content-center align-items-center flex-column" style="gap :10px; height: 95%; width :85%;background:var(--dark); border-radius :5px;" >
-        <div class="flag" style="font-size :100%; border-radius :5px; width :70%; height :10%; background:var(--red); display: flex; justify-content: center; align-items: center;" >
+    <div  class="addfriend d-flex justify-content-center align-items-center" style="gap :10px; background:var(--dark); border-radius :5px;" >
+        <button  type="click" class="flag btn-home btn btn-secondary " style="font-size :100%; border-radius :5px;  background:var(--red); display: flex; justify-content: center; align-items: center;" >
             <i style="color: #fff;" class="fa-solid fa-user-plus"></i>
-        </div>
-        <div class="scrollable-div" style="height :80%; width :95%; overflow-x :hidden; overflow-y: auto;" >
-                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
-                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+        </button>
+        <span class="forAdd" style="" ></span>
+        <div class="scrollable-div" style="" >
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
                 </div>
-                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
-                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
                 </div>
-                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
-                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
                 </div>
-                <div class="d-flex justify-content-center align-items-center flex-column" style="height :32%; width ;60%;" >
-                    <img style="position :static; width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span style="position :relative; top:-15%; left:15%; width :10px; height :10px; border-radius :50%; background:green;" ></span>
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
+                </div>
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
+                </div>
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
+                </div>
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
+                </div>
+                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
+                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
+                    <span class="sign" style="" ></span>
                 </div>
         </div>
 
@@ -40,6 +190,7 @@ const addFriends = () => {
 class profilePage extends HTMLElement {
     statsHistory = [];
     frienSection = addFriends();
+
     template = `
         <div class="content-profile ">
                 <div class="cart-profile ">
@@ -62,7 +213,7 @@ class profilePage extends HTMLElement {
                         </div>
 
                     </div>
-                    <div  class="img-profile d-flex justify-content-center align-items-center flex-column">
+                    <div  class="img-profile d-flex justify-content-center align-items-center ">
                         ${this.frienSection}
                     </div>
                 </div>
@@ -81,12 +232,12 @@ class profilePage extends HTMLElement {
                 }
         
                 .scrollable-div::-webkit-scrollbar-thumb {
-                    background: #999; /* Thumb color */
+                    background: var(--red); /* Thumb color */
                     border-radius: 10px; /* Rounded thumb for a smooth look */
                 }
         
                 .scrollable-div::-webkit-scrollbar-thumb:hover {
-                    background: #666; /* Darker color on hover */
+                    background: #fff; /* Darker color on hover */
                 }
         
                 .scrollable-div::-webkit-scrollbar-track {
@@ -221,6 +372,34 @@ class profilePage extends HTMLElement {
             @keyframes animate-positive {
             0% { width: 0%; }
             }
+            .addfriend{
+                height :95%;
+                width :85%;
+                flex-direction: column;
+            }
+            .flag{
+                width :70%;
+                height :10%;
+            }
+            .sign{
+                position :relative;
+                top:-15%;
+                left:15%;
+                background:green;
+                width :10px;
+                height :10px;
+                border-radius :50%;
+                z-index :4000;
+            }
+            .profsign{
+                height :32%;
+            }
+            .scrollable-div{
+                overflow-x :hidden; 
+                overflow-y: auto;
+                height :80%;
+                width :95%;
+            }
             @media (min-width: 320px) and (max-width: 1024px) {
                     .img-profile{
                         display :none;
@@ -234,11 +413,40 @@ class profilePage extends HTMLElement {
                     .info-profile{
                         height :80%;
                     }
+                .scrollable-div::-webkit-scrollbar {
+                    height :2px;
+                }
                     .addfriend{
-                        height :10%;
-                        width :80%;
+                        height :65px;
+                        width :100%;
                         flex-direction: row;
-                        border :1px solid;
+                    }
+                    .flag{
+                        width :16%;
+                        height :50px;
+                    }
+                    .profsign{
+                        height :50px;
+                        
+                    }
+                    .sign{
+                        top:-10px;
+                        left:15px;
+                    }
+                    .scrollable-div{
+                        display :flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: row;
+                        gap :10px;
+                        overflow-x :auto; 
+                        overflow-y: hidden;
+                        height :100%;
+                        width :95%;
+                    }
+                    .img-profile{
+                        height :15%;
+                        width :100%; 
                     }
             }
         </style>
@@ -721,6 +929,59 @@ class profilePage extends HTMLElement {
         console.log(from)
         onevsone.innerHTML = from;
     }
+    slidFriend(){
+        const friendSection = document.querySelector('.flag'); // Access the first element with the class
+        friendSection.addEventListener('click' , (e) =>{
+                console.log('Hello Friends');
+                // friendSection.className = "test"
+                document.querySelector('.forAdd').style.display = 'block';
+                const serach = document.querySelector('.forAdd').innerHTML = slidFriend();
+                const searchBar = document.getElementById('search-bar');
+                const resultsDiv = document.getElementById('results');
+                const popup = document.getElementById('popup');
+                const popupText = document.getElementById('popup-text');
+                const overlay = document.getElementById('overlay');
+        
+                const sampleData = ["apple", "banana", "cherry", "date", "elderberry", "fig", "grape"]; // Sample data to search
+        
+                // Function to display matching results
+                function displayResults(query) {
+                    resultsDiv.innerHTML = ''; // Clear previous results
+                    if (query) {
+                        const filteredData = sampleData.filter(item => item.toLowerCase().includes(query.toLowerCase()));
+                        if (filteredData.length) {
+                            resultsDiv.innerHTML = `<ul>${filteredData.map(item => `<li onclick="showPopup('${item}')">${item}</li>`).join('')}</ul>`;
+                        } else {
+                            resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
+                        }
+                    }
+                }
+        
+                // Function to show the popup
+                function showPopup(result) {
+                    popupText.textContent = `You clicked: ${result}`;
+                    popup.style.display = 'block';
+                    overlay.style.display = 'block';
+                }
+        
+                // Function to close the popup
+                function closePopup() {
+                    popup.style.display = 'none';
+                    overlay.style.display = 'none';
+                }
+        
+                // Add event listener to search bar
+                searchBar.addEventListener('input', (e) => {
+                    const query = e.target.value.trim();
+                    displayResults(query); // Show matching results
+                });           
+                document.querySelector('#backtoprof').addEventListener('click' , (e) => {
+                        console.log("BACK TO PROF PAGE");
+                        document.querySelector('.forAdd').style.display = 'none';
+                });
+            });
+
+    };
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
@@ -733,6 +994,7 @@ class profilePage extends HTMLElement {
             document.getElementById('BIO').textContent = 'ash dal temchi lzine'
         }
         uuss();
+        // this.slidFriend();
         this.innerHTML = `
             ${this.template}
             ${this.templatTwo}
@@ -784,6 +1046,8 @@ class profilePage extends HTMLElement {
     connectedCallback() {
         this.render();
         this.statsPlayer();
+        this.slidFriend();
+
     }
 }
 

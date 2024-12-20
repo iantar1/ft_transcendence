@@ -47,9 +47,6 @@ class LogoutPage extends HTMLElement {
             <div class="logout-popup-content">
                 <h2 class="confirmtext" >Confirm Logout</h2>
                 <p class="paratext">Are you sure you want to log out?</p>
-                <div class="logout-popup-buttons">
-                    <button class="btn-home btn btn-secondary " >Logout</button>
-                </div>
             </div>
         </div>
         `;
