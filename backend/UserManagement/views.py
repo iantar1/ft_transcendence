@@ -312,5 +312,96 @@ class StatsView(APIView):
             raise AuthenticationFailed('Unauthenticated')
         serialer = StatsSerializer(user.stats)
         return Response(serialer.data, status=200)
-    
 
+def checkIfTheRelationExsit(user1, user2, action):
+    # Check if a friendship exists between the two users in either direction
+    if  Friendship.objects.filter(from_user=user1, to_user=user2, status=action).exists():
+        return True
+    if  Friendship.objects.filter(from_user=user2, to_user=user1, status=action).exists():
+        return True
+    return False
+
+
+# from rest_framework.permissions import IsAuthenticated
+
+class FriendShipView(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        token = request.COOKIES.get('access')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+
+        from_user = get_user_by_token(token)
+        if from_user is None:
+            raise AuthenticationFailed('Unauthenticated')
+
+        to_user_name = request.data.get('to_user')
+        if not to_user_name:
+            raise ValidationError({'field error': 'You missed the "to_user" field.'})
+        try:
+            to_user = User.objects.get(username=to_user_name)
+        except:
+            raise ValidationError({'error': 'user not found.'})
+
+        action = request.data.get('action')
+
+        if checkIfTheRelationExsit(to_user, from_user, action):
+            return Response({"error": "This friend request already exists."}, status=400)
+
+        if action == 'sent':
+            return self.sendFriendRequest(to_user,from_user)
+        elif action == 'accepted':
+            return self.acceptFriendRequest(to_user, from_user)
+        elif action == 'rejected':
+            return self.rejectFriendRequest(to_user, from_user)
+        return  Response({"error": "This action doesn't exists."}, status=400)
+
+
+
+    def addFriend(self, user, friend):
+        userProfile, created = FriendsProfile.objects.get_or_create(user=user)
+        friendProfile, created_ = FriendsProfile.objects.get_or_create(user=friend)
+        
+        # Add the friend to the user's friends list
+        userProfile.friends.add(friend)
+        friendProfile.friends.add(user)
+        userProfile.save()
+        friendProfile.save()
+
+
+    def sendFriendRequest(self, to_user,from_user):
+        try:
+            relation = Friendship(from_user=from_user, to_user=to_user)
+            relation.save()
+            return Response({'message': 'Friend request sent successfully.'}, status=200)
+        except Exception as e:
+            return Response({'error': f'Friend request failed. Error: {str(e)}'}, status=400)
+
+
+    def rejectFriendRequest(self, to_user,from_user):
+        relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
+        if relation == None:
+            return Response({"error": "friendship not found"}, status=404)
+        
+        relation.status = 'rejected'
+        relation.save()
+        return Response({'success':"the friendship has been rejected successfully"})
+
+    def acceptFriendRequest(self, to_user, from_user):
+        relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
+        if relation == None:
+            return Response({"error": "friendship not found"}, status=404)
+        relation.status = 'accept'
+        relation.save()
+        self.addFriend(to_user,from_user)
+        # try:
+        # except:
+        #     return Response({"error":"the Profile friendship does not exist"}, status=404)
+        return Response({'success':"the friendship has been accepted successfully"})
+
+
+
+# send request
+# receive request
+# 
