@@ -369,7 +369,6 @@ class FriendShipView(APIView):
         userProfile.save()
         friendProfile.save()
 
-
     def sendFriendRequest(self, to_user,from_user):
         try:
             relation = Friendship(from_user=from_user, to_user=to_user)
