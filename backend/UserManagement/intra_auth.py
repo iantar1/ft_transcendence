@@ -35,7 +35,11 @@ def home(request):
 
 
 def createUpdateUser(data_json)-> User:
+    # check if the user already exsit
+    # existing_user = User.objects.filter(username=data_json.get("login")).first()
 
+    # if existing_user:
+    #     return existing_user
     image_link = data_json.get("image", {}).get("link")
 
     response = requests.get(image_link)
@@ -49,7 +53,14 @@ def createUpdateUser(data_json)-> User:
         # Extract the image filename from the URL
     filename = os.path.basename(data_json.get("image", {}).get("link"))
     print(f'filename: {filename}')
-
+    # user = User(
+    #         # id=data_json["id"],
+    #         first_name = data_json.get("first_name"),
+    #         last_name = data_json.get("last_name"),
+    #         email = data_json.get("email"),
+    #         image = File(img_temp, name=filename),#set default if you can't get the image
+    #         username = data_json.get("login")
+    #     )
     user, created = User.objects.update_or_create(
         username=data_json.get("login"),
         email=data_json.get("email"),
@@ -80,7 +91,8 @@ from django.urls import reverse
 def auth(request):
 
     queryStr = request.GET.get('code')
-
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    print(queryStr)
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
                'client_secret':CLIENT_SECRET,
@@ -99,13 +111,35 @@ def auth(request):
     #     raise AuthenticationFailed('Unauthenticated')
         
     serializer = UserSerializer(user)
+    # user.use
+    # response = Response(serializer.data)
+    # response.accepted_renderer = JSONRenderer()
+    # response.accepted_media_type = 'application/json'
+    # response.renderer_context = {
+    # 'request': request,
+    # 'response': response
+    # }
     access_token = create_access_token(user.id)
 
     response = HttpResponseRedirect('http://localhost:3000/home')  # Redirect to frontend
     response.set_cookie(key="access", value=access_token, httponly=True)
 
+    # Pass access token and any other required data in the URL or headers
+    # Option 1: Passing token as URL parameters (not recommended for security)
+    # response['Location'] = f'http://localhost:3000/home?access_token={access_token}'
+    
+    # Option 2: Passing token via headers (more secure)
     response['Authorization'] = f'Bearer {access_token}'
     
+    # You can also add additional user data if needed
+    # response['X-User-Data'] = serializer.data
+
     return response
+    return Response(serializer.data)
+    # return redirect("http://localhost:3000/login")
 
-
+# read the subject again
+# recreate a new intra auth
+# use jwt and set the cookie and redirct to home
+# if unthenticated user try to acess the /home rediract him to /register
+# authentcate with google 
