@@ -10,7 +10,7 @@ function serachBar(){
         #search-container {
             margin: 20px auto;
             width: 100%;
-            display :none;
+            display :flex;
             justify-content :center;
             align-items :center;
             flex-direction: column;
@@ -75,22 +75,15 @@ function serachBar(){
             <div id="results"></div>
             <button type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
         </div>
-        <div id="overlay"></div>
-        <div id="popup">
-            <p id="popup-text"></p>
-            <button onclick="closePopup()">Close</button>
-        </div>
     </div>
     `;
 }
 function profSection(){
     return `
     <style>
-        #profadd{
-            display :none;
-        }
+
     </style>
-            <div id="profadd" style=" flex-direction: column; align-items :center; justify-content:center; gap :10px; width:100%; height :100%;" >
+            <div id="profadd" style="display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px; width:100%; height :100%;" >
                 <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;">
                     <img style="position :static;  width: 80px; height: 80px; border-radius: 50%;"  src="/images/ah.png" >
                     <span>chebchoub</span>
@@ -145,8 +138,7 @@ function slidFriend(){
     </style>
         <div id="logoutPopup" class="logout-popup">
             <div class="logout-popup-content">
-                    ${searchBarr}
-                    ${prof}
+
             </div>
         </div>
                 `
@@ -919,9 +911,11 @@ class profilePage extends HTMLElement {
         const friendSection = document.querySelector('.flag'); // Access the first element with the class
         friendSection.addEventListener('click' , (e) =>{
                 // friendSection.className = "test"
-                document.querySelector('.forAdd').style.display = 'block';
-                const serach = document.querySelector('.forAdd').innerHTML = slidFriend();
-                document.querySelector('#search-container').style.display = "flex";
+                // document.querySelector('.forAdd').style.display = 'block';
+                const serach = document.querySelector('.forAdd').appendChild(slidFriend());
+                document.querySelector('.logout-popup-content').innerHTML = '';
+                document.querySelector('.logout-popup-content').appendChild(serachBar());
+                // document.querySelector('#search-container').style.display = "flex";
                 const searchBar = document.getElementById('search-bar');
                 const resultsDiv = document.getElementById('results');
                 const popup = document.getElementById('popup');
@@ -969,7 +963,9 @@ class profilePage extends HTMLElement {
                 });           
                 document.querySelector('#backtoprof').addEventListener('click' , (e) => {
                         console.log("BACK TO PROF PAGE");
-                        document.querySelector('.forAdd').style.display = 'none';
+                        document.querySelector('.logout-popup').style.display = 'none';
+                        // document.querySelector('#search-container').style.display = "none";
+
                 });
             });
 
@@ -979,22 +975,24 @@ class profilePage extends HTMLElement {
     
         openProfileElements.forEach(field => {
             field.addEventListener('click', (e) => {
-                // const currentElement = e.currentTarget;
-                // const index = currentElement.dataset.index; // Get the index from the data attribute
-                // document.querySelector('.foradd').style.display = "flex";
+                document.querySelector('.forsddProf').innerHTML = '';
                 document.querySelector('.forsddProf').innerHTML = slidFriend();
-                    document.querySelector('#profadd').style.display = "flex";
+                console.log(document.querySelector('.logout-popup-content'));
+                document.querySelector('.logout-popup').style.display = 'flex';
+                // document.querySelector('.logout-popup-content').innerHTML = '';
+                document.querySelector('.logout-popup-content').innerHTML = profSection();
+                // document.querySelector('#profadd').style.display = "flex";
     
                 // Dynamically handle the back button
                 const backToSearch = document.querySelector('#backtosearch');
 
                 backToSearch.addEventListener('click' , (e) => {
                     console.log("THERE IS THE BACK BUTTON");
-                    document.querySelector('#profadd').style.display = "none";
+                    // document.querySelector('#profadd').style.display = "none";
                     document.querySelector('.logout-popup').style.display = 'none';
                 });
     
-                console.log(`Profile clicked`);
+                // console.log(`Profile clicked`);
             });
         });
     }
@@ -1039,9 +1037,7 @@ class profilePage extends HTMLElement {
                     this.info.image = "/images/default.jpeg"
                 }
                 document.getElementById('username').textContent = this.info.username
-                // document.getElementById('username').textContent = this.info.username
                 document.getElementById('img_intra').src = this.info.image
-                console.log(this.info.image);
                 document.getElementById('BIO').textContent = 'ash dak temchi lzine'
             }
             else{
