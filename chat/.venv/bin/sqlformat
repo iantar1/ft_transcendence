@@ -1,4 +1,4 @@
-#!/home/iantar/Desktop/ft_transcendence/chat/.venv/bin/python
+#!/home/iantar/ft_transcendence/chat/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

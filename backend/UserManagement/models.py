@@ -5,7 +5,6 @@ from django.dispatch import receiver
 
 
 class User(AbstractUser):
-    # image = models.ImageField(upload_to ='image/')
     username = models.CharField(max_length=50, unique=True)
     image = models.ImageField(upload_to='images/', default='/images/default.png')
     email = models.EmailField(unique=True)
@@ -46,11 +45,26 @@ class MatchHistory(models.Model):
     #     return f"Match between {self.user1} and {self.user2} on {self.played_at}"
 
 
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    friends = models.ManyToManyField(User, related_name='friends', blank=True)
+class Friendship(models.Model):
+    STATUS_CHOICES = [
+        ('sent', 'Sent'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
     
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_from')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_to')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='sent')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.from_user.username} - {self.to_user.username} ({self.status})'
+
+
+class   FriendsProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friend_profile')
+    friends = models.ManyToManyField(User, blank=True, related_name='friends_of_user')
+
 
     def get_friends(self):
         return self.friends.all()
@@ -59,30 +73,48 @@ class Profile(models.Model):
         return self.friends.all().count()
     
     def __str__(self):
-        return str(self.user)
-    
-STATUS_CHOICES = {
-    ('send', 'send'),
-    ('accepted', 'accepted'),
-}
+        return str(self.user) + "'s friend"
 
-class Relationship(models.Model):
-    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender')
-    receiver = models.ForeignKey(Profile,  on_delete=models.CASCADE, related_name='receiver')
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+
+
+
+# class Profile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     friends = models.ManyToManyField(User, related_name='friends', blank=True)
+    
+
+#     def get_friends(self):
+#         return self.friends.all()
+    
+#     def get_friends_number(self):
+#         return self.friends.all().count()
+    
+#     def __str__(self):
+#         return str(self.user)
+    
+
+# STATUS_CHOICES = {
+#     ('send', 'send'),
+#     ('accepted', 'accepted'),
+# }
+
+# class Relationship(models.Model):
+#     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender')
+#     receiver = models.ForeignKey(Profile,  on_delete=models.CASCADE, related_name='receiver')
+#     status = models.CharField(max_length=50, choices=STATUS_CHOICES)
         
 
 
 
-@receiver(pre_save, sender=Relationship)
+# @receiver(pre_save, sender=Relationship)
 
 
-def print_email(sender, instance, **kwargs):
-    print("hello")
-    # print(instance.status)
+# def print_email(sender, instance, **kwargs):
+#     print("hello")
+#     # print(instance.status)
     
-def print_email1(sender, instance, **kwargs):
-    print("ksdjf;lksdf;lk")
+# def print_email1(sender, instance, **kwargs):
+#     print("ksdjf;lksdf;lk")
     # print(instance.status)
     
 # class Friendship(models.Model):
@@ -117,5 +149,4 @@ def print_email1(sender, instance, **kwargs):
 #         if account in self.friends.all():
 #             self.frerinds.add(account)
 
-             
-
+# add a friend row in the user 
