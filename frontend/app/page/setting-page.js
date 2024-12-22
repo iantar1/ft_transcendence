@@ -1,14 +1,57 @@
 
+import {fetchUserData} from './readData.js';
+
 
 class settingPage extends HTMLElement {
-
+    
+    navar = `
+    @media (min-width: 320px) and (max-width: 1024px) {
+            .nav-bar{
+                width: 100%;
+                display: flex;
+                height :8%;
+                background-color: rgb(0 0 0 / 0.5);
+                color: #293247;
+                justify-content: space-evenly;
+                align-items: center;
+                flex-direction: row;
+                border-radius :0px;
+                position: fixed;
+                padding-bottom: 5%;
+                bottom :0;
+                z-index :1000;
+            }
+            .nav-02{
+                margin-top:30px;
+            }
+            .nav-02 .fa-right-from-bracket{
+                display :none;
+            }
+            nav a{
+                text-decoration: none;
+            }
+            .fafa{
+                display :none;
+            }
+            .img-home{
+                display :none;
+            }
+            body{
+                flex-direction: column-reverse;
+            }
+            #content{
+                width :100vw;
+                height :100vh;
+                border-radius :0px;
+                display :flex;
+            }
+    }`
     constructor() {
         super();
     }
 
     settingOne = `
         <div class="settingOne" >
-            <h3>Account setting</h3>
             <br>
             <div class="nav-setting" >
             <br>
@@ -39,8 +82,15 @@ class settingPage extends HTMLElement {
     settingOneStyle = `
     <style>
     .nav-bar{
-        display :flex;
+            display :flex;
         }
+    @media (min-width: 992px) and (max-width: 1024px) {
+        .settingOne{
+        width :20%;
+        height :100%;
+        display :flex;
+    }
+    }
     .settingPage{
         width :100%;
         height :100%;
@@ -48,21 +98,24 @@ class settingPage extends HTMLElement {
         align-items: center;
         justify-content: center;
         gap :30px;
+        z-index :2000;
     }
     .settingOne{
         width :20%;
         height :100%;
+        display :flex;
     }
     .nav-setting{
         width :100%;
         height :50%;
-        background: #293247;
-        border-radius :25px;
+        background: var(--bluenes);
+        border-radius :5px;
         display :flex;
         align-items: center;
         justify-content: start;
         flex-direction: column;
         gap :10px;
+        z-index :2000;
     }
     .hoverSetting{
         width :100%;
@@ -92,41 +145,58 @@ class settingPage extends HTMLElement {
     }
     .infoSetting{
         width :100%;
-        height :96%;
-        background: #293247;
-        border-radius :25px;
+        height :90%;
+        background: var(--bluenes);
+        border-radius :5px;
         
     }
     .settingTwo{
         width :80%;
         height :100%;
     }
+    .btn-home{
+            width :200px;
+            height:50px;
+            background-color: rgba(228, 5, 47, 1);
+            border-radius:5px;
+            border :none;
+            font-size:100%;
+            z-index :2000;
+            font-weight: ;
+        }
     </style>
     `;
     settintransStyle = `
                 <style>
             .formProf{
                 width :100%;
-                height :100%;
+                height :90%;
                 display :flex;
                 align-items: center;
                 justify-content: center;
+                
             }
             .formProf form{
                 width :90%;
                 height :90%;
+                font-family: "Gill Sans", sans-serif;
             }
             .formProf input {
-                background: rgba(34, 40, 52, 1) ;
+                background-color: rgb(0 0 0 / 0.5);
                 border :none;
                 border-radius :15px;
             }
+            .formProf textarea{
+                background-color: rgb(0 0 0 / 0.5);
+        
+            }
             .formProf label{
                 font-size :18px;
+                font-family: "Gill Sans", sans-serif;
 
             }
             textarea{
-                height :70%;
+                height :40%;
                 width :80%;
                 background: rgba(34, 40, 52, 1) ;
                 border-radius :15px;
@@ -141,31 +211,134 @@ class settingPage extends HTMLElement {
             }
         </style>
     `;
+    // <div class="brr" ></div>
+    // <div class="infoSetting" >
+    //     <div class="avatar" >
+    //         <div class="editAvatar" >
+    //             <div class="imgInfo" >
+    //                 <img src="../images/profile.png" >
+    //             </div>
+    //             <div class="btnInfo" >
+    //                 <button type="button" class="btn btn-secondary">Upload New</button>
+    //                 <button type="button" class="btn btn-light">Delete Avatar</button>
+    //             </div>
+    //         </div>
+    //     </div>
+    //     <div class="info" >
+    //         <div class="editInfo" >
+
+    //         </div>
+    //     </div>
+    //     <div class="saveInfo" >
+    //         <button type="button" class="btn btn-light">Save</button>
+    //     </div>
+        
+    // </div>
     settingTwo = `
     <div class="settingTwo" >
-        <div class="brr" ></div>
-        <div class="infoSetting" >
-            <div class="avatar" >
-                <div class="editAvatar" >
-                    <div class="imgInfo" >
-                        <img src="../images/profile.png" >
-                    </div>
-                    <div class="btnInfo" >
-                        <button class="editImg" type="button">Upload New</button>
-                        <button class="deleteImg" type="button">Delete Avatar</button>
-                    </div>
-                </div>
-            </div>
-            <div class="info" >
-                <div class="editInfo" >
+    <div class="humbergr-bar" type="click">
+        <input type="checkbox"  role="button" aria-label="Display the menu" class="menu">
+    </div>
+    <div class="infoSetting" >
+                <div class="avatar" >
+                    <div class="editAvatar" >
+                        <div class="imgInfo" >
+                            <img id="imgSetting" src="" >
+                        </div>
+                        <div class="btnInfo" >
+                            <button type="click" id="openPopupBtn" class="btn-home fiter btn btn-secondary " >Upload New</button>
+                            <button type="click" id="deleteimg" class="btn-home fiter btn btn-secondary " >Delete Avatar</button>
+                        </div>
 
+                        <!-- Popup Overlay -->
+                        <div id="popupOverlay" class="popup-overlay"></div>
+
+                        <!-- Popup Container -->
+                        <div id="popup" class="popup">
+                            <span id="popupClose" class="popup-close">&times;</span>
+                            <h2>Upload</h2>
+                            
+                            <!-- File Input -->
+                            <input type="file" id="imageUpload" accept="image/*" class="file-input">
+                            <label for="imageUpload" class="file-input-label">Choose Image</label>
+                            
+                            <!-- Image Preview -->
+                            <img id="imagePreview" alt="Image Preview">
+                            
+                            <div>
+                                <button class="btn-home " id="uploadBtn" style="display:none;">Upload</button><br>
+                                <button class="btn-home " id="closePopupBtn">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="saveInfo" >
-                <button class="savebtn" type="button">Save</button>
-            </div>
+                <div class="info" >
+                    <div class="editInfo" >
+
+                    </div>
+                </div>
+
+    </div>
         </div>
-        </div>
+        <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--dark);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 4000;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        /* Overlay background */
+        .popup-overlay {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            backdrop-filter: blur(8px); /* Blur everything behind the overlay */
+            z-index: 999; /* Ensure overlay is on top */
+        }
+        /* Popup close button */
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        /* Button styling */
+
+        /* Image preview */
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 20px 0;
+            display: none;
+        }
+        /* File input styling */
+        .file-input {
+            display: none;
+        }
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        </style>
     `   
     hiddeHover(name){
         const hoverProf = document.querySelector(name);
@@ -174,31 +347,38 @@ class settingPage extends HTMLElement {
     }
     profEdit(){
         return `
-        <div class="formProf" >
-            <form>
+        <div class="formProf d-flex flex-column" >
+            <form id="myForm" >
                 <label for="fname">Username</label><br><br>
                 <input type="text"  class="editUser" name="username"><br><br>
-                <label for="lname">Bio</label><br><br>
+                <label for="lname">Bio</label>
                 <textarea rows="10" 
                 name="blog">
-        Share your knowledge by writing your own blog! 
-      </textarea>
+                Share your knowledge by writing your own blog! 
+                </textarea>
+                <div class="saveInfo" >
+                        <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
+                </div>
             </form>
-        </div>
+            </div>
+            <br>
         `;
     }
     passEdit(){
         return `
-        <div class="formProf" >
-            <form>
+        <div class="formProf d-flex flex-column" >
+            <form id="myForm" >
                 <label for="fname">Old Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br><br>
+                <input type="text"  class="editUser" name="username"><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br><br>
+                <input type="text"  class="editUser" name="username"><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br><br>
+                <input type="text"  class="editUser" name="username"><br>
+                <div class="saveInfo" >
+                        <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
+                </div>
             </form>
-        </div>
+            </div>
         
         `;
     }
@@ -272,8 +452,153 @@ class settingPage extends HTMLElement {
                 <input type="checkbox">
                 <span class="slider round"></span>
             </label>
-        </div>
+            </div>
+            <div class="saveInfo" >
+                <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
+           </div>
         `;
+    }
+    displayNav(){
+        console.log('inside navigation')
+        const checkbox = document.querySelector('.menu').getAttribute('name');
+            const navnav = document.querySelector(".menu");
+            navnav.addEventListener('change' , (e) =>{
+                if (navnav.checked){
+                    document.querySelector('.menu').setAttribute("name", "noflag")
+                    document.querySelector('.settingOne').style.display = "flex";
+                }
+                else{                    
+                    document.querySelector('.settingOne').style.display = "none";
+                }
+            });
+    }
+
+    async imgEffect(){
+        const openPopupBtn = document.getElementById('openPopupBtn');
+        const popup = document.getElementById('popup');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupClose = document.getElementById('popupClose');
+        const closePopupBtn = document.getElementById('closePopupBtn');
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        // Function to open the popup
+        function openPopup() {
+            popup.style.display = 'block';
+            popupOverlay.style.display = 'block';
+            // Reset form
+            imageUpload.value = '';
+            imagePreview.style.display = 'none';
+            imagePreview.src = '';
+            uploadBtn.style.display = 'none';
+                const elements = document.querySelectorAll('.fiter');
+                elements.forEach((el) => {
+                    el.style.filter = 'blur(8px)';
+                });
+            }
+        // Function to close the popup
+        function closePopup() {
+            popup.style.display = 'none';
+            popupOverlay.style.display = 'none';
+            const elements = document.querySelectorAll('.fiter');
+            elements.forEach((el) => {
+                el.style.filter = 'none';
+            });
+
+        }
+
+        // Image upload event listener
+        imageUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Create a file reader
+                const reader = new FileReader();
+                
+                // Read the image file
+                reader.readAsDataURL(file);
+                
+                // When file is loaded
+                reader.onload = function(e) {
+                    // Show image preview
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    
+                    // Show upload button
+                    uploadBtn.style.display = 'inline-block';
+                }
+            }
+        });
+
+        // Upload button event listener (you would typically send this to a server)
+        uploadBtn.addEventListener('click', function() {
+            // Simulate upload (replace with actual upload logic)
+            alert('Image ready to upload! (In a real app, this would send to a server)');
+            const file = imageUpload.files[0];
+            
+            // Here you would typically:
+            // 1. Create FormData
+            // const formData = new FormData();
+            // formData.append('image', file);
+            
+            // 2. Send to server with fetch or XMLHttpRequest
+            // fetch('/upload', {
+            //     method: 'POST',
+            //     body: formData
+            // })
+        });
+
+        // Event listeners to open and close the popup
+        openPopupBtn.addEventListener('click', openPopup);
+        popupClose.addEventListener('click', closePopup);
+        closePopupBtn.addEventListener('click', closePopup);
+        popupOverlay.addEventListener('click', closePopup);
+    }
+    deleteImage(){
+        const img = document.getElementById('deleteimg')
+        console.log(img);
+        img.addEventListener('click' , (e) => {
+            console.log('HERE HERE DELETE IMAGE');
+        });
+    }
+    infoPost(){
+        // console.log('HERE WE CAN POST YOUR DATA')
+        // const buttons = document.querySelector('#postData');
+        //     buttons.addEventListener('click', () => {
+        //         alert('Button clicked!');
+        //     });
+        document.querySelector('#myForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission and page reload
+        
+            const form = event.target; // Reference to the form
+            const formData = new FormData(form); // Collect form data
+        
+            // Convert FormData to a JSON object
+            const jsonObject = {};
+            formData.forEach((value, key) => {
+                jsonObject[key] = value;
+            });
+        
+            // Log the JSON data
+            console.log('Form Data as JSON:', jsonObject);
+        
+            // Example of sending JSON data with Fetch API
+            // fetch('https://example.com/submit', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(jsonObject), // Convert object to JSON string
+            // })
+            // .then((response) => response.json())
+            // .then((data) => {
+            //     console.log('Success:', data);
+            // })
+            // .catch((error) => {
+            //     console.error('Error:', error);
+            // });
+        });
+        
     }
     render() {
         this.innerHTML = `
@@ -287,12 +612,14 @@ class settingPage extends HTMLElement {
                     height :55%;
                 }
                 .saveInfo{
-                    width :88%;
+                    width :95%;
                     height :15%;
                     display: flex;
                     justify-content: right;
                     align-items: center;
-                    gap :10px;
+                    margin-top :8px;
+                    gap :0px;
+                    z-index :-1;
                 }
                 .savebtn{
                     width :18%;
@@ -303,25 +630,27 @@ class settingPage extends HTMLElement {
                     border-radius :15px;
                 }
                 .editAvatar{
-                    width :50%;
+                    width :80%;
                     height :100%;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    gap:10px;
+                    gap:5px;
                 }
                 .btnInfo{
-                    width :60%;
+                    width :80%;
                     height :80%;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    gap :20px;
+                    gap :10px;
+                   
                 }
                 .imgInfo img{
-                    width :80%;
-                    height :100%;
-                    border-radius:50%;
+               max-width: 130px;
+                height: 130px;
+                object-fit: cover;
+                border-radius:50%;
                 }
                 .imgInfo{
                     width :40%;
@@ -349,6 +678,18 @@ class settingPage extends HTMLElement {
                 .editInfo{
                     width :50%;
                     height :100%;
+
+                }
+                .formProf textarea{
+                     width :100%;
+                }
+                .formProf input{
+                     width :100%;
+                     height :12%;
+                    background:rgb(0 0 0 / 0.5);               
+                }
+                .humbergr-bar{
+                    display :none;
                 }
             </style>
             <div class="settingPage" >
@@ -356,7 +697,141 @@ class settingPage extends HTMLElement {
                 ${this.settingTwo}
                 ${this.settingOneStyle}
                 ${this.settintransStyle}
+                <style>
+                ${this.navar}
+                @media (min-width: 320px) and (max-width: 1024px){
+                  .settingPage{
+                        gap :0;
+                        border-radius :0px;
+                  }    
+                .settingOne{
+                        Display :none;
+                        width :100%;
+                        height :100%;
+                        z-index :1000;
+                        gap :0;
+                        position :absolute;
+                        left :0;
+                    }
+                    .nav-setting{
+                        border-radius :0px;
+                        background-color: #000;
+                        color: #293247;
+                        z-index :3000;
+                    }
+                    .settingTwo{
+                        width :100vw;
+                    }
+                    .NotKnow{
+                        display :none;
+                    }
+                    .infoSetting{
+                        border-radius :0px;
+                        height :100vh;    
+                    }
+                .editAvatar{
+                    width :100%;
+                    height :80%;
+                }
+                .btnInfo{
+                    width :100%;
+                    height :60%;
+                    flex-direction: column;
+                    z-index :0;
+                }
+                .editInfo {
+                    width :100%;                
+                }
+                .formProf textarea{
+                     width :100%;
+                }
+                .formProf input{
+                     width :100%;
+                     height :12%;               
+                }
+                .imgInfo{
+                    width :60%;
+                }
+                .saveInfo{
+                    margin-top :0px;
+                   
+                }
+                .humbergr-bar{
+                    display :flex;
+                    position :absolute;
+                    top :1%;
+                    right :0;
+                }
+                    .hoverSetting:hover{
+        background:rgba(56, 75, 112, 0.2);
+        border-right :10px solid rgba(56, 75, 112, 1);
+    }
+                .menu {
+                    --s: 20px; /* control the size */
+                    --c: #fafafa; /* the color */
+                    z-index :1001;
+                    height: var(--s);
+                    aspect-ratio: 1;
+                    border: none;
+                    padding: 0;
+                    border-inline: calc(var(--s)/1.2) solid #0000; 
+                    box-sizing: content-box;
+                    --_g1: linear-gradient(var(--c) 20%,#0000 0 80%,var(--c) 0) 
+                            no-repeat content-box border-box;
+                    --_g2: radial-gradient(circle closest-side at 50% 12.5%,var(--c) 95%,#0000) 
+                            repeat-y content-box border-box;
+                    background: 
+                    var(--_g2) left  var(--_p,0px) top,
+                    var(--_g1) left  calc(var(--s)/10 + var(--_p,0px)) top,
+                    var(--_g2) right var(--_p,0px) top,
+                    var(--_g1) right calc(var(--s)/10 + var(--_p,0px)) top;
+                    background-size: 
+                    20% 80%,
+                    40% 100%;
+                    position: relative;
+                    clip-path: inset(0 25%);
+                    -webkit-mask: linear-gradient(90deg,#0000,#000 25% 75%,#0000);
+                    cursor: pointer;
+                    transition: 
+                    background-position .3s var(--_s,.3s), 
+                    clip-path 0s var(--_s,.6s);
+                    -webkit-appearance:none;
+                    -moz-appearance:none;
+                    appearance:none;
+                    }
+                    .menu:before,
+                    .menu:after {
+                    content:"";
+                    position: absolute;
+                    border-radius: var(--s);
+                    inset: 40% 0;
+                    background: var(--c);
+                    transition: transform .3s calc(.3s - var(--_s,.3s));
+                    }
+
+                    .menu:checked {
+                    clip-path: inset(0);
+                    --_p: calc(-1*var(--s));
+                    --_s: 0s;
+                    }
+                    .menu:checked:before {
+                    transform: rotate(45deg);
+                    }
+                    .menu:checked:after {
+                    transform: rotate(-45deg);
+                    }
+                    .menu:focus-visible {
+                    clip-path: none;
+                    -webkit-mask: none;
+                    border: none;
+                    outline: 2px solid var(--c);
+                    outline-offset: 5px;
+                    }
+
+            }
+                </style>
             </div>
+            
 
             `;
             const hoverProf = document.querySelector('.profSetting');
@@ -373,6 +848,8 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.profEdit();
+            this.infoPost();
+
 
             });
             const passEdit = document.querySelector('.passSetting');
@@ -383,6 +860,8 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.passEdit();
+            this.infoPost();
+
             });
             const authEdit = document.querySelector('.authSetting');
             authEdit.addEventListener('click' , (e) => {
@@ -392,7 +871,19 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.passSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.authEdit();
+            this.infoPost();
+
             });
+            this.displayNav();
+            const uuss = async () => {
+                this.info = await fetchUserData();
+                document.getElementById('imgSetting').src = this.info.image
+            
+            }
+            uuss();
+            this.imgEffect();
+            this.deleteImage();
+            this.infoPost();
     }
 
     connectedCallback() {

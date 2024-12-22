@@ -35,8 +35,17 @@ def home(request):
 
 
 def createUpdateUser(data_json)-> User:
+<<<<<<< HEAD
+=======
+    # check if the user already exsit
+    # existing_user = User.objects.filter(username=data_json.get("login")).first()
 
-    response = requests.get(data_json.get("image", {}).get("link"))
+    # if existing_user:
+    #     return existing_user
+    image_link = data_json.get("image", {}).get("link")
+>>>>>>> iantar
+
+    response = requests.get(image_link)
     if response.status_code == 200:
         img_temp = NamedTemporaryFile()#IF the temporary file will be deleted once it's closed
         img_temp.write(response.content)
@@ -46,7 +55,19 @@ def createUpdateUser(data_json)-> User:
 
         # Extract the image filename from the URL
     filename = os.path.basename(data_json.get("image", {}).get("link"))
+<<<<<<< HEAD
 
+=======
+    print(f'filename: {filename}')
+    # user = User(
+    #         # id=data_json["id"],
+    #         first_name = data_json.get("first_name"),
+    #         last_name = data_json.get("last_name"),
+    #         email = data_json.get("email"),
+    #         image = File(img_temp, name=filename),#set default if you can't get the image
+    #         username = data_json.get("login")
+    #     )
+>>>>>>> iantar
     user, created = User.objects.update_or_create(
         username=data_json.get("login"),
         email=data_json.get("email"),
@@ -77,27 +98,30 @@ from django.urls import reverse
 def auth(request):
 
     queryStr = request.GET.get('code')
-
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    print(queryStr)
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
                'client_secret':CLIENT_SECRET,
                'code':queryStr,
                'redirect_uri':REDIRECT_URI,}
+    print(payload)
+    # return
     r = requests.post(OUUTH_TOKEN_URI, data=payload)
     print(f"here: {r.json()}")
     # try:
         # intra_access_token =  r.cookies.get('access_token')
     intra_access_token = r.json().get('access_token')#['access_token']
+    print(f"------------------------>>>>>> {intra_access_token}")
     user = getData(intra_access_token)
     # except:
     #     raise AuthenticationFailed('Unauthenticated')
-    print(f"------------------------>>>>>> {intra_access_token}")
         
     serializer = UserSerializer(user)
 
     access_token = create_access_token(user.id)
 
-    response = HttpResponseRedirect('http://localhost:3000/home')  # Redirect to frontend
+    response = HttpResponseRedirect('http://transcendence.backend.com:3000/home')  # Redirect to frontend
     response.set_cookie(key="access", value=access_token, httponly=True)
     
     response['Authorization'] = f'Bearer {access_token}'

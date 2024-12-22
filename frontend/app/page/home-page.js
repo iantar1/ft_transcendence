@@ -4,9 +4,11 @@
 import {readData} from './readData.js';
 
 import {fetchUserData} from './readData.js';
-import {fetchUserMatchHistory} from './readData.js';
+// import {fetchUserMatchHistory} from './readData.js';
 
 
+
+// console.log(${img_1});
 // readData.getData();
 // const attt = [1 , 3 , 3 , 7 ];
 // console.log(attt)
@@ -27,11 +29,11 @@ class homePage extends HTMLElement {
     <div class="content-home " >
     <div class="cart-home" >
             <img  class="img-home" src="/images/astro4.png">
-            <h3 class="title-home" >Good evening, <span id="username" >CHEBCHOUB</span></h3>
+            <h3 class="title-home" >Good evening, <span id="username" ></span></h3>
             <h1>Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
-            <button class="btn-home btn btn-secondary" >let's play</button>
+            <button class="btn-home btn btn-secondary " >let's play</button>
         </div>
     </div>
     `;
@@ -40,8 +42,9 @@ class homePage extends HTMLElement {
                 display :flex;
             }
         .cart-home p{
-            font-size:180%;
-            width:50%;
+            font-size:100%;
+            font-family: "Pong War", "Freeware";
+            width:70%;
         }
         .content-home{
             gap :10px;
@@ -49,10 +52,15 @@ class homePage extends HTMLElement {
         }
         .cart-home{
             height :39vh;
-            background: #293247;
-            border-radius:25px;
+            background: linear-gradient(-80deg, 
+            rgb(4, 28,68, 1) 5%, 
+            rgba(56, 75, 112, 0.2) 100%
+            );
+            border-radius:5px;
             overflow :hidden;
-            padding :15px;
+            padding :5px;
+            z-index :2000;
+            padding-left:15px;
         }
         .img-home{
             position :absolute;
@@ -62,22 +70,28 @@ class homePage extends HTMLElement {
             height :40.5%;
         }
         .cart-home span{
-            color : #384B70;
+            color : rgba(228, 5, 47, 1);
             text-shadow :2px 2px 2px black;
             font-size :100%;
         }
         .cart-home h1{
-            color : #384B70;
+            font-family: "Pong War", "Freeware";
             font-size:5vw;
-            text-shadow :2px 2px 2px black;
+            letter-spacing: 2px;
+            color: var(--red);
+            font-shadow: 2px 2px 5px rgba(255, 255, 255, 1);
+            z-index :2000;
+            height :25%;
         }
         .btn-home{
             width :200px;
             height:50px;
-            background-color: #384B70;
+            background-color: rgba(228, 5, 47, 1);
+
             border-radius:12px;
             border :none;
             font-size:100%;
+            z-index :2000;
         }
 @media (min-width: 320px) and (max-width: 1024px) {
                 .cart-home{
@@ -90,8 +104,11 @@ class homePage extends HTMLElement {
                         border-radius:5px;
                 }
                 .cart-home p{
-                    font-size:100%;
+                    font-size:80%;
                     width:100%;
+                }
+                .cart-home h1{
+                    font-size:7vw;
                 }
                 .slide-cart{
                         width :100%;
@@ -102,6 +119,7 @@ class homePage extends HTMLElement {
     styleSlide = `
         .slide-static-Home{
                 height :56vh;
+                flex-basis: 50%;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -109,72 +127,74 @@ class homePage extends HTMLElement {
             }
         .slide-home{
                 height:52vh;
-                width :50%;
-                overflow :hidden;
+                width :100%;
+                flex-basis: 50%;
                 mask-image: linear-gradient(to right, transparent, #000, transparent);
                 display :flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                overflow :hidden;
                 align-items :center;
                 justify-content: center;
-                flex-direction: row;
-                position :relative;
-            }     
-        .slide-cart{
-            display :flex;
-            align-items :center;
-            justify-content: center;
-            flex-direction: column;
-            height :280px;
-            width :22%;
-            border-radius: 18px;
-            border :1px solid #FFF4;
-            background: #7E7C7C;
-            border-bottom: 80px solid #293247;
-            position :absolute;
-            left :100%;
-            animation: newRun 5s linear infinite;
-            animation-duration :30s;
-            transition: 1s;
+                white-space: nowrap;
+                position: relative;
+            } 
+        .scroll-container {
+            position: relative;
+            overflow: hidden;
+            width :50vw;
         }
-        @keyframes newRun{
-            from {
-                left 100%;
-            }to{
-                left :-100%;
+        .scroll-wrapper {
+            display: flex;
+            width: fit-content;
+            will-change: transform;
+            animation: scrollAnimation 10s linear infinite;
+        }
+
+        @keyframes scrollAnimation {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
             }
         }
-        .slide-home:hover .slide-cart{
-            animation-play-state: paused!important;
-            filter: blur(3px);
-            transform: scale(0.9);
+        .scroll-item{
+            display :flex;
+            flex-direction: column-reverse;
+            gap :10px;
         }
-        .slide-home .slide-cart:hover{
-            filter: blur(0);
-            transform: scale(1.1);
-            z-index: 1;
+        .track-items{
+            width :200px;
+            height :200px;
+            background:rgb(0 0 0 / 0.5);
+            border-radius: 5px;
         }
-        .items1{
-            animation-delay :calc(30s / 8 * (8 - 1) * -1);
+        .scroll-track {
+            display: flex;
+            will-change: transform;
         }
-        .items2{
-            animation-delay :calc(30s / 8 * (8 - 2) * -1);
+
+        .scroll-item {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 250px;
+            height: 300px;
+            margin: 0 15px;
+            background:  linear-gradient(0deg, 
+            rgb(4, 28,68, 1) 100%, 
+            rgba(56, 75, 112, 0.2) 100%
+             );
+            color: white;
+            font-size: 24px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .items3{
-            animation-delay :calc(30s / 8 * (8 - 3) * -1);
-        }
-        .items4{
-            animation-delay :calc(30s / 8 * (8 - 4) * -1);
-        }
-        .items5{
-            animation-delay :calc(30s / 8 * (8 - 5) * -1);
-        }
-        .items6{
-            animation-delay :calc(30s / 8 * (8 - 6) * -1);
-        }
-        .items7{
-            animation-delay :calc(30s / 8 * (8 - 7) * -1);
-        }
-        .items8{
-            animation-delay :calc(30s / 8 * (8 - 8) * -1);
+
+        .scroll-wrapper:hover {
+            animation-play-state: paused;
         }
         .img-slid img{
             height :150px;
@@ -187,15 +207,14 @@ class homePage extends HTMLElement {
             text-align :center;
         }
         `;
+    matchHistory = [];
     styleStatic = `
         .static-home{
             height:90%;
             width:48%;
-            border-radius :25px;
-            border :1px solid #FFF4;
+            border-radius :5px;
             overflow: hidden;
-            background: #293247;
-
+            background:var(--blue);
         }
         .Player-img{
             height :44px;
@@ -216,7 +235,7 @@ class homePage extends HTMLElement {
             border-bottom :1px solid #FFF4;
         }
         td {
-            height :6vh;
+            height :8vh;
             text-align:left;
             padding-left :10px;
             border-bottom :1px solid #FFF4;
@@ -228,7 +247,12 @@ class homePage extends HTMLElement {
                     height :100vh;
                 }
         .slide-home{
+                display :flex;
+                align-items :center;
+                justify-content: center;
+                flex-direction: row;
                 height:100vh;
+<<<<<<< HEAD
                 width :100%;
                 gap :100%;
             }
@@ -239,12 +263,72 @@ class homePage extends HTMLElement {
         .slide-cart{
                    
                 }
+=======
+                width :100vw;
+                gap :5%;
+            }
+        .slide-cart{
+            display :flex;
+            align-items :center;
+            justify-content: center;
+        }
+        .static-home{
+                height:50vh;
+                width:100%;
+            }
+            .scroll-container{
+                width :100vw;
+            }
+>>>>>>> iantar
         }   
         `;
     templateHome = `
         <div class="slide-static-Home">
-            <div class="slide-home">
-
+            <div class="slide-home gap-4 ">
+    <div class="scroll-container">
+        <div class="scroll-wrapper">
+            <div class="scroll-track">
+                <div class="scroll-item">
+                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/champion.png">
+                    </div>
+                </div>
+                <div class="scroll-item">
+                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/game-controller.png">
+                    </div>
+                </div>
+                <div class="scroll-item">
+                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/onevsone.png">
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-track">
+                <div class="scroll-item">
+                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/champion.png">
+                    </div>
+                </div>
+                <div class="scroll-item">
+                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/game-controller.png">
+                    </div>
+                </div>
+                <div class="scroll-item">
+                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <div class="track-items" >
+                        <img  class="w-100 h-100" src="/images/onevsone.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
             </div>
             <div class="static-home">
             <table class="nav-static">
@@ -267,7 +351,12 @@ class homePage extends HTMLElement {
                     width: 100vw;
                     display: flex;
                     height :8%;
+<<<<<<< HEAD
                     background:#666f80;
+=======
+                background-color: rgb(0 0 0 / 0.5);
+                color: #293247;
+>>>>>>> iantar
                     justify-content: space-evenly;
                     align-items: center;
                     flex-direction: row;
@@ -277,8 +366,15 @@ class homePage extends HTMLElement {
                     bottom :0;
                 }
                 .nav-02{
+                    margin-top:30px;
+                }
+                .nav-02 .fa-right-from-bracket{
                     display :none;
                 }
+            nav a{
+                text-decoration: none;
+                background: none;
+            }
                 .fafa{
                     display :none;
                 }
@@ -311,9 +407,9 @@ class homePage extends HTMLElement {
         console.log("RANDER FUNCTION IS HERE");
         const uuss = async () => {
             this.info = await fetchUserData();
-            this.match =  await fetchUserMatchHistory();
-            console.log(this.info);
-            console.log(this.match);
+            // this.match =  await fetchUserData('match_history');
+            // console.log(this.info);
+            // console.log("---->" + this.match);
             document.getElementById('username').textContent = this.info.username
         }
         uuss();
@@ -329,7 +425,7 @@ class homePage extends HTMLElement {
             `;
     }
     staticHome(){
-        const form = [
+         this.matchHistory = [
             { player: "Jam Josh", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
             { player: "Justina Kap", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
             { player: "Chris Colt", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
@@ -340,7 +436,7 @@ class homePage extends HTMLElement {
           ];
           const cartHome = document.querySelector('.table-content');
           let cart = '';
-        form.forEach(element => {
+        this.matchHistory.forEach(element => {
             cart += `
                 <tr>
                     <td>
@@ -356,32 +452,10 @@ class homePage extends HTMLElement {
         cartHome.innerHTML = cart;
     }
     async getData(){
-        const data = [
-            { name: "Jam Josh", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Justina Kap", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Chris Colt", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Jane Doe", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Jam Josh", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Justina Kap", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Chris Colt", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", },
-            { name: "Jane Doe", title: "KOLCHY KAMIHA", img: "../images/kawakib/kawkab1.png", }
-          ];
-        var i = 0;
-        data.forEach(element => {
-            const cartHome = document.querySelector('.slide-home');
-            i++;
-            cartHome.innerHTML += `
-            <div class="slide-cart ${'items' + i}" >
-                    <div class="img-slid">
-                        <img  src=${element.img}>
-                    </div>
-                    <div class="text-content">
-                        <p class="text-cart" >${element.name}</p>
-                        <h5 class="text-cart" >${element.title}</h5>
-                    </div>
-            </div>
-        `;
-        });
+        // const data = fetchUserMatchHistory();
+        // const data = fetchUserData('match_history');
+        // console.log("inside history fitch");
+        // console.log(data);
     }
     connectedCallback(){
         this.rander();

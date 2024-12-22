@@ -9,6 +9,6 @@ from django.contrib.sessions.models import Session
 admin.site.register(User)
 admin.site.register(Stats)
 admin.site.register(MatchHistory)
-admin.site.register(Profile)
-admin.site.register(Relationship)
 admin.site.register(Session)
+admin.site.register(Friendship)
+admin.site.register(FriendsProfile)

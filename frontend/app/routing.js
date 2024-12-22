@@ -1,4 +1,6 @@
+// Render function to load the appropriate content
 
+<<<<<<< HEAD
 export function rander(path) {
     // navigateTo(path);
     history.pushState(null,null,path);
@@ -67,82 +69,62 @@ const router  = async () => {
     for (let i = 0; i < routes.length ; i++){
         if (location.pathname === isMatches[i].route.path){
             rander(isMatches[i].route.path);
+=======
+import {checkLogin} from './page/readData.js';
+
+console.log("this is if log or not " + checkLogin());
+ 
+function render(path) {
+    const content = document.getElementById('content');
+    content.innerHTML = ''; // Clear existing content
+    console.log("Navigating to " + path);
+
+    const pageElement = (() => {
+        switch (path) {
+            case '/': return 'getstarted-page';
+            case '/home': return 'home-page';
+            case '/prof': return 'profile-page';
+            case '/login': return 'login-page';
+            case '/game': return 'game-page';
+            case '/setting': return 'setting-page';
+            case '/logout': return 'logout-page';
+            default: 
+                content.innerHTML = `<h1>404 - Page Not Found</h1>`;
+                return null;
+>>>>>>> iantar
         }
+    })();
+
+    if (pageElement) {
+        content.appendChild(document.createElement(pageElement));
     }
 }
 
-const navigateTo = url => {
-
-    history.pushState(null,null,url);
-    router();
+// Router function to determine the current path and render it
+const router = () => {
+    const path = location.pathname; // Get the current path from the URL
+    render(path);
 };
 
-window.addEventListener('popstate',router);
-document.addEventListener("DOMContentLoaded", () => {
+// Navigate to a specific URL programmatically
+export const navigateTo = (url) => {
+    history.pushState(null, null, url); // Add new state to the browser history
+    router(); // Update the view
+};
 
-    document.body.addEventListener('click', (e) => {
-       if (e.target.matches("[data-link]")){
-        e.preventDefault();
-        navigateTo(e.target.href);
-       }
-    });
-    router();
+// Listen for browser back/forward navigation
+window.addEventListener('popstate', () => {
+    router(); // Re-render the appropriate page when history changes
 });
 
+// Initialize routing and set up event listeners
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener('click', (e) => {
+        if (e.target.matches("[data-link]")) {
+            e.preventDefault();
+            navigateTo(e.target.href); // Intercept clicks on elements with the `data-link` attribute
+        }
+    });
 
-
-
-
-
-
-
-// function rander(route){
-//   const content = document.getElementById("content");
-//   content.innerHTML = '';
-//   content.className = 'content';
-//   switch(route){
-//     case '/':
-//       // content.appendChild(document.createElement('getstarted-page'));
-//       content.innerHTML = `<h1>this is home page</h1>`;
-//       break;
-//     case '/prof':
-//       content.innerHTML = `<h1>this is prof page</h1>`;
-//       break;
-//     case '/game':
-//         content.innerHTML = `<h1>this is game page</h1>`;
-//         break;
-//     case '/setting':
-//           content.innerHTML = `<h1>this is setting page</h1>`;
-//           break;
-//     default:
-//       content.innerHTML = `<h1>404 page not found.</h1>`;
-
-//   }
-// }
-
-// function navigate(event) {
-//   event.preventDefault();
-//   const path = event.target.getAttribute('href');
-//   window.history.pushState({}, '', path);
-//   handleRoute();
-// }
-
-// function handleRoute(){
-//   const route  = window.location.pathname;
-//   console.log(route);
-//   rander(route);
-// }
-// document.addEventListener('DOMContentLoaded', () => {
-//   document.querySelectorAll('a[data-link]').forEach(link => {
-//       link.addEventListener('click', navigate);
-//   });
-// });
-
-// window.addEventListener('popstate',handleRoute);
-
-// window.addEventListener('load', () => {
-//   if (!window.location.pathname){
-//     window.history.replaceState({},'','/');
-//   }
-//   handleRoute();
-// });
+    router(); // Render the initial view on page load
+});

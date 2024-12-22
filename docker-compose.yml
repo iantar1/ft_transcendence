@@ -1,20 +1,4 @@
-
 version: '3'
-
-# volumes:
-#   transcendance:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       device: ${PWD}/frontend
-#       o: bind
-
-  # back:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: ${PWD}/backend
-  #     o: bind
 
 services:
   backend:
@@ -27,7 +11,16 @@ services:
       - ./backend:/backend
     # networks:
     #   - ft_transcendence
-  
+
+  ponggame:
+    container_name: ponggame
+    image: ponggame
+    build: ./PongGame
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./PongGame:/app
+
   frontend:
     container_name: frontend
     image: frontend
@@ -38,22 +31,3 @@ services:
       - ./frontend:/usr/share/nginx/html
       - ./backend/media/images:/usr/share/nginx/html/media/images
 
-    # networks:
-    #   ft_transcendence:
-    #     driver: bridge
-  # game:
-  #   container_name: game
-  #   image: game
-  #   build: ./game
-  #   ports:
-  #     - "8080:8080"
-  #   networks:
-  #     - ft_transcendence
-  # chat:
-  #   container_name: chat
-  #   image: chat
-  #   build: ./chat
-  #   ports:
-  #     - "8081:8081"
-  #   networks:
-  #     - ft_transcendence

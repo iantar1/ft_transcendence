@@ -1,11 +1,14 @@
 
 
 
-import {rander} from '../routing.js';
+import {navigateTo} from '../routing.js';
 
 import {readData} from './readData.js';
 
-const API_INTRA = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-68bcaf8c253732f9b6170cbd7f722c4ba37ed186edcfc06864478ef32dede1f9&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code';
+import {checkLogin} from './readData.js';
+
+
+const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0ebdda4b19ab43b23646a570a1cca0290462151e294cd51cfbd5a82c742adc8d&redirect_uri=http%3A%2F%2Ftranscendence.backend.com%3A8000%2Fintra%2F&response_type=code";
 const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";
 
 class loginPage extends HTMLElement {
@@ -43,8 +46,7 @@ class loginPage extends HTMLElement {
                         <label>Password</label>
                     </div>
                     <span class="otp-error" ></span>
-                    <br>
-                    <br>
+       
                     <button id="register" class="form-btn"  type="click" data-link >Register</button>
                 </form>
             `;
@@ -63,8 +65,7 @@ class loginPage extends HTMLElement {
                     <label>Password</label>
                 </div>
                 <span class="otp-error" ></span>
-                <br>
-                <br>
+
                     <input id="formLogin2" class="form-btn" type="submit" value="Log in"  />
                 </form>
                 `;
@@ -126,9 +127,8 @@ class loginPage extends HTMLElement {
     `;
     template = `
     <div class="carte-content">
-            <div class="login-img ">
-                <img class="d-none d-md-block" src="/images/login.png">
-                <div class="loginComment position-sm-relative  top-10 w-100 d-sm-block" ">
+            <div class="login-img">
+                <div class="loginComment">
                     
                 </div>
             </div>
@@ -148,14 +148,13 @@ class loginPage extends HTMLElement {
             z-index :1;
             width :100%;
             height :100%;
-            border-radius :25px;
-
+            border-radius :5px;
         }
         #login-register{
             width :300px;
-            height :40px;
-            background: #7E7C7C;
-            border-radius :25px;
+            height :60px;
+            background: var(--dark);
+            border-radius :5px;
             display :flex;
             align-items :center;
             justify-content: space-around;
@@ -172,8 +171,8 @@ class loginPage extends HTMLElement {
             top :0;
             width :50%;
             height :100%;
-            background-color: #384B70;
-            border-radius :25px;
+            background-color: var(--red);
+            border-radius :5px;
         }
         .login-content{
             width :100%;
@@ -185,7 +184,7 @@ class loginPage extends HTMLElement {
         }
         .form-login-siwtch{
             width :100%;
-            height :73%;
+            height :600px;
             display :flex;
             align-items :center;
             justify-content: center;
@@ -209,9 +208,8 @@ class loginPage extends HTMLElement {
             width :100%;
         }
         .form-btn{
-            border-radius: 8px;
-            box-shadow: 0 2px 5px 0 #000;
-            background: #384B70;
+            border-radius: 5px;
+            background: var(--red);
             font-size: 18px;
             height: 41px;
             padding: 0 11px;
@@ -344,14 +342,16 @@ class loginPage extends HTMLElement {
             display :none;
         }
         .login-cart{
+            padding-top :5px;
             width :450px;
-            height:73%;
-            border-radius :25px;
-           background:    rgba(0, 0, 0, 0.1);
+            height:90vh;
+            border-radius :5px;
+            background: var(--bluenes);
             display:flex;
             justify-content: center;
             align-items: center;
             flex-direction:column;
+
         }        
         .login-img img{
             width :100%;
@@ -359,7 +359,7 @@ class loginPage extends HTMLElement {
         }
         .login-img{
             height :100%;
-            width :50%;
+            width :100%;
             display :flex;
             align-items :center;
             justify-content: center;
@@ -373,15 +373,19 @@ class loginPage extends HTMLElement {
             flex-basis: 50%;
             height :100%;
         }
+        .loginComment h1{
+                font-family: "Pong War", "Freeware";
+                font-size :5vw;
+                width :100%;
+                transition: all 1s ease-out;
+        }
         .loginComment{
-            width :40%;
-            font-size :50px;
-            position :absolute;
+            positon :relative;
+            width :100%;
             left :50%;
-            top :50%;
+            top :10%;
             text-align :center;
             text-shadow: 4px 4px 2px black;
-            positon :relative;
         }
         .redirapi_inta , .redirapi_google{
           background:transparent;
@@ -390,6 +394,11 @@ class loginPage extends HTMLElement {
         .redirapi_inta:hover , .redirapi_google:hover{
             scale :1.1;
         }
+         @media (min-width: 320px) and (max-width: 1024px) {
+            .loginComment, .login-img{
+                display :none;
+            }
+         }
     `;
     constructor() {
         super();
@@ -414,7 +423,7 @@ class loginPage extends HTMLElement {
                     if (res.ok) {
                             
                     } else {
-;
+                                        
                     }
                 } catch(error) {
                     console.log("Error verifying OTP:", error);
@@ -450,11 +459,7 @@ class loginPage extends HTMLElement {
                         })
                     if (res.ok) {
                         console.log('--- OTP VERIFIED SUCCESSFULLY ---');
-                        // // Add success logic, like redirecting to home page
-                        // document.cookie = data["access"];
-                        // window.location.href = '/home'; 
-                        // e.target.href = '/home';
-                        // rander('/home');
+
                         try{
                             const res = await fetch("http://localhost:8000/api/user/", {
                                 method: 'GET', 
@@ -557,103 +562,17 @@ class loginPage extends HTMLElement {
             console.log("inside login page");
             const intra = document.querySelector(".redirapi_inta");
             intra.addEventListener('click', async (e) => {
-                console.log("--aoutffffff---")
+                // navigateTo('/home')
                 window.location.href = API_INTRA;
-                // try {
-                //     // Prevent default button/link behavior
-                //     e.preventDefault();
-            
-                //     // Fetch the authentication endpoint from your backend
-                //     const response = await fetch("http://localhost:8000/api/intra/", {
-                //         method: 'GET',
-                //         credentials: 'include', // Important for cookies
-                //         headers: {
-                //             'Accept': 'application/json',
-                //         }
-                //     });
-            
-                //     if (!response.ok) {
-                //         throw new Error('Failed to fetch authentication URL');
-                //     }
-            
-                //     // Parse the response to get the authentication URL
-                //     const authData = await response.json();
-                    
-                //     // Redirect to the authentication URL
-                //     if (authData.authorizationUrl) {
-                //         // Option 1: Same window redirect
-                //         window.location.href = authData.authorizationUrl;
-            
-                //         // Option 2: If you want to open in a new window
-                //         // window.open(authData.authorizationUrl, '_blank');
-                //     } else {
-                //         throw new Error('No authentication URL provided');
-                //     }
-                // } catch (error) {
-                //     console.error("Authentication Error:", error);
-                //     // Optional: Show user-friendly error message
-                //     alert("Authentication failed. Please try again.");
-                // }
+                checkLogin(true);
+
+
             });
-            // console.log("inside login page");
-            // const intra = document.querySelector(".redirapi_inta");
-            // intra.addEventListener('click', async (e) => {
-            //     try {
-            //         // Prevent default link/button behavior
-            //         e.preventDefault();
-            
-            //         // Redirect directly to the 42 OAuth authorization URL
-            //         const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http://localhost:8000/&response_type=code`;
-                    
-            //         // Option 1: Window redirect
-            //         window.location.href = authUrl;
-            
-            //         // Option 2: If you prefer opening in a new window
-            //         // window.open(authUrl, '_blank');
-            //     } catch (error) {
-            //         console.error("Authentication error:", error);
-            //     }
-            // });
             console.log("inside login page");
             const googleApi = document.querySelector(".redirapi_google");
             googleApi.addEventListener('click' , async (e) => {
                 window.location.href = API_GOOGLE;
-                // console.log(googleApi);
-                // try {
-                //     // Prevent default button/link behavior
-                //     e.preventDefault();
-            
-                //     // Fetch the authentication endpoint from your backend
-                //     const response = await fetch("http://localhost:8000/api/google/", {
-                //         method: 'GET',
-                //         credentials: 'include', // Important for cookies
-                //         headers: {
-                //             'Accept': 'application/json',
-                //         }
-                //     });
-            
-                //     if (!response.ok) {
-                //         throw new Error('Failed to fetch authentication URL');
-                //     }
-            
-                //     // Parse the response to get the authentication URL
-                //     const authData = await response.json();
-                    
-                //     // Redirect to the authentication URL
-                //     if (authData.authorizationUrl) {
-                //         // Option 1: Same window redirect
-                //         window.location.href = authData.authorizationUrl;
-            
-                //         // Option 2: If you want to open in a new window
-                //         // window.open(authData.authorizationUrl, '_blank');
-                //     } else {
-                //         throw new Error('No authentication URL provided');
-                //     }
-                // } catch (error) {
-                //     console.error("Authentication Error:", error);
-                //     // Optional: Show user-friendly error message
-                //     alert("Authentication failed. Please try again.");
-                // }
+
             });
         }
         rand(){

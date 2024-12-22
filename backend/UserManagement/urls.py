@@ -22,6 +22,8 @@ urlpatterns = [
     path('intra/', intra_auth.auth),#change the rediract uri
     path('accounts/google/login/callback/', google_auth.get_code),
 
+    path('friend_ship/', FriendShipView.as_view()),
+
 
     path('google/', google_auth.home),
 
