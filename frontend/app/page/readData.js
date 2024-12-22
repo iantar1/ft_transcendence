@@ -23,7 +23,7 @@ export const readData = (function() {
 export async function fetchUserData() {
     try {
         // Make a GET request to the API
-        const res = await fetch("http://localhost:8000/user/", {
+        const res = await fetch("http://transcendence.backend.com:8000/user/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
