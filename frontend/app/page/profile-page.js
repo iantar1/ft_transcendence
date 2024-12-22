@@ -2,23 +2,28 @@
 
 import {fetchUserData} from './readData.js';
 
+import { navigateTo } from '../routing.js';
 
 function serachBar(){
     return `
     <style>
         #search-container {
             margin: 20px auto;
-            max-width: 400px;
+            width: 100%;
+            display :none;
+            justify-content :center;
+            align-items :center;
+            flex-direction: column;
         }
         input[type="text"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            color :#000;
         }
         #results {
             margin-top: 10px;
-            border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
         }
@@ -27,7 +32,8 @@ function serachBar(){
             padding: 0;
         }
         #results li {
-            color: black;
+            font-family: Arial, sans-serif;
+            color: #fff;
             font-size: 16px;
             padding: 5px 0;
             cursor: pointer; /* Pointer cursor to indicate clickable items */
@@ -51,18 +57,6 @@ function serachBar(){
             border-radius: 8px;
             text-align: center;
         }
-        #popup button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #popup button:hover {
-            background-color: #0056b3;
-        }
         /* Overlay to dim background */
         #overlay {
             display: none; /* Hidden by default */
@@ -75,22 +69,42 @@ function serachBar(){
             z-index: 999;
         }
     </style>
-    <div id="search-container">
-        <input type="text" id="search-bar" placeholder="Search here..." />
-        <div id="results"></div>
-    </div>
-
-    <!-- Popup and Overlay -->
-    <div id="overlay"></div>
-    <div id="popup">
-        <p id="popup-text"></p>
-        <button onclick="closePopup()">Close</button>
+    <div id="search-container" style="flex-direction: column; width :100%;" >
+        <div style="width :100%; height :100%;" >
+            <input type="text" id="search-bar" placeholder="Search here..." />
+            <div id="results"></div>
+            <button type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
+        </div>
+        <div id="overlay"></div>
+        <div id="popup">
+            <p id="popup-text"></p>
+            <button onclick="closePopup()">Close</button>
+        </div>
     </div>
     `;
 }
-
+function profSection(){
+    return `
+    <style>
+        #profadd{
+            display :none;
+        }
+    </style>
+            <div id="profadd" style=" flex-direction: column; align-items :center; justify-content:center; gap :10px; width:100%; height :100%;" >
+                <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;">
+                    <img style="position :static;  width: 80px; height: 80px; border-radius: 50%;"  src="/images/ah.png" >
+                    <span>chebchoub</span>
+                </div>
+                <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;" >
+                    <button type="click" id="addfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary " >Add Friend</button>
+                    <button type="click" id="backtosearch" class="btn-home btn btn-secondary " >Back</button>
+                </div>
+            </div>
+    `;
+}
 function slidFriend(){
     const searchBarr = serachBar();
+    const prof = profSection();
     return `
         <style>
         .logout-popup {
@@ -103,6 +117,8 @@ function slidFriend(){
             z-index: 5000;
             justify-content: center;
             align-items: center;
+            gap :10px;
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
         .logout-popup-content {
@@ -123,12 +139,14 @@ function slidFriend(){
         .confirmtext{
             color :var(--red);   
         }
-
+        #forprof{
+            display :none;
+        }
     </style>
         <div id="logoutPopup" class="logout-popup">
             <div class="logout-popup-content">
-                ${searchBarr}
-                <button type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
+                    ${searchBarr}
+                    ${prof}
             </div>
         </div>
                 `
@@ -149,38 +167,7 @@ const addFriends = () => {
         </button>
         <span class="forAdd" style="" ></span>
         <div class="scrollable-div" style="" >
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
-                <div class="profsign d-flex justify-content-center align-items-center flex-column" style="" >
-                    <img style="position :static;  width: 50px; height: 50px; border-radius: 50%;" src="${data[0].img}" >
-                    <span class="sign" style="" ></span>
-                </div>
+
         </div>
 
     </div>
@@ -385,11 +372,11 @@ class profilePage extends HTMLElement {
                 position :relative;
                 top:-15%;
                 left:15%;
-                background:green;
                 width :10px;
                 height :10px;
                 border-radius :50%;
                 z-index :4000;
+                border :1px solid; 
             }
             .profsign{
                 height :32%;
@@ -887,7 +874,6 @@ class profilePage extends HTMLElement {
           ];
 
         const onevsone = document.querySelector('.players');
-        console.log(onevsone);
         let from = '';
         this.statsHistory.forEach(element => {
                 // console.log('hhhhhhhhhh');
@@ -926,16 +912,16 @@ class profilePage extends HTMLElement {
                     </tr>
                 `;
         });
-        console.log(from)
         onevsone.innerHTML = from;
     }
+
     slidFriend(){
         const friendSection = document.querySelector('.flag'); // Access the first element with the class
         friendSection.addEventListener('click' , (e) =>{
-                console.log('Hello Friends');
                 // friendSection.className = "test"
                 document.querySelector('.forAdd').style.display = 'block';
                 const serach = document.querySelector('.forAdd').innerHTML = slidFriend();
+                document.querySelector('#search-container').style.display = "flex";
                 const searchBar = document.getElementById('search-bar');
                 const resultsDiv = document.getElementById('results');
                 const popup = document.getElementById('popup');
@@ -950,21 +936,27 @@ class profilePage extends HTMLElement {
                     if (query) {
                         const filteredData = sampleData.filter(item => item.toLowerCase().includes(query.toLowerCase()));
                         if (filteredData.length) {
-                            resultsDiv.innerHTML = `<ul>${filteredData.map(item => `<li onclick="showPopup('${item}')">${item}</li>`).join('')}</ul>`;
+                            resultsDiv.innerHTML = `<ul>${filteredData.map(item => `<li class="resdiv" type="click" >${item}</li>`).join('')}</ul>`;
                         } else {
                             resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
                         }
                     }
                 }
-        
-                // Function to show the popup
-                function showPopup(result) {
-                    popupText.textContent = `You clicked: ${result}`;
-                    popup.style.display = 'block';
-                    overlay.style.display = 'block';
+                if (document.querySelector('.resdiv')){
+                    document.querySelector('.resdiv').addEventListener('click' , (e) => {
+                        document.querySelector('#search-container').style.display = "none";
+                        document.querySelector('#profadd').style.display = "flex";
+                        document.querySelector('#backtosearch').addEventListener('click' , (e) => {
+                            document.querySelector('#profadd').style.display = "none";
+                            document.querySelector('#search-container').style.display = "flex";
+                        });
+                        document.querySelector('#addfriend').addEventListener('click' , (e) => {
+                            console.log('HERE WE ADD THE FETCH FUNCTION');
+                        });
+                    });
+                    
                 }
-        
-                // Function to close the popup
+  
                 function closePopup() {
                     popup.style.display = 'none';
                     overlay.style.display = 'none';
@@ -982,16 +974,79 @@ class profilePage extends HTMLElement {
             });
 
     };
+    openProfile() {
+        const openProfileElements = document.querySelectorAll('#openprof'); // Select all with the class 'profsign'
+    
+        openProfileElements.forEach(field => {
+            field.addEventListener('click', (e) => {
+                // const currentElement = e.currentTarget;
+                // const index = currentElement.dataset.index; // Get the index from the data attribute
+                // document.querySelector('.foradd').style.display = "flex";
+                document.querySelector('.forsddProf').innerHTML = slidFriend();
+                    document.querySelector('#profadd').style.display = "flex";
+    
+                // Dynamically handle the back button
+                const backToSearch = document.querySelector('#backtosearch');
+
+                backToSearch.addEventListener('click' , (e) => {
+                    console.log("THERE IS THE BACK BUTTON");
+                    document.querySelector('#profadd').style.display = "none";
+                    document.querySelector('.logout-popup').style.display = 'none';
+                });
+    
+                console.log(`Profile clicked`);
+            });
+        });
+    }
+    
+    stockFriends() {
+        this.statsHistory = [
+            { player: "ahbajaou", img: "/images/ah.png", status: "green" },
+            { player: "arahmoun", img: "/images/ara.png", status: "red" },
+            { player: "iantar", img: "/images/iantar.jpeg", status: "green" },
+            { player: "ahbajaou", img: "/images/ah.png", status: "green" },
+            { player: "arahmoun", img: "/images/ara.png", status: "red" },
+            { player: "iantar", img: "/images/iantar.jpeg", status: "green" }
+        ];
+    
+        const main = document.querySelector('.scrollable-div');
+        let prof = '';
+       let  index = 0;
+        this.statsHistory.forEach((element) => {
+            // index++;
+            prof += `
+                <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
+                    <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%; border: 1px solid;" src="${element.img}">
+                    <span class="sign" style="background: ${element.status};"></span>
+                    <span id="" class="forsddProf" style=""></span>
+                </span>
+            `;
+            console.log('openprof-' + index)
+        });
+        main.innerHTML = prof;
+    }
+    
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
             this.info = await fetchUserData();
-            console.log(this.info.image);
-            document.getElementById('username').textContent = this.info.username
-            // document.getElementById('username').textContent = this.info.username
-            document.getElementById('img_intra').src = this.info.image
-            console.log(this.info.image);
-            document.getElementById('BIO').textContent = 'ash dal temchi lzine'
+            if (this.info){
+                console.log(this.info.image);
+                if (!this.info.username){
+                    this.info.username = "ASTRO"
+                }
+                if (!this.info.image){
+                    this.info.image = "/images/default.jpeg"
+                }
+                document.getElementById('username').textContent = this.info.username
+                // document.getElementById('username').textContent = this.info.username
+                document.getElementById('img_intra').src = this.info.image
+                console.log(this.info.image);
+                document.getElementById('BIO').textContent = 'ash dak temchi lzine'
+            }
+            else{
+                navigateTo('/login');
+            }
         }
         uuss();
         // this.slidFriend();
@@ -1047,204 +1102,11 @@ class profilePage extends HTMLElement {
         this.render();
         this.statsPlayer();
         this.slidFriend();
+        this.stockFriends();
+        this.openProfile();
 
     }
 }
 
 customElements.define('profile-page', profilePage);
 
-
-// <!DOCTYPE html>
-// <html>
-// <head>
-//     <style>
-//         .profile-card {
-//             max-width: 320px;
-//             padding: 1.5rem;
-//             background: white;
-//             border-radius: 8px;
-//             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-//             margin: 20px auto;
-//         }
-
-//         .profile-container {
-//             display: flex;
-//             flex-direction: column;
-//             align-items: center;
-//             gap: 1rem;
-//         }
-
-//         .profile-image-container {
-//             position: relative;
-//         }
-
-//         .profile-image {
-//             width: 96px;
-//             height: 96px;
-//             border-radius: 50%;
-//             object-fit: cover;
-//             border: 2px solid #e5e7eb;
-//         }
-
-//         .profile-image-fallback {
-//             width: 96px;
-//             height: 96px;
-//             border-radius: 50%;
-//             background: #f3f4f6;
-//             display: flex;
-//             align-items: center;
-//             justify-content: center;
-//             border: 2px solid #e5e7eb;
-//         }
-
-//         .status-badge {
-//             position: absolute;
-//             bottom: -8px;
-//             right: 0;
-//             padding: 4px 8px;
-//             border-radius: 9999px;
-//             font-size: 12px;
-//             font-weight: bold;
-//             color: white;
-//         }
-
-//         .english {
-//             background-color: #22c55e;
-//         }
-
-//         .not-english {
-//             background-color: #ef4444;
-//         }
-
-//         .profile-name {
-//             font-size: 1.25rem;
-//             font-weight: 600;
-//             color: #1f2937;
-//             margin: 0;
-//         }
-
-//         .profile-subtitle {
-//             font-size: 0.875rem;
-//             color: #6b7280;
-//             margin: 0;
-//         }
-
-//         .stats-container {
-//             width: 100%;
-//             padding-top: 1rem;
-//             border-top: 1px solid #e5e7eb;
-//             margin-top: 1rem;
-//         }
-
-//         .stats-grid {
-//             display: flex;
-//             justify-content: space-around;
-//             text-align: center;
-//         }
-
-//         .stat-label {
-//             font-size: 0.875rem;
-//             color: #6b7280;
-//             margin: 0;
-//         }
-
-//         .stat-value {
-//             font-weight: 600;
-//             color: #1f2937;
-//             margin: 0;
-//         }
-
-//         .toggle-button {
-//             margin-top: 1rem;
-//             padding: 8px 16px;
-//             background: #3b82f6;
-//             color: white;
-//             border: none;
-//             border-radius: 4px;
-//             cursor: pointer;
-//         }
-
-//         .toggle-button:hover {
-//             background: #2563eb;
-//         }
-//     </style>
-// </head>
-// <body>
-//     <div id="app"></div>
-
-//     <script>
-//         function createProfileCard(container, {
-//             name = "John Doe",
-//             isEnglish = true,
-//             imageUrl = null
-//         } = {}) {
-//             function getProfileHTML() {
-//                 return `
-//                     <div class="profile-card">
-//                         <div class="profile-container">
-//                             <div class="profile-image-container">
-//                                 ${imageUrl 
-//                                     ? `<img src="/api/placeholder/96/96" alt="Profile" class="profile-image">`
-//                                     : `<div class="profile-image-fallback">
-//                                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af">
-//                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-//                                             <circle cx="12" cy="7" r="4"></circle>
-//                                         </svg>
-//                                        </div>`
-//                                 }
-//                                 <span class="status-badge ${isEnglish ? 'english' : 'not-english'}">
-//                                     ${isEnglish ? 'English' : 'Not English'}
-//                                 </span>
-//                             </div>
-                            
-//                             <div style="text-align: center">
-//                                 <h3 class="profile-name">${name}</h3>
-//                                 <p class="profile-subtitle">User Profile</p>
-//                             </div>
-
-//                             <div class="stats-container">
-//                                 <div class="stats-grid">
-//                                     <div>
-//                                         <p class="stat-label">Status</p>
-//                                         <p class="stat-value">${isEnglish ? 'Active' : 'Inactive'}</p>
-//                                     </div>
-//                                     <div>
-//                                         <p class="stat-label">Member Since</p>
-//                                         <p class="stat-value">2024</p>
-//                                     </div>
-//                                 </div>
-//                             </div>
-                            
-//                             <button class="toggle-button" id="toggleStatus">
-//                                 Toggle English Status
-//                             </button>
-//                         </div>
-//                     </div>
-//                 `;
-//             }
-
-//             // Initial render
-//             container.innerHTML = getProfileHTML();
-
-//             // Add event listener for toggle button
-//             const toggleButton = container.querySelector('#toggleStatus');
-//             toggleButton.addEventListener('click', () => {
-//                 isEnglish = !isEnglish;
-//                 container.innerHTML = getProfileHTML();
-                
-//                 // Reattach event listener after re-render
-//                 container.querySelector('#toggleStatus')
-//                     .addEventListener('click', toggleButton.onclick);
-//             });
-//         }
-
-//         // Initialize the profile card
-//         const appContainer = document.getElementById('app');
-//         createProfileCard(appContainer, {
-//             name: "John Doe",
-//             isEnglish: true,
-//             imageUrl: null
-//         });
-//     </script>
-// </body>
-// </html>
