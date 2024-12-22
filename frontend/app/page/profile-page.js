@@ -179,11 +179,7 @@ class profilePage extends HTMLElement {
     frienSection = addFriends();
 
     template = `
-<<<<<<< HEAD
-        <div class="content-profile .container">
-=======
         <div class="content-profile ">
->>>>>>> iantar
                 <div class="cart-profile ">
                     <div class="info-profile">
                         <img id="img_intra" src="" >
@@ -197,25 +193,11 @@ class profilePage extends HTMLElement {
                             <br>
                         </div>
                         <div class="lvl">
-<<<<<<< HEAD
-                            <h5 class="opa" > Lvl 13 <span class="lvl-prof">7 more game hours for level</span></h5>
-                            <br>
-                            <div class="level"></div><br>
-                        </div>
-                        <div class="achev">
-                            <h5 > <span class="lvl-prof"> Achievement : </span>4 of 37</h5>
-                                <div class="ach"></div>
-                                <div class="ach"></div>
-                                <div class="ach"></div>
-                                <div class="ach"></div>
-                            
-=======
                             <div class="progress">
                                 <div class="progress-bar progress-bar-info progress-bar-striped active" style="width:10%; box-shadow:none;"></div>
                                 <div class="progress-value">10%</div>
                             </div>
                         </div>
->>>>>>> iantar
 
                     </div>
                     <div  class="img-profile d-flex justify-content-center align-items-center ">
@@ -289,16 +271,6 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 flex-direction: column;
                 gap :0px;
-<<<<<<< HEAD
-            }
-            .level{
-                width :70%;
-                height :16px;
-                background-color: rgba(255, 255, 255, 0.384);
-                border-left :180px solid rgba(56, 75, 112, 1);
-                border-radius :15px;
-=======
->>>>>>> iantar
             }
             .lvl-profile .lvl-prof{
                   opacity:0.4;
@@ -350,8 +322,6 @@ class profilePage extends HTMLElement {
                 top :0%;
                 left :59%;
             }
-<<<<<<< HEAD
-=======
             .achevmet-piece{
                 display :flex;
                 flex-direction: row;
@@ -417,22 +387,11 @@ class profilePage extends HTMLElement {
                 height :80%;
                 width :95%;
             }
->>>>>>> iantar
             @media (min-width: 320px) and (max-width: 1024px) {
                     .img-profile{
                         display :none;
                     }
                     .cart-profile{
-<<<<<<< HEAD
-                        flex-direction: column;
-                        height :50vh;
-                        width :100vw;
-                        border-radius:0px;
-                    }
-                    .achev{
-                        
-                    }
-=======
                         flex-direction: column-reverse;
                         height :50%;
                         width :100vw;
@@ -476,7 +435,6 @@ class profilePage extends HTMLElement {
                         height :15%;
                         width :100%; 
                     }
->>>>>>> iantar
             }
         </style>
     `;
@@ -515,10 +473,6 @@ class profilePage extends HTMLElement {
                 align-items :center;
                 flex-direction: row;
                 gap :5%;
-<<<<<<< HEAD
-
-=======
->>>>>>> iantar
             }
             .userInfo{
                 height :100%;
@@ -528,12 +482,9 @@ class profilePage extends HTMLElement {
                 align-items :center;
                 flex-direction: row;
                 gap :5%;
-<<<<<<< HEAD
-=======
             }
             .userPart{
                min-height :50vh;
->>>>>>> iantar
             }
             .name-user{
                 width :100px;
@@ -612,16 +563,11 @@ class profilePage extends HTMLElement {
                             display :none;
                         }
                         .winorlose{
-<<<<<<< HEAD
-                            width :100%;
-                            background: none;
-=======
                             width :100vw;
                             height :50vh;
                             background: none;
                             overflow: hidden;
 
->>>>>>> iantar
                         }
                         .userInfo{
                             flex-basis: 10%;
@@ -630,8 +576,6 @@ class profilePage extends HTMLElement {
                         .imgIcon{
                             width :90px;
                         }
-<<<<<<< HEAD
-=======
                         .userInfo{
                             height :100%;
                             width :40vw;
@@ -651,7 +595,6 @@ class profilePage extends HTMLElement {
             .imgIcon{
                 height :130px;
             }
->>>>>>> iantar
              }
         </style>
     `;
@@ -701,18 +644,6 @@ class profilePage extends HTMLElement {
                 border-radius :5px;
                 z-index :2000;
             }
-<<<<<<< HEAD
-        .cylcle-content{
-            display :flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap :10px;
-            height :100%;
-            width :100%;
-        }
-=======
->>>>>>> iantar
         .cycle-progress{
             display :flex;
             align-items: center;
@@ -723,191 +654,16 @@ class profilePage extends HTMLElement {
         }
         .cont-progress{
             width :55%;
-<<<<<<< HEAD
-            height :100%;
-            display :none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap :20px;
-        }
-        .small-cycle{
-            width :8px;
-            height:8px;
-            border-radius :100%;
-            background: rgba(34, 236, 90, 1);
-            box-shadow: -2px -2px 7px rgba(34, 236, 90, 1),  
-                  1px 1px 7px rgba(34, 236, 90, 1); 
-        }
-        .cycleAndprofit{
-            width :100%;
-            display :flex;
-            align-items: center;
-            flex-direction: row;
-            gap :5px;
-        }
-        .cycle-base{
-            width :100%;
-            height :70%;
-            border-radius :100%;
-            background :rgba(26, 34, 50, 1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .btn-average{
-            width :60%;
-            height :12%;
-            border-radius :15px;
-            background :rgba(34, 40, 52, 1);
-            display :flex;
-            align-items: center;
-            justify-content: center;
-            font-size :20px;
-        }
-        .progress-container {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        /* Define the custom properties for win and lose progress */
-        @property --win-progress-value {
-          syntax: "<integer>";
-          initial-value: 0;
-          inherits: false;
-        }
-        
-        @property --lose-progress-value {
-          syntax: "<integer>";
-          initial-value: 0;
-          inherits: false;
-        }
-        
-        @keyframes progress {
-          to {
-            --win-progress-value: 50;
-            --lose-progress-value: 50;
-          }
-        }
-        
-        /* Styling for the combined progress bar */
-        .progress-bar {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        
-          width: 85%;
-          height: 85%;
-          border-radius: 50%;
-          background: 
-            radial-gradient(closest-side, rgba(26, 34, 50, 1) 79%, transparent 80% 100%),
-            conic-gradient(
-              from 0deg,
-              rgba(113, 217, 182, 1) calc(var(--win-progress-value) * 0.33%),
-              rgba(98, 182, 193, 1) calc(var(--win-progress-value) * 0.66%),
-              rgba(82, 131, 197, 1) calc(var(--win-progress-value) * 1%),
-              rgba(251, 135, 44, 1) 0 calc((var(--win-progress-value) + var(--lose-progress-value)) * 0.33%),
-              rgba(164, 92, 205, 1) 0 calc((var(--win-progress-value) + var(--lose-progress-value)) * 0.66%),
-              rgba(113, 64, 208, 1) 0 calc((var(--win-progress-value) + var(--lose-progress-value)) * 1%),
-              rgba(36, 48, 72, 1) 0
-            );
-          animation: progress 2s 1 forwards;
-        }
-        
-        /* Center text for the progress */
-        .progress-bar::before {
-          content: 'Win: ' var(--win-progress-value) '% | Lose: ' var(--lose-progress-value) '%';
-          font-size: 16px;
-        }
-        
-        #progress-text {
-            position: relative;
-            font-size: 34px;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .prog{
-            width :426px;
-            height :237px;
-            border-radius :25px;
-            backgdround:rgba(26, 34, 50, 1);
-            position :absolute;
-            top :45%;
-        }
-        .maskoff{
-            width :100px;
-            height :100px;
-            border-radius :70px;
-            background:rgba(26, 34, 50, 1);
-            position :relative;
-            left :0;
-            top :-16%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .maskoff img{
-            width :100%;
-            height :100%;
-        }
-        .btn-prg{
-            width :85%;
-            height :15%;
-            border-radius :25px;
-            background :rgba(251, 135, 44, 1);
-            position :relative;
-            top :25%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .progwinlos{
-            width :100%;
-            height :45%;
-            position :relative;
-            left :0;
-            top :200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: row;
-            
-        }
-        .prog2{
-            border-right :1px solid #fff;
-            border-left :1px solid #fff;
-        }
-        .itempr{
-            width :100%;
-            height :100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-=======
             height :90%;
             display :flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
->>>>>>> iantar
             gap :10px;
             
         }
         @media (min-width: 320px) and (max-width: 1024px) {
                 .gameRank{
-<<<<<<< HEAD
-                    width :100%;
-                    border-radius :0px;
-                    height :100vh;
-
-                }
-             }
-=======
                     width :100vw;
                     height :70vh;
                     border-radius :0px;
@@ -923,7 +679,6 @@ class profilePage extends HTMLElement {
                 height :100%;
             }
     }
->>>>>>> iantar
     </style>
     `;
     cycleProgress = `
@@ -1064,15 +819,9 @@ class profilePage extends HTMLElement {
              @media (min-width: 320px) and (max-width: 1024px) {
                 .static-profile{
                     flex-direction: column;
-<<<<<<< HEAD
-                    height :100vh;
-                }
-
-=======
                     height :130vh;
                     border-radius :0px;
                 }
->>>>>>> iantar
              }
         </style>
     `;
@@ -1082,12 +831,8 @@ class profilePage extends HTMLElement {
                 width: 100%;
                 display: flex;
                 height :8%;
-<<<<<<< HEAD
-                background:#666f80;
-=======
                 background-color: rgb(0 0 0 / 0.5);
                 color: #293247;
->>>>>>> iantar
                 justify-content: space-evenly;
                 align-items: center;
                 flex-direction: row;
@@ -1095,13 +840,6 @@ class profilePage extends HTMLElement {
                 position: fixed;
                 padding-bottom: 5%;
                 bottom :0;
-<<<<<<< HEAD
-                z-index :1000;
-            }
-            .nav-02{
-                display :none;
-            }
-=======
                 z-index :2001;
             }
             .nav-02{
@@ -1113,7 +851,6 @@ class profilePage extends HTMLElement {
             nav a{
                 text-decoration: none;
             }
->>>>>>> iantar
             .fafa{
                 display :none;
             }
@@ -1129,12 +866,7 @@ class profilePage extends HTMLElement {
                 border-radius :0px;
                 display :flex;
             }
-<<<<<<< HEAD
-    }
-        `
-=======
     }`
->>>>>>> iantar
     constructor() {
         super();
     }
@@ -1302,14 +1034,6 @@ class profilePage extends HTMLElement {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
             this.info = await fetchUserData();
-<<<<<<< HEAD
-            console.log(this.info.image);
-            document.getElementById('username').textContent = "CHEBCHOUB"
-            // document.getElementById('username').textContent = this.info.username
-            document.getElementById('img_intra').src = this.info.image
-            console.log(this.info.image);
-            document.getElementById('BIO').textContent = 'ash dal temchi lzine'
-=======
             if (this.info){
                 console.log(this.info.image);
                 if (!this.info.username){
@@ -1327,7 +1051,6 @@ class profilePage extends HTMLElement {
             else{
                 navigateTo('/login');
             }
->>>>>>> iantar
         }
         uuss();
         // this.slidFriend();
@@ -1340,8 +1063,6 @@ class profilePage extends HTMLElement {
             ${this.gamerankStyle}
             <style>
             ${this.navar}
-<<<<<<< HEAD
-=======
                 table.table tbody tr:nth-child(odd) { 
                     background-color: var(--dark); 
                 }
@@ -1372,68 +1093,14 @@ class profilePage extends HTMLElement {
                     align-items: center;
                     justify-content: center;
                 }
->>>>>>> iantar
             </style>
         `;
 
         this.querySelector('.cycle-progress').innerHTML = this.cycleProgress;   
         // cycleProg();
         // this.cycleRander();
-<<<<<<< HEAD
-        const form = [
-            { player: "ahbajaou",  img: "/images/ah.png"},
-            { player: "arahmoun", img: "/images/ara.png"},
-            { player: "iantar", img: "/images/iantar.jpeg"}
-          ];
-        const losrWin = document.querySelector('.winorlose');
-        form.forEach(element => {
-            losrWin.innerHTML += `
-            <div class="userleft" >
-                <div class="userInfo" >
-                        <div class="imgIcon" >
-                            <div class="img-user" >
-                                <img src="${element.img}" >
-                            </div>
-                            <div class="winIcon" >
-                                <img src="/images/icon/badge.png" >
-                                <p class="noonehere" >ahbajaou</p>
-                            </div>
-                        </div>
-                        <div class="name-user" >
-                            <h5>${element.player}</h5>
-                        </div>
-                        <div class="score-user" >
-                                <h2>0</h2>
-                        </div>
-                </div>
-                <div class="time-user">
-                    <img src="/images/icon/ping.png" >
-                    <h6>24-10-2030;20:23</h6>
-                </div>
-                <div class="userInfo" >
-                    <div class="score-user" >
-                            <h2>0</h2>
-                    </div>
-                    <div class="name-user name-userright" >
-                        <h5>${element.player}</h5>
-                    </div>
-                    <div class="imgIcon" >
-                        <div class="img-user" >
-                            <img src="${element.img}" >
-                        </div>
-                        <div class="winIcon" >
-                            <img src="/images/icon/lose.png" >
-                            <p class="noonehere" >ahbajaou</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;;
-            });
-=======
         // losrWin.appendChild(onevsone);
             // });
->>>>>>> iantar
     }
     connectedCallback() {
         this.render();

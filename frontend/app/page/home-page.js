@@ -252,18 +252,6 @@ class homePage extends HTMLElement {
                 justify-content: center;
                 flex-direction: row;
                 height:100vh;
-<<<<<<< HEAD
-                width :100%;
-                gap :100%;
-            }
-        .static-home{
-                height:100vh;
-                width:100%;
-            }
-        .slide-cart{
-                   
-                }
-=======
                 width :100vw;
                 gap :5%;
             }
@@ -279,7 +267,6 @@ class homePage extends HTMLElement {
             .scroll-container{
                 width :100vw;
             }
->>>>>>> iantar
         }   
         `;
     templateHome = `
@@ -351,12 +338,8 @@ class homePage extends HTMLElement {
                     width: 100vw;
                     display: flex;
                     height :8%;
-<<<<<<< HEAD
-                    background:#666f80;
-=======
                 background-color: rgb(0 0 0 / 0.5);
                 color: #293247;
->>>>>>> iantar
                     justify-content: space-evenly;
                     align-items: center;
                     flex-direction: row;

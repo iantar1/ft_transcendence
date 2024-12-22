@@ -61,10 +61,6 @@ class gamePage extends HTMLElement {
                     overflow: hidden;
                     border-radius :5px;
             }
-<<<<<<< HEAD
-            </style>
-            <button type="button" class="btn btn-primary">game</button>
-=======
             game-page{
                 width :100%;
                 height :100%;
@@ -78,7 +74,6 @@ class gamePage extends HTMLElement {
             }
             </style>
         
->>>>>>> iantar
         `;
     }
     connectedCallback(){

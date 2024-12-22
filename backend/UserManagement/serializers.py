@@ -58,7 +58,7 @@ class StatsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Stats
-        fields = ['wins', 'losses']
+        fields = ['wins', 'losses', 'total']
 
 
 

@@ -310,7 +310,10 @@ class StatsView(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        serialer = StatsSerializer(user.stats)
+        stats = Stats.objects.filter(user=user)
+        if stats == None:
+            return Response({"error":"stats not found"}, status=404)
+        serialer = StatsSerializer(stats)
         return Response(serialer.data, status=200)
 
 def checkIfTheRelationExsit(user1, user2, action):

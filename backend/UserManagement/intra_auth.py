@@ -25,6 +25,7 @@ CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
 OUUTH_TOKEN_URI = os.getenv('OUUTH_TOKEN_URI')
+FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
 
 
@@ -91,7 +92,6 @@ from django.urls import reverse
 def auth(request):
 
     queryStr = request.GET.get('code')
-    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print(queryStr)
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
@@ -113,9 +113,11 @@ def auth(request):
     serializer = UserSerializer(user)
 
     access_token = create_access_token(user.id)
+    refresh_token = create_refresh_token(user.id)
 
-    response = HttpResponseRedirect('http://transcendence.backend.com:3000/home')  # Redirect to frontend
+    response = HttpResponseRedirect(FRONTEND_REDIRECT_URL)  # Redirect to frontend
     response.set_cookie(key="access", value=access_token, httponly=True)
+    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     
     response['Authorization'] = f'Bearer {access_token}'
     
