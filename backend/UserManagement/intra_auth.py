@@ -35,15 +35,12 @@ def home(request):
 
 
 def createUpdateUser(data_json)-> User:
-<<<<<<< HEAD
-=======
     # check if the user already exsit
     # existing_user = User.objects.filter(username=data_json.get("login")).first()
 
     # if existing_user:
     #     return existing_user
     image_link = data_json.get("image", {}).get("link")
->>>>>>> iantar
 
     response = requests.get(image_link)
     if response.status_code == 200:
@@ -55,9 +52,6 @@ def createUpdateUser(data_json)-> User:
 
         # Extract the image filename from the URL
     filename = os.path.basename(data_json.get("image", {}).get("link"))
-<<<<<<< HEAD
-
-=======
     print(f'filename: {filename}')
     # user = User(
     #         # id=data_json["id"],
@@ -67,7 +61,6 @@ def createUpdateUser(data_json)-> User:
     #         image = File(img_temp, name=filename),#set default if you can't get the image
     #         username = data_json.get("login")
     #     )
->>>>>>> iantar
     user, created = User.objects.update_or_create(
         username=data_json.get("login"),
         email=data_json.get("email"),
