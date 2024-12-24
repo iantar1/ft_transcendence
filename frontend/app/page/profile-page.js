@@ -95,6 +95,68 @@ function profSection(){
             </div>
     `;
 }
+function slidProf(info){
+    // const searchBarr = serachBar();
+    // const prof = profSection();
+    // data = document.querySelector('.forsddProf');
+
+    const name = info.name;
+    const img = info.img;
+    return `
+        <style>
+        .logout-popup {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5000;
+            justify-content: center;
+            align-items: center;
+            gap :10px;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .logout-popup-content {
+            background: var(--blue);
+            padding: 30px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        .btn-home{
+            background: var(--red);
+        }
+        .paratext{
+            font-size :90%;
+        }
+        .confirmtext{
+            color :var(--red);   
+        }
+        #forprof{
+            display :none;
+        }
+    </style>
+        <div id="logoutPopup" class="logout-popup">
+            <div class="logout-popup-content">
+            <div id="profadd" style="display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px; width:100%; height :100%;" >
+                <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;">
+                    <img style="position :static;  width: 80px; height: 80px; border-radius: 50%;"  src="${img}" >
+                    <span>${name}</span>
+                </div>
+                <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;" >
+                    <button type="click" id="addfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary " >Add Friend</button>
+                    <button type="click" id="toprof" class="btn-home btn btn-secondary " >Back</button>
+                </div>
+            </div>
+            </div>
+        </div>
+                `
+                
+}
 function slidFriend(){
     const searchBarr = serachBar();
     const prof = profSection();
@@ -138,12 +200,13 @@ function slidFriend(){
     </style>
         <div id="logoutPopup" class="logout-popup">
             <div class="logout-popup-content">
-
+                ${searchBarr}
+                ${prof}
             </div>
         </div>
                 `
                 
-            };
+}
 
 const addFriends = () => {
     const elem = document.getElementsByClassName('.img-profile')
@@ -912,17 +975,17 @@ class profilePage extends HTMLElement {
         friendSection.addEventListener('click' , (e) =>{
                 // friendSection.className = "test"
                 // document.querySelector('.forAdd').style.display = 'block';
-                const serach = document.querySelector('.forAdd').appendChild(slidFriend());
-                document.querySelector('.logout-popup-content').innerHTML = '';
-                document.querySelector('.logout-popup-content').appendChild(serachBar());
-                // document.querySelector('#search-container').style.display = "flex";
+                const serach = document.querySelector('.forAdd').innerHTML =  slidFriend();
+                // document.querySelector('.logout-popup-content').innerHTML = '';
+                // document.querySelector('.logout-popup-content').innerHTML =  serachBar();
+                document.querySelector('#profadd').style.display = "none";
                 const searchBar = document.getElementById('search-bar');
                 const resultsDiv = document.getElementById('results');
                 const popup = document.getElementById('popup');
                 const popupText = document.getElementById('popup-text');
                 const overlay = document.getElementById('overlay');
         
-                const sampleData = ["apple", "banana", "cherry", "date", "elderberry", "fig", "grape"]; // Sample data to search
+                const sampleData = this.statsHistory.map(item => item.player); // Sample data to search
         
                 // Function to display matching results
                 function displayResults(query) {
@@ -930,14 +993,14 @@ class profilePage extends HTMLElement {
                     if (query) {
                         const filteredData = sampleData.filter(item => item.toLowerCase().includes(query.toLowerCase()));
                         if (filteredData.length) {
-                            resultsDiv.innerHTML = `<ul>${filteredData.map(item => `<li class="resdiv" type="click" >${item}</li>`).join('')}</ul>`;
+                            resultsDiv.innerHTML = `<ul>${filteredData.map(item => `<li  type="click" >${item}</li>`).join('')}</ul>`;
                         } else {
                             resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
                         }
                     }
                 }
-                if (document.querySelector('.resdiv')){
-                    document.querySelector('.resdiv').addEventListener('click' , (e) => {
+                if (resultsDiv){
+                    resultsDiv.addEventListener('click' , (e) => {
                         document.querySelector('#search-container').style.display = "none";
                         document.querySelector('#profadd').style.display = "flex";
                         document.querySelector('#backtosearch').addEventListener('click' , (e) => {
@@ -971,33 +1034,30 @@ class profilePage extends HTMLElement {
 
     };
     openProfile() {
-        const openProfileElements = document.querySelectorAll('#openprof'); // Select all with the class 'profsign'
+        const openProfileElements = document.querySelectorAll('.profsign'); // Select all span elements with the class 'profsign'
     
         openProfileElements.forEach(field => {
             field.addEventListener('click', (e) => {
-                document.querySelector('.forsddProf').innerHTML = '';
-                document.querySelector('.forsddProf').innerHTML = slidFriend();
-                console.log(document.querySelector('.logout-popup-content'));
-                document.querySelector('.logout-popup').style.display = 'flex';
-                // document.querySelector('.logout-popup-content').innerHTML = '';
-                document.querySelector('.logout-popup-content').innerHTML = profSection();
-                // document.querySelector('#profadd').style.display = "flex";
+                // Get data attributes from the clicked element
+                const name = field.querySelector('.forsddProf').dataset.name;
+                const img = field.querySelector('.forsddProf').dataset.img;
     
-                // Dynamically handle the back button
-                const backToSearch = document.querySelector('#backtosearch');
-
-                backToSearch.addEventListener('click' , (e) => {
-                    console.log("THERE IS THE BACK BUTTON");
-                    // document.querySelector('#profadd').style.display = "none";
-                    document.querySelector('.logout-popup').style.display = 'none';
+                // Pass the data dynamically to slidProf and display the popup
+                // console.log("----> : "  + name);
+                const profilePopup = slidProf({ name, img });
+                document.body.insertAdjacentHTML('beforeend', profilePopup);
+    
+                // Add functionality to the back button
+                const backToSearch = document.querySelector('#toprof');
+                backToSearch.addEventListener('click', () => {
+                    document.querySelector('#logoutPopup').remove(); // Close the popup
                 });
-    
-                // console.log(`Profile clicked`);
             });
         });
     }
     
     stockFriends() {
+
         this.statsHistory = [
             { player: "ahbajaou", img: "/images/ah.png", status: "green" },
             { player: "arahmoun", img: "/images/ara.png", status: "red" },
@@ -1006,17 +1066,16 @@ class profilePage extends HTMLElement {
             { player: "arahmoun", img: "/images/ara.png", status: "red" },
             { player: "iantar", img: "/images/iantar.jpeg", status: "green" }
         ];
-    
         const main = document.querySelector('.scrollable-div');
         let prof = '';
        let  index = 0;
-        this.statsHistory.forEach((element) => {
+        this.statsHistory.forEach((info) => {
             // index++;
             prof += `
                 <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
-                    <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%; border: 1px solid;" src="${element.img}">
-                    <span class="sign" style="background: ${element.status};"></span>
-                    <span id="" class="forsddProf" style=""></span>
+                    <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%; border: 1px solid;" src="${info.img}">
+                    <span class="sign" style="background: ${info.status};"></span>
+                    <span id="" data-name="${info.player}" data-img="${info.img}" class="forsddProf" style=""></span>
                 </span>
             `;
             console.log('openprof-' + index)
@@ -1027,6 +1086,7 @@ class profilePage extends HTMLElement {
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
+
             this.info = await fetchUserData();
             if (this.info){
                 console.log(this.info.image);
