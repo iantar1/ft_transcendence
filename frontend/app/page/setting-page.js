@@ -84,6 +84,9 @@ class settingPage extends HTMLElement {
     .nav-bar{
             display :flex;
         }
+        #setting{ 
+                    color: #fff; 
+                }
     @media (min-width: 992px) and (max-width: 1024px) {
         .settingOne{
         width :20%;
@@ -877,6 +880,9 @@ class settingPage extends HTMLElement {
             this.displayNav();
             const uuss = async () => {
                 this.info = await fetchUserData();
+                if (!this.info.image){
+                    this.info.image = "/images/default.jpeg"
+                }
                 document.getElementById('imgSetting').src = this.info.image
             
             }

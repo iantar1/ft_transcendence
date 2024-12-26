@@ -41,6 +41,10 @@ class homePage extends HTMLElement {
         .nav-bar{
                 display :flex;
             }
+        #home{
+
+            color: #fff; 
+        }
         .cart-home p{
             font-size:100%;
             font-family: "Pong War", "Freeware";
@@ -316,20 +320,24 @@ class homePage extends HTMLElement {
         </div>
     </div>
             </div>
-            <div class="static-home">
-            <table class="nav-static">
-                <thead>
-                    <tr>
-                        <th>Player</th>
-                        <th>Level</th>
-                        <th>Game</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody class="table-content" ></tbody>
-             </table>
-            </div>
-            </div>
+<div class="static-home">
+    <table class="nav-static">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Level</th>
+                <th>Game</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody class="table-content"></tbody>
+    </table>
+</div>
+
+<style>
+
+</style>
+
             `;
         navBar = `
         @media (min-width: 320px) and (max-width: 1024px) {

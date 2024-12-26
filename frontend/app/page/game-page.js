@@ -51,7 +51,7 @@ class gamePage extends HTMLElement {
     }
     rander(){
         this.innerHTML = `
-            <iframe class="ifif" id="django-iframe" src="http://10.24.85.211:8000" ></iframe>
+            <iframe class="ifif" id="django-iframe" src="http://10.53.81.212:8000" ></iframe>
             <style>
             ${this.navar}
             #content{
@@ -72,6 +72,9 @@ class gamePage extends HTMLElement {
                 height :100%;
                 border :0;
             }
+            #game{ 
+                    color: #fff; 
+                }
             </style>
         
         `;
