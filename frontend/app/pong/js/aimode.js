@@ -70,7 +70,7 @@ export function ai_mode()
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
     
-    const ai_URL = 'ws://transcendence.backend.com:8003/ws/ai/';
+    const ai_URL = 'ws://transcendence.backend.com:5050/ws/ai/';
     let wsOpen = false;
     const selectedMode = "AI MODE";
     let ball_config, ball, plane, paddle, score, animationId, table_config, player1_config, player2_config;
