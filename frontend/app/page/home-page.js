@@ -5,6 +5,10 @@ import {readData} from './readData.js';
 
 import {fetchUserData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
+import { navigateTo } from '../routing.js';
+
+import { betweenPage } from '../routing.js';
+
 
 
   // Usage example - wrapped in DOMContentLoaded
@@ -14,7 +18,15 @@ import {fetchUserData} from './readData.js';
     
 //     setTimeout(() => loader.hide(), 3000);
 //   });
-
+function toGame(){
+    const page = document.querySelectorAll('#togame');
+    page.forEach(element =>{
+        element.addEventListener('click' , (e) => {
+                betweenPage();
+                navigateTo('/game');
+        });
+    })
+}
 class homePage extends HTMLElement {
     info = [];
     match = [];
@@ -26,7 +38,7 @@ class homePage extends HTMLElement {
             <h1>Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
-            <button class="btn-home btn btn-secondary " >let's play</button>
+            <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
         </div>
     </div>
     `;
@@ -272,19 +284,19 @@ class homePage extends HTMLElement {
         <div class="scroll-wrapper">
             <div class="scroll-track">
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/champion.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/game-controller.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/onevsone.png">
                     </div>
@@ -292,19 +304,19 @@ class homePage extends HTMLElement {
             </div>
             <div class="scroll-track">
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/champion.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/game-controller.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/onevsone.png">
                     </div>
@@ -444,6 +456,8 @@ class homePage extends HTMLElement {
         this.rander();
         this.getData();
         this.staticHome();
+        toGame();
+
     }
 }
 

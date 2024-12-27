@@ -94,7 +94,7 @@ class LoadingScreen {
   }
 
   // Usage example - wrapped in DOMContentLoaded
-  const betweenPage = (() => {
+  export const betweenPage = (() => {
     const loader = new LoadingScreen('Loading your content...');
     loader.show();
     

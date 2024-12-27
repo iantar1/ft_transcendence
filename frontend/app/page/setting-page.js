@@ -187,7 +187,7 @@ class settingPage extends HTMLElement {
             .formProf input {
                 background-color: rgb(0 0 0 / 0.5);
                 border :none;
-                border-radius :15px;
+                border-radius :3px;
             }
             .formProf textarea{
                 background-color: rgb(0 0 0 / 0.5);

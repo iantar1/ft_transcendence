@@ -19,7 +19,10 @@ function serachBar(){
         }
         input[type="text"] {
             width: 100%;
-            padding: 10px;
+            pad        page.addEventListener('click' , (e) => {
+                betweenPage();
+                navigateTo('/game');
+        });ding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             color :#000;
@@ -435,8 +438,7 @@ class profilePage extends HTMLElement {
                 width :10px;
                 height :10px;
                 border-radius :50%;
-                z-index :4000;
-                border :1px solid; 
+                z-index :3000;
             }
             .profsign{
                 height :32%;
