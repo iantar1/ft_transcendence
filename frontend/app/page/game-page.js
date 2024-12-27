@@ -1,4 +1,6 @@
 
+// import {gamePage} from '/home/chebchoub/Desktop/ping/frontend/app/pong/js/gamePage.js'
+
 class gamePage extends HTMLElement {
 
     navar = `
@@ -51,7 +53,7 @@ class gamePage extends HTMLElement {
     }
     rander(){
         this.innerHTML = `
-            <iframe class="ifif" id="django-iframe" src="http://10.53.81.212:8000" ></iframe>
+            <gamePage></gamePage>
             <style>
             ${this.navar}
             #content{
@@ -66,11 +68,6 @@ class gamePage extends HTMLElement {
                 height :100%;
                 padding :0;
                 margin :0;
-            }
-            iframe{
-                width :100%;
-                height :100%;
-                border :0;
             }
             #game{ 
                     color: #fff; 

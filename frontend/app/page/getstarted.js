@@ -197,6 +197,7 @@ class getstartedPage extends HTMLElement {
         const form = [
             { player: "ahbajaou",  img: "/images/ah.jpg"},
             { player: "arahmoun", img: "/images/ara.png"},
+            { player: "himejjad", img: "/images/him.jpeg"},
             { player: "iantar", img: "/images/iantar.jpeg"}
           ];
           const cartHome = document.querySelector('.table-content');
