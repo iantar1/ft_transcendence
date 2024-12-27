@@ -214,29 +214,7 @@ class settingPage extends HTMLElement {
             }
         </style>
     `;
-    // <div class="brr" ></div>
-    // <div class="infoSetting" >
-    //     <div class="avatar" >
-    //         <div class="editAvatar" >
-    //             <div class="imgInfo" >
-    //                 <img src="../images/profile.png" >
-    //             </div>
-    //             <div class="btnInfo" >
-    //                 <button type="button" class="btn btn-secondary">Upload New</button>
-    //                 <button type="button" class="btn btn-light">Delete Avatar</button>
-    //             </div>
-    //         </div>
-    //     </div>
-    //     <div class="info" >
-    //         <div class="editInfo" >
 
-    //         </div>
-    //     </div>
-    //     <div class="saveInfo" >
-    //         <button type="button" class="btn btn-light">Save</button>
-    //     </div>
-        
-    // </div>
     settingTwo = `
     <div class="settingTwo" >
     <div class="humbergr-bar" type="click">

@@ -98,7 +98,7 @@ class LoadingScreen {
     const loader = new LoadingScreen('Loading your content...');
     loader.show();
     
-    setTimeout(() => loader.hide(), 2000);
+    setTimeout(() => loader.hide(), 1500);
   });
 
   function render(path) {
