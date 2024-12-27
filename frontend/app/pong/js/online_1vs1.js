@@ -71,7 +71,7 @@ export function online_1vs1()
     pongCanvas.appendChild(countdownElement);
 
 
-    const online_URL = 'ws://'+window.location.host+'/ws/online_1vs1/';
+    const online_URL = 'ws://transcendence.backend.com:5050/ws/online_1vs1/';
     let wsOpen = false;
     const selectedMode = "online_1vs1";
     let ball_config, ball, glowMesh, player1_config, player2_config, plane, table_config, paddle, score, animationId, role, composer;

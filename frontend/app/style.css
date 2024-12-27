@@ -90,7 +90,7 @@ animation: zoom 16s alternate infinite;
   rgba(56, 75, 112, 0.2) 100%
 );
   flex-basis: 3%;
-  z-index: 4000;
+  z-index: 3001;
   /* background-image: ; */
   display: flex;
   flex-direction: column;

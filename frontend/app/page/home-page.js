@@ -7,20 +7,13 @@ import {fetchUserData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
 
 
-
-// console.log(${img_1});
-// readData.getData();
-// const attt = [1 , 3 , 3 , 7 ];
-// console.log(attt)
-// readData.setData(attt);
-// const dd = await fetchUserData();
-// console.log(dd);
-// readData.getData();
-// const att = readData.getData()
-// console.log(att);
-
-console.log("inside home page");
-// console.log("------" + readData.getData());
+  // Usage example - wrapped in DOMContentLoaded
+//   document.addEventListener('DOMContentLoaded', () => {
+//     const loader = new LoadingScreen('Loading your content...');
+//     loader.show();
+    
+//     setTimeout(() => loader.hide(), 3000);
+//   });
 
 class homePage extends HTMLElement {
     info = [];

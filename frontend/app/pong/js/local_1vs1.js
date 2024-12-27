@@ -63,7 +63,7 @@ export function local_1vs1()
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
 
-    const local_URL = 'ws://'+window.location.host+'/ws/local_1vs1/';
+    const local_URL = 'ws://transcendence.backend.com:5050/ws/local_1vs1/';
     let wsOpen = false;
     let ball_config, ball, player1_config, player2_config, plane, table_config, paddle, score, animationId, role, composer;
     let player2Direction = 0, player1Direction = 0;
