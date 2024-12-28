@@ -72,6 +72,13 @@ class   FriendsProfile(models.Model):
     def get_friends_number(self):
         return self.friends.all().count()
     
+    def remove_friend(self, friend):
+        if friend in self.friends.all():
+            self.friends.remove(friend)
+            return True
+        return False
+
+
     def __str__(self):
         return str(self.user) + "'s friend"
 
