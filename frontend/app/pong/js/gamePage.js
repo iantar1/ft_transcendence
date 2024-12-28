@@ -92,6 +92,7 @@ class GamePage extends HTMLElement {
                     flex-direction: column-reverse;
                 }
                 #content{
+                    position: relative;
                     width :100vw;
                     height :100vh;
                     border-radius :0px;

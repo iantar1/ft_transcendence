@@ -66,8 +66,9 @@ export function manageLocalTournament(participants, tournamentName) {
     let height = canvas.height ;
 
     console.log("sizes : ", width, height);
+
+    resizeCanvas();
     
-    let stats = new Stats();
     const camera1 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     
@@ -83,17 +84,15 @@ export function manageLocalTournament(participants, tournamentName) {
     grid.position.y = -1;
     scene.add( grid );
     grid.visible = false;
-    function initRenderer(){
-        
-        renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        pongCanvas.appendChild(renderer.domElement);
-        pongCanvas.appendChild( stats.dom );
-        controls = new THREE.OrbitControls( camera1, renderer.domElement );
-    }
+ 
+    renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    pongCanvas.appendChild(renderer.domElement);
+    pongCanvas.appendChild( stats.dom );
+    controls = new THREE.OrbitControls( camera1, renderer.domElement );
     
     
     const directionalLight = new THREE.DirectionalLight(0xfdfbd3, 10, 800);
@@ -137,7 +136,6 @@ export function manageLocalTournament(participants, tournamentName) {
             score = data.score;
 
             console.log('Joined tournament');
-            initRenderer();
             table();
             ballCreation();
             playerCreation();
@@ -235,19 +233,24 @@ export function manageLocalTournament(participants, tournamentName) {
         if (e.key === "a" || e.key === "d")
             player1Direction = 0;
     }
-    window.addEventListener("resize", () => {
-        console.log("resize canvas");
-        canvas.width = document.documentElement.clientWidth;
-        canvas.height = document.documentElement.clientHeight;
 
-        width = canvas.width;
-        height = canvas.height;
-        camera1.aspect = (width / 2) / height;
-        camera2.aspect = (width / 2) / height;
-        camera2.updateProjectionMatrix();
+
+    function resizeCanvas() {
+        width = pongCanvas.clientWidth ;
+        height = pongCanvas.clientHeight ;
+
+        console.log("sizes : ", pongCanvas.clientWidth / pongCanvas.clientHeight);
+        camera1.fov = Math.min(95, Math.max(75, 60 * (height / width)));
+        camera1.aspect = width / height;
         camera1.updateProjectionMatrix();
+
+        camera2.fov = Math.min(95, Math.max(75, 60 * (height / width)));
+        camera2.aspect = width / height;
+        camera2.updateProjectionMatrix();
         renderer.setSize(width , height);
-    });
+    }
+
+    window.addEventListener("resize", resizeCanvas);
 
     function table() {
         tableHeight = table_config.tableHeight;
