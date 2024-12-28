@@ -2,6 +2,8 @@
 
 import {fetchUserData} from './readData.js';
 
+import {fetchMatchData} from './readData.js';
+
 import { navigateTo } from '../routing.js';
 
 function serachBar(){
@@ -10,14 +12,17 @@ function serachBar(){
         #search-container {
             margin: 20px auto;
             width: 100%;
-            display :none;
+            display :flex;
             justify-content :center;
             align-items :center;
             flex-direction: column;
         }
         input[type="text"] {
             width: 100%;
-            padding: 10px;
+            pad        page.addEventListener('click' , (e) => {
+                betweenPage();
+                navigateTo('/game');
+        });ding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             color :#000;
@@ -75,32 +80,88 @@ function serachBar(){
             <div id="results"></div>
             <button type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
         </div>
-        <div id="overlay"></div>
-        <div id="popup">
-            <p id="popup-text"></p>
-            <button onclick="closePopup()">Close</button>
+    </div>
+    `;
+}
+function profSection(name, img) {
+    return `
+    <style>
+        /* Add your custom styles here if needed */
+    </style>
+    <div id="profadd" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 100%;">
+        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+            <img style="position: static; width: 80px; height: 80px; border-radius: 50%;" src="${img}" alt="${name}'s profile picture">
+            <span>${name}</span>
+        </div>
+        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+            <button type="click" id="addfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary">Add Friend</button>
+            <button type="click" id="backtosearch" class="btn-home btn btn-secondary">Back</button>
         </div>
     </div>
     `;
 }
-function profSection(){
+
+function slidProf(info){
+    // const searchBarr = serachBar();
+    // const prof = profSection();
+    // data = document.querySelector('.forsddProf');
+
+    const name = info.name;
+    const img = info.img;
     return `
-    <style>
-        #profadd{
+        <style>
+        .logout-popup {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5000;
+            justify-content: center;
+            align-items: center;
+            gap :10px;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .logout-popup-content {
+            background: var(--blue);
+            padding: 30px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        .btn-home{
+            background: var(--red);
+        }
+        .paratext{
+            font-size :90%;
+        }
+        .confirmtext{
+            color :var(--red);   
+        }
+        #forprof{
             display :none;
         }
     </style>
-            <div id="profadd" style=" flex-direction: column; align-items :center; justify-content:center; gap :10px; width:100%; height :100%;" >
+        <div id="logoutPopup" class="logout-popup">
+            <div class="logout-popup-content">
+            <div id="profadd" style="display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px; width:100%; height :100%;" >
                 <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;">
-                    <img style="position :static;  width: 80px; height: 80px; border-radius: 50%;"  src="/images/ah.png" >
-                    <span>chebchoub</span>
+                    <img style="position :static;  width: 80px; height: 80px; border-radius: 50%;"  src="${img}" >
+                    <span>${name}</span>
                 </div>
                 <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;" >
                     <button type="click" id="addfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary " >Add Friend</button>
-                    <button type="click" id="backtosearch" class="btn-home btn btn-secondary " >Back</button>
+                    <button type="click" id="toprof" class="btn-home btn btn-secondary " >Back</button>
                 </div>
             </div>
-    `;
+            </div>
+        </div>
+                `
+                
 }
 function slidFriend(){
     const searchBarr = serachBar();
@@ -145,13 +206,12 @@ function slidFriend(){
     </style>
         <div id="logoutPopup" class="logout-popup">
             <div class="logout-popup-content">
-                    ${searchBarr}
-                    ${prof}
+                ${searchBarr}
             </div>
         </div>
                 `
                 
-            };
+}
 
 const addFriends = () => {
     const elem = document.getElementsByClassName('.img-profile')
@@ -184,7 +244,7 @@ class profilePage extends HTMLElement {
                     <div class="info-profile">
                         <img id="img_intra" src="" >
                         <h3 id='username' ></h3>
-                            <button class="btn-home btn btn-secondary " >Edit</button>
+                            <button id="tosetting" type="click" class="btn-home btn btn-secondary " >Edit</button>
                     </div>
                     <div class="lvl-profile">
                         <div class="bio-profile">
@@ -212,7 +272,10 @@ class profilePage extends HTMLElement {
                 display :flex;
 
                 }
-
+                #prof{
+   
+                    color: #fff; 
+                }
                 /* Webkit Browsers (Chrome, Edge, Safari) */
                 .scrollable-div::-webkit-scrollbar {
                     width: 6px; /* Narrow scrollbar for a mobile-like feel */
@@ -375,8 +438,7 @@ class profilePage extends HTMLElement {
                 width :10px;
                 height :10px;
                 border-radius :50%;
-                z-index :4000;
-                border :1px solid; 
+                z-index :3000;
             }
             .profsign{
                 height :32%;
@@ -867,11 +929,20 @@ class profilePage extends HTMLElement {
                 display :flex;
             }
     }`
+    narotu = [];
     constructor() {
         super();
     }
     statsPlayer(){
-        this.statsHistory = [
+        console.log('----HEREHEREHEREHEREHERE-----');
+        // console.log(fetchMatchData().image);
+        // const data = fetchMatchData();
+        // const data = fetchMatchData();
+        // data.forEach(da => {
+        //     console.log(da.user1);
+        // });
+        this.narotu = 
+         [
             { player: "ahbajaou",  img: "/images/ah.png"},
             { player: "arahmoun", img: "/images/ara.png"},
             { player: "iantar", img: "/images/iantar.jpeg"}
@@ -879,7 +950,7 @@ class profilePage extends HTMLElement {
 
         const onevsone = document.querySelector('.players');
         let from = '';
-        this.statsHistory.forEach(element => {
+        this.narotu.forEach(element => {
                 // console.log('hhhhhhhhhh');
                 from += `
                     <tr>
@@ -919,91 +990,117 @@ class profilePage extends HTMLElement {
         onevsone.innerHTML = from;
     }
 
-    slidFriend(){
+    slidFriend() {
         const friendSection = document.querySelector('.flag'); // Access the first element with the class
-        friendSection.addEventListener('click' , (e) =>{
-                // friendSection.className = "test"
-                document.querySelector('.forAdd').style.display = 'block';
-                const serach = document.querySelector('.forAdd').innerHTML = slidFriend();
-                document.querySelector('#search-container').style.display = "flex";
-                const searchBar = document.getElementById('search-bar');
-                const resultsDiv = document.getElementById('results');
-                const popup = document.getElementById('popup');
-                const popupText = document.getElementById('popup-text');
-                const overlay = document.getElementById('overlay');
-        
-                const sampleData = ["apple", "banana", "cherry", "date", "elderberry", "fig", "grape"]; // Sample data to search
-        
-                // Function to display matching results
-                function displayResults(query) {
-                    resultsDiv.innerHTML = ''; // Clear previous results
-                    if (query) {
-                        const filteredData = sampleData.filter(item => item.toLowerCase().includes(query.toLowerCase()));
-                        if (filteredData.length) {
-                            resultsDiv.innerHTML = `<ul>${filteredData.map(item => `<li class="resdiv" type="click" >${item}</li>`).join('')}</ul>`;
-                        } else {
-                            resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
-                        }
+        friendSection.addEventListener('click', (e) => {
+            // Reset or manipulate DOM content here as needed
+            const searchBarContainer = document.querySelector('.forAdd');
+            searchBarContainer.innerHTML = slidFriend(); // Update content inside forAdd
+    
+            // Rebind the events after updating the content inside .forAdd
+            this.bindSearchBarEvents();  // Call function to rebind events
+        });
+    }
+    
+    bindSearchBarEvents() {
+        const searchBar = document.getElementById('search-bar');
+        const resultsDiv = document.getElementById('results');
+        const popup = document.getElementById('popup');
+        const popupText = document.getElementById('popup-text');
+        const overlay = document.getElementById('overlay');
+    
+        const sampleData = this.statsHistory.map(item => ({
+            name: item.player,
+            img: item.img
+        }));
+    
+        // Function to display matching results
+        function displayResults(query) {
+            resultsDiv.innerHTML = ''; // Clear previous results
+            if (query) {
+                const filteredData = sampleData.filter(item =>
+                    item.name.toLowerCase().includes(query.toLowerCase())
+                );
+                if (filteredData.length) {
+                    resultsDiv.innerHTML = `
+                        <ul>
+                            ${filteredData
+                                .map(
+                                    item =>
+                                        `<li data-name="${item.name}" data-img="${item.img}" class="search-result">${item.name}</li>`
+                                )
+                                .join('')}
+                        </ul>`;
+                } else {
+                    resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
+                }
+            }
+        }
+    
+        // Event delegation for dynamically generated search result items
+        if (resultsDiv) {
+            resultsDiv.addEventListener('click', (e) => {
+                const clickedElement = e.target.closest('.search-result');
+                if (clickedElement) {
+                    const name = clickedElement.getAttribute('data-name');
+                    const img = clickedElement.getAttribute('data-img');
+    
+                    // Replace the container with the dynamic profile section
+                    document.querySelector('#search-container').style.display = "none";
+                    const content = document.querySelector('.logout-popup-content');
+                    if (content) {
+                        content.innerHTML = '';
+                        content.innerHTML = profSection(name, img);
                     }
-                }
-                if (document.querySelector('.resdiv')){
-                    document.querySelector('.resdiv').addEventListener('click' , (e) => {
-                        document.querySelector('#search-container').style.display = "none";
-                        document.querySelector('#profadd').style.display = "flex";
-                        document.querySelector('#backtosearch').addEventListener('click' , (e) => {
-                            document.querySelector('#profadd').style.display = "none";
-                            document.querySelector('#search-container').style.display = "flex";
-                        });
-                        document.querySelector('#addfriend').addEventListener('click' , (e) => {
-                            console.log('HERE WE ADD THE FETCH FUNCTION');
-                        });
+    
+                    // Add functionality to buttons
+                    document.querySelector('#backtosearch').addEventListener('click', () => {
+                        document.querySelector('.forAdd').innerHTML = slidFriend();
+                        this.bindSearchBarEvents();
                     });
-                    
                 }
-  
-                function closePopup() {
-                    popup.style.display = 'none';
-                    overlay.style.display = 'none';
-                }
-        
-                // Add event listener to search bar
-                searchBar.addEventListener('input', (e) => {
-                    const query = e.target.value.trim();
-                    displayResults(query); // Show matching results
-                });           
-                document.querySelector('#backtoprof').addEventListener('click' , (e) => {
-                        console.log("BACK TO PROF PAGE");
-                        document.querySelector('.forAdd').style.display = 'none';
-                });
             });
-
-    };
+        }
+    
+        // Add event listener to search bar
+        if (searchBar) {
+            searchBar.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+                displayResults(query); // Show matching results
+            });
+        }
+    
+        // Add click listener for the 'back to profile' button
+        document.querySelector('#backtoprof').addEventListener('click', () => {
+            document.querySelector('.logout-popup').style.display = 'none';
+        });
+    }
+    
+    
     openProfile() {
-        const openProfileElements = document.querySelectorAll('#openprof'); // Select all with the class 'profsign'
+        const openProfileElements = document.querySelectorAll('.profsign'); // Select all span elements with the class 'profsign'
     
         openProfileElements.forEach(field => {
             field.addEventListener('click', (e) => {
-                // const currentElement = e.currentTarget;
-                // const index = currentElement.dataset.index; // Get the index from the data attribute
-                // document.querySelector('.foradd').style.display = "flex";
-                document.querySelector('.forsddProf').innerHTML = slidFriend();
-                    document.querySelector('#profadd').style.display = "flex";
+                // Get data attributes from the clicked element
+                const name = field.querySelector('.forsddProf').dataset.name;
+                const img = field.querySelector('.forsddProf').dataset.img;
     
-                // Dynamically handle the back button
-                const backToSearch = document.querySelector('#backtosearch');
-
-                backToSearch.addEventListener('click' , (e) => {
-                    console.log("THERE IS THE BACK BUTTON");
-                    document.querySelector('#profadd').style.display = "none";
-                    document.querySelector('.logout-popup').style.display = 'none';
+                // Pass the data dynamically to slidProf and display the popup
+                const profilePopup = slidProf({ name, img });
+                document.body.insertAdjacentHTML('beforeend', profilePopup);
+    
+                // Add functionality to the back button
+                const backToSearch = document.querySelector('#toprof');
+                backToSearch.addEventListener('click', () => {
+                    document.querySelector('#logoutPopup').remove(); // Close the popup
                 });
-    
-                console.log(`Profile clicked`);
             });
         });
     }
     
     stockFriends() {
+
         this.statsHistory = [
             { player: "ahbajaou", img: "/images/ah.png", status: "green" },
             { player: "arahmoun", img: "/images/ara.png", status: "red" },
@@ -1012,17 +1109,16 @@ class profilePage extends HTMLElement {
             { player: "arahmoun", img: "/images/ara.png", status: "red" },
             { player: "iantar", img: "/images/iantar.jpeg", status: "green" }
         ];
-    
         const main = document.querySelector('.scrollable-div');
         let prof = '';
        let  index = 0;
-        this.statsHistory.forEach((element) => {
+        this.statsHistory.forEach((info) => {
             // index++;
             prof += `
                 <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
-                    <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%; border: 1px solid;" src="${element.img}">
-                    <span class="sign" style="background: ${element.status};"></span>
-                    <span id="" class="forsddProf" style=""></span>
+                    <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%; border: 1px solid;" src="${info.img}">
+                    <span class="sign" style="background: ${info.status};"></span>
+                    <span id="" data-name="${info.player}" data-img="${info.img}" class="forsddProf" style=""></span>
                 </span>
             `;
             console.log('openprof-' + index)
@@ -1033,6 +1129,7 @@ class profilePage extends HTMLElement {
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
+
             this.info = await fetchUserData();
             if (this.info){
                 console.log(this.info.image);
@@ -1043,9 +1140,7 @@ class profilePage extends HTMLElement {
                     this.info.image = "/images/default.jpeg"
                 }
                 document.getElementById('username').textContent = this.info.username
-                // document.getElementById('username').textContent = this.info.username
                 document.getElementById('img_intra').src = this.info.image
-                console.log(this.info.image);
                 document.getElementById('BIO').textContent = 'ash dak temchi lzine'
             }
             else{
@@ -1101,6 +1196,10 @@ class profilePage extends HTMLElement {
         // this.cycleRander();
         // losrWin.appendChild(onevsone);
             // });
+            const backToSearch = document.querySelector('#tosetting');
+            backToSearch.addEventListener('click', () => {
+                navigateTo('/setting')
+            });
     }
     connectedCallback() {
         this.render();

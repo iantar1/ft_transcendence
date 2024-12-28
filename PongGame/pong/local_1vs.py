@@ -19,6 +19,7 @@ class Local1vs1Consumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.is_active = True
+        self.mode = "local"
         self.width = 800
         self.height = 400
         self.speed = 1

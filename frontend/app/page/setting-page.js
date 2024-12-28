@@ -84,6 +84,9 @@ class settingPage extends HTMLElement {
     .nav-bar{
             display :flex;
         }
+        #setting{ 
+                    color: #fff; 
+                }
     @media (min-width: 992px) and (max-width: 1024px) {
         .settingOne{
         width :20%;
@@ -184,7 +187,7 @@ class settingPage extends HTMLElement {
             .formProf input {
                 background-color: rgb(0 0 0 / 0.5);
                 border :none;
-                border-radius :15px;
+                border-radius :3px;
             }
             .formProf textarea{
                 background-color: rgb(0 0 0 / 0.5);
@@ -211,29 +214,7 @@ class settingPage extends HTMLElement {
             }
         </style>
     `;
-    // <div class="brr" ></div>
-    // <div class="infoSetting" >
-    //     <div class="avatar" >
-    //         <div class="editAvatar" >
-    //             <div class="imgInfo" >
-    //                 <img src="../images/profile.png" >
-    //             </div>
-    //             <div class="btnInfo" >
-    //                 <button type="button" class="btn btn-secondary">Upload New</button>
-    //                 <button type="button" class="btn btn-light">Delete Avatar</button>
-    //             </div>
-    //         </div>
-    //     </div>
-    //     <div class="info" >
-    //         <div class="editInfo" >
 
-    //         </div>
-    //     </div>
-    //     <div class="saveInfo" >
-    //         <button type="button" class="btn btn-light">Save</button>
-    //     </div>
-        
-    // </div>
     settingTwo = `
     <div class="settingTwo" >
     <div class="humbergr-bar" type="click">
@@ -877,6 +858,9 @@ class settingPage extends HTMLElement {
             this.displayNav();
             const uuss = async () => {
                 this.info = await fetchUserData();
+                if (!this.info.image){
+                    this.info.image = "/images/default.jpeg"
+                }
                 document.getElementById('imgSetting').src = this.info.image
             
             }

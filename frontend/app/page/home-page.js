@@ -5,23 +5,28 @@ import {readData} from './readData.js';
 
 import {fetchUserData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
+import { navigateTo } from '../routing.js';
+
+import { betweenPage } from '../routing.js';
 
 
 
-// console.log(${img_1});
-// readData.getData();
-// const attt = [1 , 3 , 3 , 7 ];
-// console.log(attt)
-// readData.setData(attt);
-// const dd = await fetchUserData();
-// console.log(dd);
-// readData.getData();
-// const att = readData.getData()
-// console.log(att);
-
-console.log("inside home page");
-// console.log("------" + readData.getData());
-
+  // Usage example - wrapped in DOMContentLoaded
+//   document.addEventListener('DOMContentLoaded', () => {
+//     const loader = new LoadingScreen('Loading your content...');
+//     loader.show();
+    
+//     setTimeout(() => loader.hide(), 3000);
+//   });
+function toGame(){
+    const page = document.querySelectorAll('#togame');
+    page.forEach(element =>{
+        element.addEventListener('click' , (e) => {
+                betweenPage();
+                navigateTo('/game');
+        });
+    })
+}
 class homePage extends HTMLElement {
     info = [];
     match = [];
@@ -33,7 +38,7 @@ class homePage extends HTMLElement {
             <h1>Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
-            <button class="btn-home btn btn-secondary " >let's play</button>
+            <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
         </div>
     </div>
     `;
@@ -41,6 +46,10 @@ class homePage extends HTMLElement {
         .nav-bar{
                 display :flex;
             }
+        #home{
+
+            color: #fff; 
+        }
         .cart-home p{
             font-size:100%;
             font-family: "Pong War", "Freeware";
@@ -276,19 +285,19 @@ class homePage extends HTMLElement {
         <div class="scroll-wrapper">
             <div class="scroll-track">
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/champion.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/game-controller.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/onevsone.png">
                     </div>
@@ -296,19 +305,19 @@ class homePage extends HTMLElement {
             </div>
             <div class="scroll-track">
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/champion.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/game-controller.png">
                     </div>
                 </div>
                 <div class="scroll-item">
-                    <button class="btn-home btn btn-secondary " >let's play</button>
+                    <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
                     <div class="track-items" >
                         <img  class="w-100 h-100" src="/images/onevsone.png">
                     </div>
@@ -317,20 +326,24 @@ class homePage extends HTMLElement {
         </div>
     </div>
             </div>
-            <div class="static-home">
-            <table class="nav-static">
-                <thead>
-                    <tr>
-                        <th>Player</th>
-                        <th>Level</th>
-                        <th>Game</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody class="table-content" ></tbody>
-             </table>
-            </div>
-            </div>
+<div class="static-home">
+    <table class="nav-static">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Level</th>
+                <th>Game</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody class="table-content"></tbody>
+    </table>
+</div>
+
+<style>
+
+</style>
+
             `;
         navBar = `
         @media (min-width: 320px) and (max-width: 1024px) {
@@ -444,6 +457,8 @@ class homePage extends HTMLElement {
         this.rander();
         this.getData();
         this.staticHome();
+        toGame();
+
     }
 }
 

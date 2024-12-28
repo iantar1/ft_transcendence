@@ -28,7 +28,7 @@ services:
     image: frontend
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3000:443"
     volumes:
       - ./frontend:/usr/share/nginx/html
       - ./backend/media/images:/usr/share/nginx/html/media/images

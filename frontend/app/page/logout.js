@@ -39,7 +39,9 @@ class LogoutPage extends HTMLElement {
         .confirmtext{
             color :var(--red);   
         }
-
+        #logout{
+            color: #fff; 
+        }
     </style>
 
         <!-- Logout Popup -->
