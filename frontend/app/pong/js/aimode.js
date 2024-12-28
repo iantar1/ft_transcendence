@@ -1,14 +1,10 @@
 import { render  } from "./render.js";
-import { waitingPage } from "./waiting.js";
 import { GameOver } from "./gameOver.js";
 
 
 
 function gameCanvas() {
     const canvas = document.createElement('canvas');
-    canvas.style.display = 'flex';
-    canvas.width = document.documentElement.clientWidth;
-    canvas.height = document.documentElement.clientHeight;
     
     return canvas;
 }
@@ -27,17 +23,20 @@ export function ai_mode()
 
     const style = document.createElement('style');
     style.textContent = `
-        canvas {
+        .pongCanvas canvas {
+            display: block;
+            margin: auto;
+            background-color: #000;
             width: 100%;
             height: 100%;
         }
-        .countdown {
+        .pongCanvas .countdown {
             color: var(--red);
             text-shadow: 2px 0 white, -2px 0 white, 0 2px white, 0 -2px white,
                 1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
             position: absolute;
-            top: 0px;
-            left: 0px;
+            top: 0;
+            left: 0;
             text-align: center;
             place-content: center;
             align-items: center;
@@ -47,14 +46,10 @@ export function ai_mode()
             background-color: rgba(255, 0, 0, 0);
         }
         .pongCanvas {
+            position: relative;
             display: flex;
-            position: absolute;
-            top: 0px;
-            left: 0px;
             width: 100%;
             height: 100%;
-            justify-content: center;
-            align-items: center;
         }
     `;
 
@@ -86,47 +81,29 @@ export function ai_mode()
     let tableWidth, tableHeight;
     const scene = new THREE.Scene();
 
-    let width = canvas.width ;
-    let height = canvas.height ;
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
 
-    console.log("sizes : ", width, height);
+    let width = canvas.clientWidth ;
+    let height = canvas.clientHeight ;
+
+    console.log("sizes : ", canvas.clientWidth, canvas.clientHeight);
     
-    const axesHelper = new THREE.AxesHelper(width / 2);
-    scene.add(axesHelper);
-    axesHelper.visible = false;
     
-    let stats = new Stats();
+
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 2000);
-    camera.position.set(0, 30, 30);
+    camera.position.set(0, 45, 30);
     scene.add(camera);
-    
-    
-    const grid = new THREE.GridHelper( 1000, 1000, 0xaaaaaa, 0xaaaaaa );
-    grid.material.opacity = 1;
-    grid.material.transparent = true;
-    grid.position.y = -1;
-    scene.add( grid );
-    grid.visible = false;
-
-    function initRenderer(){
-        
-        renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        pongCanvas.appendChild(renderer.domElement);
-        pongCanvas.appendChild( stats.dom );
-        controls = new THREE.OrbitControls( camera, renderer.domElement );
-    }
 
 
-    const directionalLight = new THREE.DirectionalLight(0xfdfbd3, 10, 800);
-    directionalLight.position.set(0, 500, 50);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
-    directionalLight.visible = false;
+    renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    pongCanvas.appendChild(renderer.domElement);
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
     
+    resizeCanvas();
     
     const socket = new WebSocket(ai_URL);
     // Handle WebSocket events
@@ -141,10 +118,9 @@ export function ai_mode()
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        console.table('data', data)
+        // console.table('data', data)
         if (data.type === "start") {
-            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
-            initRenderer();
+
             table_config = data.table;
             paddle = data.paddle;
             player1_config = data.player1;
@@ -212,17 +188,18 @@ export function ai_mode()
             playerDirection = 0;
     }
 
+    function resizeCanvas() {
+        width = pongCanvas.clientWidth ;
+        height = pongCanvas.clientHeight ;
 
-    window.addEventListener("resize", () => {
-        canvas.width = document.documentElement.clientWidth;
-        canvas.height = document.documentElement.clientHeight;
-        
-        width = canvas.width ;
-        height = canvas.height ;
+        console.log("sizes : ", pongCanvas.clientWidth / pongCanvas.clientHeight);
+        camera.fov = Math.min(95, Math.max(75, 60 * (height / width)));
         camera.aspect = width / height;
-        renderer.setSize(width , height);
         camera.updateProjectionMatrix();
-    });
+        renderer.setSize(width , height);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
 
     function table() {
         tableHeight = table_config.tableHeight;
@@ -424,7 +401,6 @@ export function ai_mode()
     function animate ()
     {
         animationId = requestAnimationFrame(animate);
-        stats.update();
         controls.update();
         renderer.render( scene, camera );
         if (wsOpen)

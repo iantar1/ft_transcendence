@@ -1,5 +1,6 @@
 import { render } from "./render.js";
 import { menu } from "./loby.js";
+import { createWinnerCard } from "./winnerCard.js";
 
 
 export function tournamentBracket(
@@ -314,6 +315,9 @@ export function tournamentBracket(
         container.appendChild(CurrentRound);
     }
     container.appendChild(buttons);
+    if (currentMatch > 3) {
+        container.appendChild(createWinnerCard(matches[2].winner));
+    }
 
     return container;
 }
