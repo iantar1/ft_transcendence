@@ -8,17 +8,18 @@ export function manageLocalTournament(participants, tournamentName) {
 
     const style = document.createElement('style');
     style.textContent = `
-        canvas {
+        .pongCanvas canvas {
+            display: block;
             width: 100%;
             height: 100%;
         }
-        .countdown {
+        .pongCanvas .countdown {
             color: var(--red);
             text-shadow: 2px 0 white, -2px 0 white, 0 2px white, 0 -2px white,
                 1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
             position: absolute;
-            top: 0px;
-            left: 0px;
+            top: 0;
+            left: 0;
             text-align: center;
             place-content: center;
             align-items: center;
@@ -28,14 +29,10 @@ export function manageLocalTournament(participants, tournamentName) {
             background-color: rgba(255, 0, 0, 0);
         }
         .pongCanvas {
+            position: relative;
             display: flex;
-            position: absolute;
-            top: 0px;
-            left: 0px;
             width: 100%;
             height: 100%;
-            justify-content: center;
-            align-items: center;
         }
     `;
     const gamePage = document.body.querySelector('game-page');
@@ -61,13 +58,15 @@ export function manageLocalTournament(participants, tournamentName) {
     
     let tableWidth, tableHeight;
     const scene = new THREE.Scene();
+    // add pongCanvas to gamePage
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
 
-    let width = canvas.width ;
-    let height = canvas.height ;
+    let width = canvas.clientWidth ;
+    let height = canvas.clientHeight ;
 
     console.log("sizes : ", width, height);
+
     
-    let stats = new Stats();
     const camera1 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     
@@ -77,31 +76,16 @@ export function manageLocalTournament(participants, tournamentName) {
     scene.add(camera1, camera2);
     
     
-    const grid = new THREE.GridHelper( 1000, 1000, 0xaaaaaa, 0xaaaaaa );
-    grid.material.opacity = 1;
-    grid.material.transparent = true;
-    grid.position.y = -1;
-    scene.add( grid );
-    grid.visible = false;
-    function initRenderer(){
-        
-        renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        pongCanvas.appendChild(renderer.domElement);
-        pongCanvas.appendChild( stats.dom );
-        controls = new THREE.OrbitControls( camera1, renderer.domElement );
-    }
-    
-    
-    const directionalLight = new THREE.DirectionalLight(0xfdfbd3, 10, 800);
-    directionalLight.position.set(0, 500, 50);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
-    directionalLight.visible = false;
-    
+ 
+    renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    pongCanvas.appendChild(renderer.domElement);
+    controls = new THREE.OrbitControls( camera1, renderer.domElement );
+
+    resizeCanvas();
 
 
 
@@ -110,10 +94,7 @@ export function manageLocalTournament(participants, tournamentName) {
 
 
 
-
-
-
-    URL = 'ws://transcendence.backend.com:5050/ws/tournament/local/';
+    URL = 'ws://localhost:5050/ws/tournament/local/';
     let ws = new WebSocket(URL);
     
     ws.onopen = function(event) {
@@ -137,7 +118,6 @@ export function manageLocalTournament(participants, tournamentName) {
             score = data.score;
 
             console.log('Joined tournament');
-            initRenderer();
             table();
             ballCreation();
             playerCreation();
@@ -235,19 +215,24 @@ export function manageLocalTournament(participants, tournamentName) {
         if (e.key === "a" || e.key === "d")
             player1Direction = 0;
     }
-    window.addEventListener("resize", () => {
-        console.log("resize canvas");
-        canvas.width = document.documentElement.clientWidth;
-        canvas.height = document.documentElement.clientHeight;
 
-        width = canvas.width;
-        height = canvas.height;
-        camera1.aspect = (width / 2) / height;
-        camera2.aspect = (width / 2) / height;
-        camera2.updateProjectionMatrix();
+
+    function resizeCanvas() {
+        width = pongCanvas.clientWidth ;
+        height = pongCanvas.clientHeight ;
+
+        console.log("sizes : ", pongCanvas.clientWidth / pongCanvas.clientHeight);
+        camera1.fov = Math.min(95, Math.max(75, 60 * (height / width)));
+        camera1.aspect = width / height;
         camera1.updateProjectionMatrix();
+
+        camera2.fov = Math.min(95, Math.max(75, 60 * (height / width)));
+        camera2.aspect = width / height;
+        camera2.updateProjectionMatrix();
         renderer.setSize(width , height);
-    });
+    }
+
+    window.addEventListener("resize", resizeCanvas);
 
     function table() {
         tableHeight = table_config.tableHeight;
@@ -309,7 +294,6 @@ export function manageLocalTournament(participants, tournamentName) {
 
     function tableWalls(tableWidth, tableHeight) {
 
-    /////////////////////////////////////////////
         const WallL = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
@@ -325,39 +309,39 @@ export function manageLocalTournament(participants, tournamentName) {
         rectLight1.position.set( WallL.position.x + 0.5, WallL.position.y , WallL.position.z);
         rectLight1.rotation.y = -Math.PI / 2;
         TableG.add( rectLight1 );
-    /////////////////////////////////////////////
+        
         const WallL1 = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
-                color: 0x00ff00,
-                emissive: 0x00ff00, // Emissive color (glow effect)
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
                 emissiveIntensity: 0.8 // Intensity of the emissive effect
                 })
         );
         WallL1.position.set(-(tableWidth / 2) + 0.5, 0, -(tableHeight / 4));
         TableG.add(WallL1);
 
-        const rectLight2 = new THREE.RectAreaLight( 0x00ff00, 2, tableHeight / 2, 3 );
+        const rectLight2 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
         rectLight2.position.set( WallL1.position.x + 0.5, WallL1.position.y, WallL1.position.z);
         rectLight2.rotation.y = -Math.PI / 2;
         TableG.add( rectLight2 );
-    ///////////////////////////////////////////////
+        
         const WallR = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
-                color: 0x00ff00,
-                emissive: 0x00ff00, // Emissive color (glow effect)
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
                 emissiveIntensity: 0.8 // Intensity of the emissive effect
             })
         );
         WallR.position.set(tableWidth / 2 - 0.5, 0, tableHeight / 4);
         TableG.add(WallR);
 
-        const rectLight3 = new THREE.RectAreaLight( 0x00ff00, 2, tableHeight / 2, 3 );
+        const rectLight3 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
         rectLight3.position.set( WallR.position.x - 0.5, WallR.position.y, WallR.position.z);
         rectLight3.rotation.y = Math.PI / 2;
         TableG.add( rectLight3 );
-    ///////////////////////////////////////////////////
+        
         const WallR1 = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
@@ -406,8 +390,8 @@ export function manageLocalTournament(participants, tournamentName) {
         player2 = new THREE.Mesh(
             new THREE.BoxGeometry(paddle.width, paddle.height, paddle.deep),
             new THREE.MeshToonMaterial({
-                color: "red",
-                emissive: "red",
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"),
                 emissiveIntensity: 1.0
             })
         );
@@ -450,7 +434,6 @@ export function manageLocalTournament(participants, tournamentName) {
     function animate ()
     {
         animationId = requestAnimationFrame(animate);
-        stats.update();
         controls.update();
 
         drawing();
@@ -541,15 +524,8 @@ export function manageLocalTournament(participants, tournamentName) {
         player2.position.set(0, 0, -(tableHeight / 2) + (paddle.deep / 2));
         ball.position.set(0, 0, 0);
         score = { player1: 0, player2: 0 };
-        stats.update();
         updateScore();
     }
-
-
-
-
-
-
 }
 
 

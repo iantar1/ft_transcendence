@@ -115,7 +115,11 @@ def auth(request):
     access_token = create_access_token(user.id)
     refresh_token = create_refresh_token(user.id)
 
+<<<<<<< HEAD
     response = HttpResponseRedirect(FRONTEND_REDIRECT_URL)  # Redirect to frontend
+=======
+    response = HttpResponseRedirect('https://0.0.0.0:3000/home')  # Redirect to frontend
+>>>>>>> origin/iantar
     response.set_cookie(key="access", value=access_token, httponly=True)
     response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     

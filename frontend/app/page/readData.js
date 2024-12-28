@@ -23,7 +23,7 @@ export const readData = (function() {
 export async function fetchUserData() {
     try {
         // Make a GET request to the API
-        const res = await fetch("http://transcendence.backend.com:8000/user/", {
+        const res = await fetch("http://0.0.0.0:8000/user/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export async function fetchUserData() {
 export async function fetchMatchData() {
     try {
         // Make a GET request to the API
-        const res = await fetch("http://transcendence.backend.com:8000/match_history/", {
+        const res = await fetch("http://0.0.0.0:8000/match_history/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

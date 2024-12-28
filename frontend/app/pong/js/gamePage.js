@@ -5,6 +5,7 @@ import { GameOver } from './gameOver.js'
 import { tournamentPage } from './tournament.js'
 import { matchmakingPage } from './tournament_matchmaking.js';
 import { tournamentlocal } from './localTournament.js';
+import { tournamentBracket } from './bracket.js'
 import { manageLocalTournament } from './manage_local_tour.js';
 // import { matchmakingPage } from './localmatchmaking.js';
 
@@ -35,6 +36,7 @@ class GamePage extends HTMLElement {
                 width: 100%;
             }
             .game-page {
+                position :relative;
                 font-family: "Pong War", sans-serif;
                 color: var(--white);
                 margin: 0;
@@ -50,6 +52,7 @@ class GamePage extends HTMLElement {
         shadow.appendChild(style);
         shadow.appendChild(main);
         render(menu(), main);
+        render(GameOver(), main);
     }
 
     connectedCallback(){
@@ -92,8 +95,9 @@ class GamePage extends HTMLElement {
                     flex-direction: column-reverse;
                 }
                 #content{
-                    width :100vw;
-                    height :100vh;
+                    position :relative;
+                    width :100%;
+                    height :100%;
                     border-radius :0px;
                     display :flex;
                 }

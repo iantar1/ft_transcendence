@@ -8,33 +8,31 @@ class getstartedPage extends HTMLElement {
                 display :none;
             }
     .page-1{
-        width: 100vw;
-        height :100vh;
+        width: 100%;
+        height :100%;
         display: flex;
         justify-content: start;
         align-items: center;
         flex-direction: column;
     }
     #content{
-        height: 100vh;
-        width: 100vw;
+        height: 100%;
+        width: 100%;
         flex-basis: none;
         border-radius: 0;
     }
     .content-gsp{
-        width :100vw;
+        width :100%;
         height :50vh;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        background:var( --bluenes);
         font-family: "Pong War", "Freeware";
     }
      .titlehome2{
         font-family: "Pong War", "Freeware";
         color : var(--red);
-
      }  
     .firstpage-para{
         width :60vw;
@@ -42,15 +40,8 @@ class getstartedPage extends HTMLElement {
         font-size :2.5vw;
         font-family: "Pong War", "Freeware";
     }
-    .btn-firstpg{
-        width : 214px;
-        height :56px;
-        border-radius :5px;
-        background-color:var(--red);
-        color :#fff;
-        border :none;
-        font-size :20px;
-        box-shadow: 5px 5px black;
+    .btn-home{
+        background :var(--red);
     }
     </style>
     `;
@@ -162,7 +153,7 @@ class getstartedPage extends HTMLElement {
                 <p class="firstpage-para fw-bold " style="font-size:1rem;" >In a distant galaxy, peace hinges on the Grand Galactic Tournament of zero-gravity ping pong. The Zephron Empire aims to dominate. </p>
             
                 <br>
-                <a type="click" href="/login" class="btn-firstpg btn btn-secondary mb-5 " data-link >Get started</a>
+                <a type="click" href="/login" class="btn-home btn btn-secondary mb-5 " data-link >Get started</a>
             </div>
             `;
     // <img src="/images/ahbajaou.jpg">
@@ -174,6 +165,7 @@ class getstartedPage extends HTMLElement {
             <div class="team d-flex flex-column flex-md-row justify-content-between">
 
             </div>
+            <br><br><br><br><br><br><br><br><br>
         </div>
     `
 

@@ -2,6 +2,8 @@ export function createWinnerCard(winnerName) {
     const style = document.createElement('style');
     style.textContent = `
         .winner-card {
+            position: absolute;
+            top: 50%;
             font-family: 'Roboto', sans-serif;
             display: flex;
             flex-direction: column;
