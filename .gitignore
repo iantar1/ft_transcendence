@@ -1,2 +1,6 @@
 ./backend/.venv
 ./chat
+*.sqlite3
+*.py[cod]
+__pycache__/
+

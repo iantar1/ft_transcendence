@@ -1,5 +1,6 @@
 import { render } from "./render.js";
 import { menu } from "./loby.js";
+import { createWinnerCard } from "./winnerCard.js";
 
 
 export function tournamentBracket(
@@ -18,6 +19,9 @@ export function tournamentBracket(
             padding: 2rem;
             border-radius: 5px;
             color: white;
+            width :90%;
+            max-width :1000px;
+            height :100%;
         }
 
         .bracket-title {
@@ -29,9 +33,12 @@ export function tournamentBracket(
         }
 
         .bracket-content {
+            width :90%;
             display: flex;
             align-items: center;
             gap: 4rem;
+            overflow-x :scroll;
+
         }
 
         .round-bracket {
@@ -169,6 +176,12 @@ export function tournamentBracket(
         button:hover {
             background-color: gray;
         }
+         @media (min-width: 320px) and (max-width: 1024px) {
+               .tournament-container{
+                    height :110%;
+               }
+
+         }
     `;
 
     function createTeam(name, score = null, isWinner = false) {
@@ -314,6 +327,9 @@ export function tournamentBracket(
         container.appendChild(CurrentRound);
     }
     container.appendChild(buttons);
+    // if (currentMatch > 3) {
+    //     container.appendChild(createWinnerCard(matches[2].winner));
+    // }
 
     return container;
 }

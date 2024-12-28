@@ -71,7 +71,7 @@ export function online_1vs1()
     pongCanvas.appendChild(countdownElement);
 
 
-    const online_URL = 'ws://transcendence.backend.com:5050/ws/online_1vs1/';
+    const online_URL = 'ws://localhost:5050/ws/online_1vs1/';
     let wsOpen = false;
     const selectedMode = "online_1vs1";
     let ball_config, ball, glowMesh, player1_config, player2_config, plane, table_config, paddle, score, animationId, role, composer;
@@ -87,44 +87,29 @@ export function online_1vs1()
     let tableWidth, tableHeight;
     const scene = new THREE.Scene();
     
-    let width = canvas.width ;
-    let height = canvas.height ;
-    
-    const axesHelper = new THREE.AxesHelper(width / 2);
-    scene.add(axesHelper);
-    axesHelper.visible = false;
-    
-    let stats = new Stats();
+
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+
+    let width = canvas.clientWidth ;
+    let height = canvas.clientHeight ;
+
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 2000);
     camera.position.set(0, 30, 35);
     scene.add(camera);
     
     
-    const grid = new THREE.GridHelper( 500, 500, 0xaaaaaa, 0xaaaaaa );
-    grid.material.opacity = 1;
-    grid.material.transparent = true;
-    grid.position.y = -1;
-    scene.add( grid );
-    // grid.visible = false;
-    function initRenderer(){
-        
-        renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        pongCanvas.appendChild(renderer.domElement);
-        pongCanvas.appendChild( stats.dom );
-        controls = new THREE.OrbitControls( camera, renderer.domElement );
-    }
+
+    renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    pongCanvas.appendChild(renderer.domElement);
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+    resizeCanvas();
     
-    
-    const directionalLight = new THREE.DirectionalLight(0xfdfbd3, 10, 800);
-    directionalLight.position.set(0, 500, 50);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
-    directionalLight.visible = false;
-    
+
     
     const socket = new WebSocket(online_URL);
     // Handle WebSocket events
@@ -142,8 +127,8 @@ export function online_1vs1()
         const data = JSON.parse(e.data);
         console.table('data', data)
         if (data.type === "start") {
-            initRenderer();
             render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+
             table_config = data.table;
             paddle = data.paddle;
             player1_config = data.player1;
@@ -184,6 +169,8 @@ export function online_1vs1()
         }
         if (data.type === "game_over") {
             score = data.score;
+            cancelAnimationFrame(animationId);
+            socket.close();
             render(GameOver(data.winner, score), gamePage.shadowRoot.querySelector('.game-page'));
         }
     };
@@ -216,18 +203,18 @@ export function online_1vs1()
         render(menu(), gamePage.shadowRoot.querySelector('.game-page'));
     });
 
+    function resizeCanvas() {
+        width = pongCanvas.clientWidth ;
+        height = pongCanvas.clientHeight ;
 
-    window.addEventListener("resize", () => {
-
-        canvas.width = document.documentElement.clientWidth;
-        canvas.height = document.documentElement.clientHeight;
-
-        width = canvas.width;
-        height = canvas.height;
+        console.log("sizes : ", pongCanvas.clientWidth / pongCanvas.clientHeight);
+        camera.fov = Math.min(95, Math.max(75, 60 * (height / width)));
         camera.aspect = width / height;
-        renderer.setSize(width , height);
         camera.updateProjectionMatrix();
-    });
+        renderer.setSize(width , height);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
 
     function table() {
         tableHeight = table_config.tableHeight;
@@ -286,10 +273,8 @@ export function online_1vs1()
         TableG.add(boundY);
     }
 
-
     function tableWalls(tableWidth, tableHeight) {
 
-    /////////////////////////////////////////////
         const WallL = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
@@ -305,39 +290,39 @@ export function online_1vs1()
         rectLight1.position.set( WallL.position.x + 0.5, WallL.position.y , WallL.position.z);
         rectLight1.rotation.y = -Math.PI / 2;
         TableG.add( rectLight1 );
-    /////////////////////////////////////////////
+        
         const WallL1 = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
-                color: 0x00ff00,
-                emissive: 0x00ff00, // Emissive color (glow effect)
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
                 emissiveIntensity: 0.8 // Intensity of the emissive effect
                 })
         );
         WallL1.position.set(-(tableWidth / 2) + 0.5, 0, -(tableHeight / 4));
         TableG.add(WallL1);
 
-        const rectLight2 = new THREE.RectAreaLight( 0x00ff00, 2, tableHeight / 2, 3 );
+        const rectLight2 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
         rectLight2.position.set( WallL1.position.x + 0.5, WallL1.position.y, WallL1.position.z);
         rectLight2.rotation.y = -Math.PI / 2;
         TableG.add( rectLight2 );
-    ///////////////////////////////////////////////
+        
         const WallR = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
-                color: 0x00ff00,
-                emissive: 0x00ff00, // Emissive color (glow effect)
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
                 emissiveIntensity: 0.8 // Intensity of the emissive effect
             })
         );
         WallR.position.set(tableWidth / 2 - 0.5, 0, tableHeight / 4);
         TableG.add(WallR);
 
-        const rectLight3 = new THREE.RectAreaLight( 0x00ff00, 2, tableHeight / 2, 3 );
+        const rectLight3 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
         rectLight3.position.set( WallR.position.x - 0.5, WallR.position.y, WallR.position.z);
         rectLight3.rotation.y = Math.PI / 2;
         TableG.add( rectLight3 );
-    ///////////////////////////////////////////////////
+        
         const WallR1 = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
@@ -386,8 +371,8 @@ export function online_1vs1()
         player2 = new THREE.Mesh(
             new THREE.BoxGeometry(paddle.width, paddle.height, paddle.deep),
             new THREE.MeshToonMaterial({
-                color: "red",
-                emissive: "red",
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"),
                 emissiveIntensity: 1.0
             })
         );
@@ -438,7 +423,6 @@ export function online_1vs1()
     function animate ()
     {
         animationId = requestAnimationFrame(animate);
-        stats.update();
         controls.update();
         renderer.render( scene, camera );
         if (wsOpen)

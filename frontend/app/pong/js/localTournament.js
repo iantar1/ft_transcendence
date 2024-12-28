@@ -3,7 +3,6 @@ import { menu } from "./loby.js";
 import { manageLocalTournament } from "./manage_local_tour.js";
 
 
-
 export function tournamentlocal() {
 
     const style = document.createElement('style');
