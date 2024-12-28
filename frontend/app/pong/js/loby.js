@@ -6,11 +6,8 @@ import { online_1vs1 } from './online_1vs1.js';
 import { tournamentPage } from './tournament.js';
 import { tournamentlocal } from './localTournament.js';
 
-let  switchButton = new Audio('static/pong/sound/switch.mp3');
-let click = new Audio('static/pong/sound/menu-click-89198.mp3');
-
-
-
+let  switchButton = new Audio('../sound/switch.mp3');
+let click = new Audio('../sound/menu-click-89198.mp3');
 
 
 export function menu() {

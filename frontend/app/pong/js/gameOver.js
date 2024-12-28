@@ -1,5 +1,6 @@
 import { render } from "./render.js";
 import { menu } from "./loby.js";
+import { navigateTo } from '../../routing.js';
 
 let context = {
     player1 : 5,
@@ -86,6 +87,7 @@ export function GameOver(winnerContent = "WIN", scoreContent = context) {
     };
 
     homeButton.onclick = () => {
+        navigateTo('/home');
         console.log("to home");
     };
     

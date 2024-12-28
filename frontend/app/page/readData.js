@@ -46,7 +46,7 @@ export async function fetchUserData() {
         return []; // Return an empty array in case of an error
     }
 }
-
+// console.log(kdkdkdk);
 export async function fetchMatchData() {
     try {
         // Make a GET request to the API

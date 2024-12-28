@@ -48,6 +48,7 @@ class LoadingScreen {
       width: 8px;
       height: 30px;
       background: var(--red);
+      box-shadow: 0 0 10px var(--red);
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
