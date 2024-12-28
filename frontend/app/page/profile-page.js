@@ -584,6 +584,7 @@ class profilePage extends HTMLElement {
                 justify-content: center;
                 align-items :center;
                 flex-direction: column;
+                
             }
             .img-user{
                 width :60px;
@@ -615,6 +616,9 @@ class profilePage extends HTMLElement {
             }
             .time-user h6{
                 text-align :center;
+            }
+            .noonehere{
+                display :none;
             }
             .noonehere{
                 display :none;
