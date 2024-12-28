@@ -8,17 +8,20 @@ export function manageLocalTournament(participants, tournamentName) {
 
     const style = document.createElement('style');
     style.textContent = `
-        canvas {
+        .pongCanvas canvas {
+            display: block;
+            margin: auto;
+            background-color: #000;
             width: 100%;
             height: 100%;
         }
-        .countdown {
+        .pongCanvas .countdown {
             color: var(--red);
             text-shadow: 2px 0 white, -2px 0 white, 0 2px white, 0 -2px white,
                 1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
             position: absolute;
-            top: 0px;
-            left: 0px;
+            top: 0;
+            left: 0;
             text-align: center;
             place-content: center;
             align-items: center;
@@ -28,14 +31,10 @@ export function manageLocalTournament(participants, tournamentName) {
             background-color: rgba(255, 0, 0, 0);
         }
         .pongCanvas {
+            position: relative;
             display: flex;
-            position: absolute;
-            top: 0px;
-            left: 0px;
             width: 100%;
             height: 100%;
-            justify-content: center;
-            align-items: center;
         }
     `;
     const gamePage = document.body.querySelector('game-page');
@@ -61,13 +60,14 @@ export function manageLocalTournament(participants, tournamentName) {
     
     let tableWidth, tableHeight;
     const scene = new THREE.Scene();
+    // add pongCanvas to gamePage
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
 
-    let width = canvas.width ;
-    let height = canvas.height ;
+    let width = canvas.clientWidth ;
+    let height = canvas.clientHeight ;
 
     console.log("sizes : ", width, height);
 
-    resizeCanvas();
     
     const camera1 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
@@ -78,12 +78,6 @@ export function manageLocalTournament(participants, tournamentName) {
     scene.add(camera1, camera2);
     
     
-    const grid = new THREE.GridHelper( 1000, 1000, 0xaaaaaa, 0xaaaaaa );
-    grid.material.opacity = 1;
-    grid.material.transparent = true;
-    grid.position.y = -1;
-    scene.add( grid );
-    grid.visible = false;
  
     renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
     renderer.setSize(width, height);
@@ -91,19 +85,9 @@ export function manageLocalTournament(participants, tournamentName) {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     pongCanvas.appendChild(renderer.domElement);
-    pongCanvas.appendChild( stats.dom );
     controls = new THREE.OrbitControls( camera1, renderer.domElement );
-    
-    
-    const directionalLight = new THREE.DirectionalLight(0xfdfbd3, 10, 800);
-    directionalLight.position.set(0, 500, 50);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
-    directionalLight.visible = false;
-    
 
-
-
+    resizeCanvas();
 
 
 
@@ -453,7 +437,6 @@ export function manageLocalTournament(participants, tournamentName) {
     function animate ()
     {
         animationId = requestAnimationFrame(animate);
-        stats.update();
         controls.update();
 
         drawing();
@@ -544,15 +527,8 @@ export function manageLocalTournament(participants, tournamentName) {
         player2.position.set(0, 0, -(tableHeight / 2) + (paddle.deep / 2));
         ball.position.set(0, 0, 0);
         score = { player1: 0, player2: 0 };
-        stats.update();
         updateScore();
     }
-
-
-
-
-
-
 }
 
 
