@@ -36,9 +36,8 @@ html , body{
   align-items: center;
   background:#000000;
   scroll-behavior: smooth;
-  /* overflow: hidden; */
-  /* overflow-x: hidden; */
-  /* overflow: scroll; */
+  overflow-y: hidden;
+   overflow-x: hidden;
 }
 
 .main{
@@ -88,7 +87,8 @@ animation: zoom 16s alternate infinite;
   background: linear-gradient(0deg, 
   rgb(4, 28,68, 1) 100%, 
   rgba(56, 75, 112, 0.2) 100%
-);
+  );
+  display: none;
   flex-basis: 3%;
   z-index: 3001;
   /* background-image: ; */

@@ -241,10 +241,17 @@ class profilePage extends HTMLElement {
     template = `
         <div class="content-profile ">
                 <div class="cart-profile ">
-                    <div class="info-profile">
-                        <img id="img_intra" src="" >
-                        <h3 id='username' ></h3>
+                <div class="info-profile" >
+                        <div style="width :8%; height :90%;display:flex; align-items: start; justify-content: center;" >
+                            <div  style="height :30px; width :30px; border-radius:50%; background:var(--red); display:flex; align-items: center; justify-content: center;" >
+                                <i style="color :#fff;margin: 0; padding: 0; position: static; vertical-align: middle;" class="fa-solid fa-bell"></i>
+                            </div>
+                        </div>
+                        <div style="height :100%; width :100%; display:flex; align-items: center; justify-content: center; flex-direction: column;" >
+                            <img id="img_intra" src="" >
+                            <h3 id='username' ></h3>
                             <button id="tosetting" type="click" class="btn-home btn btn-secondary " >Edit</button>
+                        </div>
                     </div>
                     <div class="lvl-profile">
                         <div class="bio-profile">
@@ -324,7 +331,7 @@ class profilePage extends HTMLElement {
                 display :flex;
                 align-items: center;
                 justify-content: center;
-                flex-direction: column;
+                flex-direction: row;
                 gap :0px;
             }
             .lvl-profile{
