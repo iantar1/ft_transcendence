@@ -28,7 +28,7 @@ export function menu() {
       display: flex;
       font-family: "Pong War", "Freeware";
       font-weight: bold;
-      font-size: 120px;
+      font-size: 8vw;
       margin-bottom: 20px;
       text-align: center;
       color: var(--red);
@@ -38,16 +38,17 @@ export function menu() {
     }
     .game-buttons-container {
       left: 0px;
-      width: 20%;
+      width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items :center;
+      gap :10px;
     }
 
     button {
       padding: 10px 10px;
-      width: 90%;
-      margin-bottom: 10px;
+      width: 200px;
       font-family: "Pong War";
       letter-spacing: 2px;
       color: white;
@@ -55,6 +56,7 @@ export function menu() {
       border: 1px solid white;
       border-radius: 5px;
       cursor: pointer;
+      font-size :100%;
       transition: 0.5s ease;
     }
     

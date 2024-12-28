@@ -19,7 +19,6 @@ export function GameOver(winnerContent = "WIN", scoreContent = context) {
             flex-direction: column;
             justify-content: center;
             place-items: center;
-            align-items: center;
             width: 100%;
             height: 100%; 
             background: rgb(0, 0, 0);
@@ -30,7 +29,7 @@ export function GameOver(winnerContent = "WIN", scoreContent = context) {
         .game-over-title {
             font-family: "Pong War", "Freeware";
             font-weight: bold;
-            font-size: 120px;
+            font-size: 8vw;
             margin-bottom: 20px;
             color: var(--red);
             text-shadow: 2px 0 white, -2px 0 white, 0 2px white, 0 -2px white,
@@ -39,7 +38,7 @@ export function GameOver(winnerContent = "WIN", scoreContent = context) {
         button {
             font-family: "Pong War";
             padding: 10px 10px;
-            width: 20%;
+            width: 200px;
             margin-bottom: 10px;
             letter-spacing: 2px;
             color: white;
