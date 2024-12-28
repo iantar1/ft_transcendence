@@ -24,9 +24,8 @@ export function ai_mode()
     const style = document.createElement('style');
     style.textContent = `
         .pongCanvas canvas {
+            background-color: transparent;
             display: block;
-            margin: auto;
-            background-color: #000;
             width: 100%;
             height: 100%;
         }
@@ -80,6 +79,7 @@ export function ai_mode()
     
     let tableWidth, tableHeight;
     const scene = new THREE.Scene();
+    scene.background = null;
 
     render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
 
@@ -280,15 +280,15 @@ export function ai_mode()
         const WallL1 = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
-                color: 0x00ff00,
-                emissive: 0x00ff00, // Emissive color (glow effect)
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
                 emissiveIntensity: 0.8 // Intensity of the emissive effect
                 })
         );
         WallL1.position.set(-(tableWidth / 2) + 0.5, 0, -(tableHeight / 4));
         TableG.add(WallL1);
 
-        const rectLight2 = new THREE.RectAreaLight( 0x00ff00, 2, tableHeight / 2, 3 );
+        const rectLight2 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
         rectLight2.position.set( WallL1.position.x + 0.5, WallL1.position.y, WallL1.position.z);
         rectLight2.rotation.y = -Math.PI / 2;
         TableG.add( rectLight2 );
@@ -296,15 +296,15 @@ export function ai_mode()
         const WallR = new THREE.Mesh(
             new THREE.BoxGeometry(1, 1, tableHeight / 2),
             new THREE.MeshToonMaterial({
-                color: 0x00ff00,
-                emissive: 0x00ff00, // Emissive color (glow effect)
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
                 emissiveIntensity: 0.8 // Intensity of the emissive effect
             })
         );
         WallR.position.set(tableWidth / 2 - 0.5, 0, tableHeight / 4);
         TableG.add(WallR);
 
-        const rectLight3 = new THREE.RectAreaLight( 0x00ff00, 2, tableHeight / 2, 3 );
+        const rectLight3 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
         rectLight3.position.set( WallR.position.x - 0.5, WallR.position.y, WallR.position.z);
         rectLight3.rotation.y = Math.PI / 2;
         TableG.add( rectLight3 );
@@ -357,8 +357,8 @@ export function ai_mode()
         player2 = new THREE.Mesh(
             new THREE.BoxGeometry(paddle.width, paddle.height, paddle.deep),
             new THREE.MeshToonMaterial({
-                color: "red",
-                emissive: "red",
+                color: new THREE.Color("#e3052e"),
+                emissive: new THREE.Color("#e3052e"),
                 emissiveIntensity: 1.0
             })
         );
