@@ -9,8 +9,9 @@ WORKDIR ./backend
 RUN pip install --break-system-packages -r requirements.txt
 
 
+
 EXPOSE 8000
 
 
-CMD ["python3" ,"manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python3" ,"manage.py", "runserver_plus", "--cert-file", "/frontend/etc/nginx/ssl/certificate.crt" ,"--key-file", "/frontend/etc/nginx/ssl/private.key", "0.0.0.0:8000"]
 

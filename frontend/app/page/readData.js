@@ -22,8 +22,15 @@ export const readData = (function() {
 
 export async function fetchUserData() {
     try {
+        // const getCsrfToken = () => {
+        //     const cookieValue = document.cookie
+        //         .split('; ')
+        //         .find(row => row.startsWith('csrftoken='))
+        //         ?.split('=')[1];
+        //     return cookieValue || '';
+        // };
         // Make a GET request to the API
-        const res = await fetch("http://0.0.0.0:8000/user/", {
+        const res = await fetch("https://0.0.0.0:8000/user/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
