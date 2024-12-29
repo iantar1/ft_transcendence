@@ -7,7 +7,7 @@ import {readData} from './readData.js';
 import {checkLogin} from './readData.js';
 
 
-const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0ebdda4b19ab43b23646a570a1cca0290462151e294cd51cfbd5a82c742adc8d&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code";
+const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0ebdda4b19ab43b23646a570a1cca0290462151e294cd51cfbd5a82c742adc8d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code";
 const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";
 
 class loginPage extends HTMLElement {
