@@ -1,4 +1,5 @@
 ./backend/.venv
 ./chat
-*.py[cod]
-__pycache__/
+./backend/UserManagement/migrations/__pycache__/*
+./backend/db.sqlite3
+backend/media/images/*
