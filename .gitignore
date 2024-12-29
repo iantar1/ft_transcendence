@@ -2,3 +2,4 @@
 ./chat
 *.py[cod]
 __pycache__/
+./backend/db.sqlite3

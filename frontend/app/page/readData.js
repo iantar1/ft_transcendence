@@ -1,5 +1,5 @@
 
-
+ 
 export const readData = (function() {
     let data = [];
 
@@ -22,8 +22,15 @@ export const readData = (function() {
 
 export async function fetchUserData() {
     try {
+        // const getCsrfToken = () => {
+        //     const cookieValue = document.cookie
+        //         .split('; ')
+        //         .find(row => row.startsWith('csrftoken='))
+        //         ?.split('=')[1];
+        //     return cookieValue || '';
+        // };
         // Make a GET request to the API
-        const res = await fetch("http://0.0.0.0:8000/user/", {
+        const res = await fetch("https://localhost:3000/user/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,12 +57,13 @@ export async function fetchUserData() {
 export async function fetchMatchData() {
     try {
         // Make a GET request to the API
-        const res = await fetch("http://0.0.0.0:8000/match_history/", {
+        const res = await fetch("https://localhost:3000/match_history/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include', // Sends cookies along with the request
+
         });
 
         // Check if the response is successfuurl
@@ -76,7 +84,7 @@ export async function fetchMatchData() {
 // export async function fetchUserMatchHistory() {
 //     try {
 //         // Make a GET request to the API
-//         const res = await fetch("http://localhost:8000/match_history/", {
+//         const res = await fetch("https://localhost:3000/match_history/", {
 //             method: 'GET',
 //             headers: {
 //                 'Content-Type': 'application/json',
@@ -108,7 +116,7 @@ export async function postInfo(alias,redir){
     const fromData = new FormData(form);
     const data = Object.fromEntries(fromData);
     try{
-        const res = await fetch("http://localhost:8000/api/${redir}", {
+        const res = await fetch("https://localhost:3000/api/${redir}", {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',

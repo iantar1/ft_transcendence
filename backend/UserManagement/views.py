@@ -272,7 +272,8 @@ def get_user_by_token(token):
 
 class MatchHistoryView(APIView):
     def get(self, request):
-        token = request.COOKIES.get('access')
+        token = request.COOKIES.get('X-CSRFToken')
+        print(f"TOKEN : {token}")
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
