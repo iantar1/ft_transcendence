@@ -116,7 +116,7 @@ def auth(request):
     refresh_token = create_refresh_token(user.id)
 
     response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
-    response.set_cookie(key="access", value=access_token, httponly=True)
+    response.set_cookie(key="access", value=access_token, httponly=False)
     response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     
     response['Authorization'] = f'Bearer {access_token}'

@@ -23,7 +23,7 @@ class RegesterView(APIView):
         refresh_token = create_refresh_token(user_data.get('id'))
 
         response = Response()
-        response.set_cookie(key="access", value=access_token, httponly=True)
+        response.set_cookie(key="access", value=access_token, httponly=False)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
         response.data = {
             "access": access_token,
@@ -102,7 +102,7 @@ class VerifyOTPView(APIView):
 
         response = Response()
         response.delete_cookie('otp_token')
-        response.set_cookie(key="access", value=access_token, httponly=True)
+        response.set_cookie(key="access", value=access_token, httponly=False)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
         response.data = {
             "access": access_token,
@@ -111,19 +111,33 @@ class VerifyOTPView(APIView):
 
         return response
 
+def checkAuthentication(access_token, refresh_token):
+
+    pass
 
 class UserView(APIView):
     
     def get(self, request):
         token = request.COOKIES.get('access')
+        refresh = request.COOKIES.get('refresh')
         
         if not token:
             raise AuthenticationFailed('Unauthenticated')
-        
+        response = Response()
         try:
             playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
+            try:
+                playload = jwt.decode(refresh, 'refresh_secret', algorithms=['HS256'])
+                user = User.objects.filter(id=playload['id']).first()
+                access_token = create_access_token(user.id)
+                refresh_token = create_refresh_token(user.id)
+                response.delete_cookie('access')
+                response.delete_cookie('refresh')
+                response.set_cookie(key="access", value=access_token, httponly=False)
+                response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+            except jwt.ExpiredSignatureError:
+                raise AuthenticationFailed('Unauthenticated')
         
         user = User.objects.filter(id=playload['id']).first()
         serailiser = UserSerializer(user)
