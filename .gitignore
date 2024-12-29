@@ -1,2 +1,4 @@
 ./backend/.venv
 ./chat
+*.py[cod]
+__pycache__/

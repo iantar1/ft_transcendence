@@ -25,6 +25,7 @@ CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
 OUUTH_TOKEN_URI = os.getenv('OUUTH_TOKEN_URI')
+FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
 
 
@@ -91,7 +92,6 @@ from django.urls import reverse
 def auth(request):
 
     queryStr = request.GET.get('code')
-    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print(queryStr)
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
@@ -111,24 +111,14 @@ def auth(request):
     #     raise AuthenticationFailed('Unauthenticated')
         
     serializer = UserSerializer(user)
-    # user.use
-    # response = Response(serializer.data)
-    # response.accepted_renderer = JSONRenderer()
-    # response.accepted_media_type = 'application/json'
-    # response.renderer_context = {
-    # 'request': request,
-    # 'response': response
-    # }
+
     access_token = create_access_token(user.id)
+    refresh_token = create_refresh_token(user.id)
 
-    response = HttpResponseRedirect('https://0.0.0.0:3000/home')  # Redirect to frontend
-    response.set_cookie(key="access", value=access_token, httponly=True)
-
-    # Pass access token and any other required data in the URL or headers
-    # Option 1: Passing token as URL parameters (not recommended for security)
-    # response['Location'] = f'http://localhost:3000/home?access_token={access_token}'
+    response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
+    response.set_cookie(key="access", value=access_token, httponly=False)
+    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     
-    # Option 2: Passing token via headers (more secure)
     response['Authorization'] = f'Bearer {access_token}'
     
     # You can also add additional user data if needed

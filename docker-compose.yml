@@ -9,6 +9,8 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/backend
+    env_file:
+      - .env
     # networks:
     #   - ft_transcendence
 

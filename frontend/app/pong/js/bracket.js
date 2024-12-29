@@ -327,9 +327,9 @@ export function tournamentBracket(
         container.appendChild(CurrentRound);
     }
     container.appendChild(buttons);
-    if (currentMatch > 3) {
-        container.appendChild(createWinnerCard(matches[2].winner));
-    }
+    // if (currentMatch > 3) {
+    //     container.appendChild(createWinnerCard(matches[2].winner));
+    // }
 
     return container;
 }

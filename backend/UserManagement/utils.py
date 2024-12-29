@@ -19,7 +19,7 @@ import jwt, datetime
 def create_access_token(id):
     playlod = {
         'id': id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),#it will despire after one minute
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),#it will despire after one minute
         'iat': datetime.datetime.utcnow(),#date which the token is created
     }
     token = jwt.encode(playlod, 'access_secret', algorithm='HS256')

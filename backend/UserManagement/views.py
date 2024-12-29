@@ -23,7 +23,7 @@ class RegesterView(APIView):
         refresh_token = create_refresh_token(user_data.get('id'))
 
         response = Response()
-        response.set_cookie(key="access", value=access_token, httponly=True)
+        response.set_cookie(key="access", value=access_token, httponly=False)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
         response.data = {
             "access": access_token,
@@ -102,7 +102,7 @@ class VerifyOTPView(APIView):
 
         response = Response()
         response.delete_cookie('otp_token')
-        response.set_cookie(key="access", value=access_token, httponly=True)
+        response.set_cookie(key="access", value=access_token, httponly=False)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
         response.data = {
             "access": access_token,
@@ -111,19 +111,33 @@ class VerifyOTPView(APIView):
 
         return response
 
+def checkAuthentication(access_token, refresh_token):
+
+    pass
 
 class UserView(APIView):
     
     def get(self, request):
         token = request.COOKIES.get('access')
+        refresh = request.COOKIES.get('refresh')
         
         if not token:
             raise AuthenticationFailed('Unauthenticated')
-        
+        response = Response()
         try:
             playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
+            try:
+                playload = jwt.decode(refresh, 'refresh_secret', algorithms=['HS256'])
+                user = User.objects.filter(id=playload['id']).first()
+                access_token = create_access_token(user.id)
+                refresh_token = create_refresh_token(user.id)
+                response.delete_cookie('access')
+                response.delete_cookie('refresh')
+                response.set_cookie(key="access", value=access_token, httponly=False)
+                response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+            except jwt.ExpiredSignatureError:
+                raise AuthenticationFailed('Unauthenticated')
         
         user = User.objects.filter(id=playload['id']).first()
         serailiser = UserSerializer(user)
@@ -310,7 +324,13 @@ class StatsView(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        serialer = StatsSerializer(user.stats)
+        stats = Stats.objects.get(user=user)
+        if stats == None:
+            return Response({"error":"stats not found"}, status=404)
+        serialer = StatsSerializer(stats)
+        # print(serialer.data)
+        print("----------------------------")
+        # print(stats)
         return Response(serialer.data, status=200)
 
 def checkIfTheRelationExsit(user1, user2, action):
@@ -322,7 +342,8 @@ def checkIfTheRelationExsit(user1, user2, action):
     return False
 
 
-# from rest_framework.permissions import IsAuthenticated
+
+
 
 class FriendShipView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -344,7 +365,10 @@ class FriendShipView(APIView):
         except:
             raise ValidationError({'error': 'user not found.'})
 
+        if to_user == from_user:
+            return Response({"error":"a user can't do this action to himself"})
         action = request.data.get('action')
+        
 
         if checkIfTheRelationExsit(to_user, from_user, action):
             return Response({"error": "This friend request already exists."}, status=400)
@@ -355,8 +379,12 @@ class FriendShipView(APIView):
             return self.acceptFriendRequest(to_user, from_user)
         elif action == 'rejected':
             return self.rejectFriendRequest(to_user, from_user)
+        elif action == 'remove':
+            return self.removeFriend(to_user, from_user)
         return  Response({"error": "This action doesn't exists."}, status=400)
 
+    def isThisActionExist(sender, receiver, status):
+        pass
 
 
     def addFriend(self, user, friend):
@@ -369,23 +397,38 @@ class FriendShipView(APIView):
         userProfile.save()
         friendProfile.save()
 
+    
     def sendFriendRequest(self, to_user,from_user):
         try:
-            relation = Friendship(from_user=from_user, to_user=to_user)
+            #get_or_create returns a tuple of two elemnts
+            # if to_user == from_user:
+            #     return Response({'error': 'a user can\'t be a friend of himself.'}, status=400)
+                
+            relation, created = Friendship.objects.get_or_create(from_user=from_user, to_user=to_user)
+            # relation = Friendship(from_user=from_user, to_user=to_user)
+            if created == False:
+                relation.status = "sent"
             relation.save()
             return Response({'message': 'Friend request sent successfully.'}, status=200)
         except Exception as e:
             return Response({'error': f'Friend request failed. Error: {str(e)}'}, status=400)
 
 
-    def rejectFriendRequest(self, to_user,from_user):
-        relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
-        if relation == None:
-            return Response({"error": "friendship not found"}, status=404)
-        
-        relation.status = 'rejected'
-        relation.save()
-        return Response({'success':"the friendship has been rejected successfully"})
+    def rejectFriendRequest(self, to_user, from_user):
+        try:
+            relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
+            if relation.status == 'accepted':
+                return Response({'error': "these two users are alredy friendds"}, status=400)
+            relation.delete()
+            # relation.status = 'rejected'
+            # relation.save()
+
+            return Response({'success': "The friendship has been rejected successfully"}, status=200)
+        except Friendship.DoesNotExist:
+            return Response({"error": "Friendship not found"}, status=404)
+        except Exception as e:
+            return Response({"error": f"An error occurred: {str(e)}"}, status=500)
+
 
     def acceptFriendRequest(self, to_user, from_user):
         relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
@@ -394,13 +437,35 @@ class FriendShipView(APIView):
         relation.status = 'accept'
         relation.save()
         self.addFriend(to_user,from_user)
-        # try:
-        # except:
-        #     return Response({"error":"the Profile friendship does not exist"}, status=404)
+
         return Response({'success':"the friendship has been accepted successfully"})
 
+    def removeFriend(self, to_user, from_user):
+        # u have to be my friend 
+        # delete the both users's friend from their friend profile
+        sender_friend_probfile = FriendsProfile.objects.get(user=from_user)
+        receiver_friend_probfile = FriendsProfile.objects.get(user=to_user)
+        x = sender_friend_probfile.remove_friend(friend=to_user)
+        y = receiver_friend_probfile.remove_friend(friend=from_user)
+        if x == False or y == False:
+            return Response({"error":"you don't have a friend with this name"}, status=400)
+
+        return Response({'success':'the friend has been removed succefull'}, status=200)
 
 
-# send request
-# receive request
-# 
+
+# send a freind request
+# cancel it/from the sender and the rescever 
+# if a user resceive a frined request he can't send it to the same user
+# sender -> receiver
+# if a frind request canceled remove it from the data base
+#
+#the friend system :
+# url: /friend_ship/
+#POST :
+# {
+# "from_user":"sende username",
+# "to_user":"receiver username",
+# "status":"",
+# "action":"sent rejected accepted remove"
+# }

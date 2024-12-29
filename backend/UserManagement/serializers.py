@@ -36,7 +36,7 @@ class ImageBioSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'bio', 'image', 'username']
-    
+
 
 class PLayerMaatchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,7 +58,7 @@ class StatsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Stats
-        fields = ['wins', 'losses']
+        fields = ['wins', 'losses', 'total']
 
 
 
@@ -72,8 +72,24 @@ class   FriendshipSerializer(serializers.ModelSerializer):
 # "from_user":"iantar",
 # "to_user":"kali",
 # "status":"",
-# "action":"send"
+# "action":"sent"
 # }
+
+# {
+# "from_user":"iantar",
+# "to_user":"kali",
+# "status":"",
+# "action":"accepted"
+# }
+
+# {
+# "from_user":"kali",
+# "to_user":"iantar",
+# "status":"",
+# "action":"rejected"
+# }
+
+
 
 
     # def create(self, validated_data):

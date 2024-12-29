@@ -57,6 +57,7 @@ class homePage extends HTMLElement {
         }
         .content-home{
             gap :10px;
+            
         }
         .cart-home{
             height :39vh;
