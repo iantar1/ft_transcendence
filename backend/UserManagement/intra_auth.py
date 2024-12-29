@@ -115,7 +115,7 @@ def auth(request):
     access_token = create_access_token(user.id)
     refresh_token = create_refresh_token(user.id)
 
-    response = HttpResponseRedirect('https://0.0.0.0:3000/home')  # Redirect to frontend
+    response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
     response.set_cookie(key="access", value=access_token, httponly=True)
     response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     
