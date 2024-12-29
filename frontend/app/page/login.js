@@ -1,6 +1,5 @@
 
 
-
 import {navigateTo} from '../routing.js';
 
 import {readData} from './readData.js';
@@ -413,12 +412,13 @@ class loginPage extends HTMLElement {
                 const fromData = new FormData(form);
                 const data = Object.fromEntries(fromData);
                 try{
-                    const res = await fetch("http://localhost:8000/api/register/", {
+                    const res = await fetch("https://localhost:3000/api/register/", {
                         method: 'POST', 
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify(data),
+                        agent: new https.Agent({ rejectUnauthorized: false })
                     })
                     if (res.ok) {
                             
@@ -449,25 +449,29 @@ class loginPage extends HTMLElement {
                 // Make the fetch call to verify OTP
                 try {
                     console.log(data);
-                    const res =  await fetch("http://localhost:8000/api/verify_otp/", {
+                    const res =  await fetch("https://localhost:3000/api/verify_otp/", {
                             method: 'POST', 
                             headers: {
                                 'Content-Type': 'application/json',
                             },
                             credentials: 'include',
                             body: JSON.stringify(data),
+                            agent: new https.Agent({ rejectUnauthorized: false })
+
                         })
                     if (res.ok) {
                         console.log('--- OTP VERIFIED SUCCESSFULLY ---');
 
                         try{
-                            const res = await fetch("http://localhost:8000/api/user/", {
+                            const res = await fetch("https://localhost:3000/api/user/", {
                                 method: 'GET', 
                                 headers: {
                                     'Content-Type': 'application/json',
                                     
                                 },
                                 credentials: 'include',
+                                agent: new https.Agent({ rejectUnauthorized: false })
+
                             })
                             console.log(`res : ${res}`)
                                 if (res.ok) {
@@ -524,7 +528,7 @@ class loginPage extends HTMLElement {
                     readData.setData(arr);
                     // rander('/home');
                     try{
-                        const response = await fetch("http://localhost:8000/api/login/", {
+                        const response = await fetch("https://localhost:3000/api/login/", {
                                 method: 'POST', 
                                 headers: {
                                     
@@ -532,6 +536,7 @@ class loginPage extends HTMLElement {
                                 },
                                 credentials: 'include',
                                 body: JSON.stringify(data),
+                                agent: new https.Agent({ rejectUnauthorized: false })
                             })
                             if (response.ok){ 
            
