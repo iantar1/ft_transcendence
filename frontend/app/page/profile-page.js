@@ -1,10 +1,13 @@
 
 
-import {fetchUserData} from './readData.js';
+import {fetchUserData , fetchMatchData} from './readData.js';
 
-import {fetchMatchData} from './readData.js';
+// import {fetchMatchData} from './readData.js';
 
 import { navigateTo } from '../routing.js';
+// const info = await fetchUserData();
+// this.narotu = await fetchMatchData();
+
 
 function serachBar(){
     return `
@@ -942,36 +945,42 @@ class profilePage extends HTMLElement {
     }
     statsPlayer(){
         console.log('----HEREHEREHEREHEREHERE-----');
-        // console.log(fetchMatchData().image);
-        // const data = fetchMatchData();
-        // const data = fetchMatchData();
-        // data.forEach(da => {
-        //     console.log(da.user1);
-        // });
-        this.narotu = 
-         [
-            { player: "ahbajaou",  img: "/images/ah.png"},
-            { player: "arahmoun", img: "/images/ara.png"},
-            { player: "iantar", img: "/images/iantar.jpeg"}
-          ];
-
+    
+        // this.narotu = [
+        //     { player: "ahbajaou", img: "/images/ah.png" },
+        //     { player: "arahmoun", img: "/images/ara.png" },
+        //     { player: "iantar", img: "/images/iantar.jpeg" }
+        // ];
+    
+        // const matchHistory = fetchMatchData();
+        // console.log(matchHistory);
         const onevsone = document.querySelector('.players');
         let from = '';
-        this.narotu.forEach(element => {
-                // console.log('hhhhhhhhhh');
+        console.log(this.narotu)
+        this.narotu.forEach(match => {
+            const player1 = this.narotu.find(p => p.player === match.user1.username);
+            const player2 = this.narotu.find(p => p.player === match.user2.username);
+    
+            if (player1 && player2) {
+                // Determine who won and who lost
+                const winner = match.winner.username;
+                const loser = winner === match.user1.username ? match.user2.username : match.user1.username;
+                const winnerScore = winner === match.user1.username ? match.user1_score : match.user2_score;
+                const loserScore = loser === match.user1.username ? match.user1_score : match.user2_score;
+    
                 from += `
                     <tr>
                         <td>
                             <div>
-                                <img src="${element.img}" alt="Larry" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                                <span>${element.player}</span>
+                                <img src="${player1.img}" alt="${player1.player}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                                <span>${player1.player}</span>
                             </div>
                         </td>
                         <td>
-                            <div>15</div>
+                            <div>${match.user1_score}</div>
                         </td>
                         <td>
-                            <div>Win</div>
+                            <div>${winner === match.user1.username ? 'Win' : 'Lose'}</div>
                         </td>
                         <td>
                             <div>
@@ -980,22 +989,26 @@ class profilePage extends HTMLElement {
                             </div>
                         </td>
                         <td>
-                            <div>Lose</div>
+                            <div>${winner === match.user2.username ? 'Win' : 'Lose'}</div>
                         </td>
                         <td>
-                            <div>3</div>
+                            <div>${match.user2_score}</div>
                         </td>
                         <td>
                             <div>
-                                <img src="${element.img}" alt="Bird" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                                <span>${element.player}</span>
+                                <img src="${player2.img}" alt="${player2.player}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                                <span>${player2.player}</span>
                             </div>
                         </td>
                     </tr>
                 `;
+            }
         });
+    
         onevsone.innerHTML = from;
     }
+    
+    
 
     slidFriend() {
         const friendSection = document.querySelector('.flag'); // Access the first element with the class
@@ -1138,8 +1151,14 @@ class profilePage extends HTMLElement {
         const uuss = async () => {
 
             this.info = await fetchUserData();
+            // console.log("--->" + this.info);
+            this.narotu = await fetchMatchData();
+            // await fetchMatchData().then( data =>{
+            // })
+            console.log(this.info + "jojo")
+
             if (this.info){
-                console.log(this.info.image);
+                // console.log(this.info.image);
                 if (!this.info.username){
                     this.info.username = "ASTRO"
                 }
