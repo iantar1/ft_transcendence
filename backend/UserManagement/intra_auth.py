@@ -71,7 +71,7 @@ def createUpdateUser(data_json)-> User:
                   'image':File(img_temp, name=filename),
                   'username':data_json.get("login")},
     )
-    # user.save()
+    user.save()
     return user
     
 
@@ -81,7 +81,7 @@ def getData(access_token) -> User:
         "Authorization": f"Bearer {access_token}"
     }
     response = requests.get(url, headers=headers)
-    print(f"the resposnse josn: {response.json()}")
+    print(f"101 the resposnse josn: {response.json()}")
     return createUpdateUser(response.json())
 
 from rest_framework.renderers import JSONRenderer

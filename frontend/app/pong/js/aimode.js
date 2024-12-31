@@ -17,7 +17,6 @@ function createcountdown() {
     return countdown;
 }
 
-
 export function ai_mode()
 {
 
@@ -160,6 +159,7 @@ export function ai_mode()
         }
         if (data.type === "game_over") {
             score = data.score;
+            wsOpen = false;
             cancelAnimationFrame(animationId);
             socket.close();
             render(GameOver(data.winner, score), gamePage.shadowRoot.querySelector('.game-page'));
