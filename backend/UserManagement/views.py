@@ -320,11 +320,6 @@ class MatchHistoryView(APIView):
         return Response("The match history stored successfully", status=200)
 
 
-
-
-
-
-
 class StatsView(APIView):
      
     def get(self, request):

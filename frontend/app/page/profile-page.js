@@ -943,73 +943,64 @@ class profilePage extends HTMLElement {
     constructor() {
         super();
     }
-    statsPlayer(){
-        console.log('----HEREHEREHEREHEREHERE-----');
+    async statsPlayer() {
+        // Fetch match data
+        this.narotu = (await fetchMatchData()).matchHistory;
     
-        // this.narotu = [
-        //     { player: "ahbajaou", img: "/images/ah.png" },
-        //     { player: "arahmoun", img: "/images/ara.png" },
-        //     { player: "iantar", img: "/images/iantar.jpeg" }
-        // ];
+        if (!this.narotu || this.narotu.length === 0) {
+            console.log('No match history data found.');
+            return;
+        }
     
-        // const matchHistory = fetchMatchData();
-        // console.log(matchHistory);
         const onevsone = document.querySelector('.players');
         let from = '';
-        console.log(this.narotu)
+    
+        // Process each match and construct the table rows
         this.narotu.forEach(match => {
-            const player1 = this.narotu.find(p => p.player === match.user1.username);
-            const player2 = this.narotu.find(p => p.player === match.user2.username);
+            const player1 = match.user1;
+            const player2 = match.user2;
+            const winner = match.winner.username;
+            const loser = winner === player1.username ? player2.username : player1.username;
     
-            if (player1 && player2) {
-                // Determine who won and who lost
-                const winner = match.winner.username;
-                const loser = winner === match.user1.username ? match.user2.username : match.user1.username;
-                const winnerScore = winner === match.user1.username ? match.user1_score : match.user2_score;
-                const loserScore = loser === match.user1.username ? match.user1_score : match.user2_score;
-    
-                from += `
-                    <tr>
-                        <td>
-                            <div>
-                                <img src="${player1.img}" alt="${player1.player}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                                <span>${player1.player}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div>${match.user1_score}</div>
-                        </td>
-                        <td>
-                            <div>${winner === match.user1.username ? 'Win' : 'Lose'}</div>
-                        </td>
-                        <td>
-                            <div>
-                                <div>2024-03-17</div>
-                                <div>11:15</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div>${winner === match.user2.username ? 'Win' : 'Lose'}</div>
-                        </td>
-                        <td>
-                            <div>${match.user2_score}</div>
-                        </td>
-                        <td>
-                            <div>
-                                <img src="${player2.img}" alt="${player2.player}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                                <span>${player2.player}</span>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }
+            from += `
+                <tr>
+                    <td>
+                        <div>
+                            <img src="${player1.image}" alt="${player1.username}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>${player1.username}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>${match.user1_score}</div>
+                    </td>
+                    <td>
+                        <div>${winner === player1.username ? 'Win' : 'Lose'}</div>
+                    </td>
+                    <td>
+                        <div>
+                            <div>2024-03-17</div>
+                            <div>11:15</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>${winner === player2.username ? 'Win' : 'Lose'}</div>
+                    </td>
+                    <td>
+                        <div>${match.user2_score}</div>
+                    </td>
+                    <td>
+                        <div>
+                            <img src="${player2.image}" alt="${player2.username}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>${player2.username}</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
         });
     
+        // Render the table rows in the DOM
         onevsone.innerHTML = from;
     }
-    
-    
-
     slidFriend() {
         const friendSection = document.querySelector('.flag'); // Access the first element with the class
         friendSection.addEventListener('click', (e) => {
@@ -1152,11 +1143,16 @@ class profilePage extends HTMLElement {
 
             this.info = await fetchUserData();
             // console.log("--->" + this.info);
-            this.narotu = await fetchMatchData();
+            // this.narotu = await fetchMatchData();
+            // this.narotu.matchHistory.forEach((match, index) => {
+            //     console.log(`Match ${index + 1}:`);
+            //     console.log(`User 1: ${match.user1.username} (Score: ${match.user1_score})`);
+            //     console.log(`User 2: ${match.user2.username} (Score: ${match.user2_score})`);
+            //     console.log(`Winner: ${match.winner.username}`);
+            //     console.log(`---`);
+            // });
             // await fetchMatchData().then( data =>{
             // })
-            console.log(this.info + "jojo")
-
             if (this.info){
                 // console.log(this.info.image);
                 if (!this.info.username){

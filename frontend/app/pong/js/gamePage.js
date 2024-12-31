@@ -52,7 +52,6 @@ class GamePage extends HTMLElement {
         shadow.appendChild(style);
         shadow.appendChild(main);
         render(menu(), main);
-        render(GameOver(), main);
     }
 
     connectedCallback(){
