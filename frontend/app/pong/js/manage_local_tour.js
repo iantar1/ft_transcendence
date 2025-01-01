@@ -94,7 +94,7 @@ export function manageLocalTournament(participants, tournamentName) {
 
 
 
-    URL = 'ws://localhost:5050/ws/tournament/local/';
+    URL = 'wss://'+window.location.host+'/ws/tournament/local/';
     let ws = new WebSocket(URL);
     
     ws.onopen = function(event) {

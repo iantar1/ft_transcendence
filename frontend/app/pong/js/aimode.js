@@ -63,7 +63,7 @@ export function ai_mode()
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
     
-    const ai_URL = 'ws://localhost:5050/ws/ai/';
+    const ai_URL = 'wss://'+window.location.host+'/ws/ai/';
     let wsOpen = false;
     const selectedMode = "AI MODE";
     let ball_config, ball, plane, paddle, score, animationId, table_config, player1_config, player2_config;

@@ -83,11 +83,11 @@ class VerifyOTPView(APIView):
         otp_token = request.COOKIES.get('otp_token')
     
         if not otp_token:
-            raise AuthenticationFailed('Unauthenticated')
+            raise AuthenticationFailed('22Unauthenticated')
         try:
             playload = jwt.decode(otp_token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
+            raise AuthenticationFailed('33Unauthenticated')
         
         user = User.objects.filter(id=playload['id']).first()
     
@@ -116,7 +116,7 @@ def checkAuthenticationAnsReturnTokens(request):
     refresh_token = request.COOKIES.get('refresh')
     
     if not access_token or not refresh_token:
-        raise AuthenticationFailed('Unauthenticated')
+        raise AuthenticationFailed('44Unauthenticated')
     return {access_token, refresh_token}
 
 def generateNewTokens(response, access_token, refresh_token, playload):
@@ -253,12 +253,11 @@ class ChangeBioImage(APIView):
 
 def get_user_by_token(token):
     if not token:
-        raise AuthenticationFailed('Unauthenticated')
-    
+        raise AuthenticationFailed('x1Unauthenticated')
     try:
         playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
     except jwt.ExpiredSignatureError:
-        raise AuthenticationFailed('Unauthenticated')
+        raise AuthenticationFailed('xxUnauthenticated')
     
     return User.objects.filter(id=playload['id']).first()
     
@@ -272,21 +271,22 @@ def get_user_by_token(token):
 
 class MatchHistoryView(APIView):
     def get(self, request):
-        token = request.COOKIES.get('X-CSRFToken')
-        print(f"TOKEN : {token}")
-        user = get_user_by_token(token)
-        if user == None:
-            raise AuthenticationFailed('Unauthenticated')
-        match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
-        match_history_list = MatchHistorySerializer(match_history, many=True).data
-
-        return Response({"matchHistory": match_history_list})
-
-    def post(self, request):
+        # print(f"TOKEN : not found")
         token = request.COOKIES.get('access')
         user = get_user_by_token(token)
         if user == None:
-            raise AuthenticationFailed('Unauthenticated')
+            raise AuthenticationFailed('11Unauthenticated')
+        match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
+        match_history_list = MatchHistorySerializer(match_history, many=True).data
+        print({"matchHistory": match_history_list})
+        return Response({"matchHistory": match_history_list})
+
+    def post(self, request):
+        print(request)
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('00Unauthenticated')
         #opponenet username
         try:
             opponent_username = request.data['opponent_username']
@@ -319,11 +319,6 @@ class MatchHistoryView(APIView):
         user.score += user_score
         user.save()
         return Response("The match history stored successfully", status=200)
-
-
-
-
-
 
 
 class StatsView(APIView):

@@ -166,6 +166,7 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
 
             # Prepare data for match history
             match_data = {
+                "opponent_username": self.opponent.username,
                 "opponent_score": self.score["player2"],
                 "user_score": self.score["player1"],
             }
