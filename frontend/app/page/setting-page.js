@@ -1,6 +1,7 @@
 
-import {fetchUserData} from './readData.js';
+import {fetchUserData , getCookie} from './readData.js';
 
+import { navigateTo } from '../routing.js';
 
 class settingPage extends HTMLElement {
     
@@ -871,6 +872,9 @@ class settingPage extends HTMLElement {
     }
 
     connectedCallback() {
+        if (!getCookie('access')){
+            navigateTo('/login');
+        }
         this.render();
     }
 }
