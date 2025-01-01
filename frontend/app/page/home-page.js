@@ -9,8 +9,12 @@ import { navigateTo } from '../routing.js';
 
 import { betweenPage } from '../routing.js';
 
+const isCookieEnabled = navigator.cookieEnabled;
 
+console.log("Coockies" + isCookieEnabled);
 
+// const token = Cookies.get('access_token');
+// console.log("access token : " + token)
   // Usage example - wrapped in DOMContentLoaded
 //   document.addEventListener('DOMContentLoaded', () => {
 //     const loader = new LoadingScreen('Loading your content...');
