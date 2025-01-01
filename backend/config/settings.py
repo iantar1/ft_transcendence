@@ -73,8 +73,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
     'http://localhost:8000',  # Add the port where your frontend is running if different
-    'https://0.0.0.0:3000',
-    
+    'https://localhost:3000',
 ]
 
 CORS_ALLOW_CREDENTIALS = True # make sure this is set to True 

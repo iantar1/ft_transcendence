@@ -1,7 +1,7 @@
 
 // console.log("--somthing is cooking");
 
-import {readData} from './readData.js';
+import {readData , getCookie} from './readData.js';
 
 import {fetchUserData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
@@ -9,8 +9,12 @@ import { navigateTo } from '../routing.js';
 
 import { betweenPage } from '../routing.js';
 
+// const isCookieEnabled = navigator.cookieEnabled;
 
+// console.log("Coockies" + isCookieEnabled);
 
+// const token = Cookies.get('access_token');
+// console.log("access token : " + token)
   // Usage example - wrapped in DOMContentLoaded
 //   document.addEventListener('DOMContentLoaded', () => {
 //     const loader = new LoadingScreen('Loading your content...');
@@ -402,10 +406,14 @@ class homePage extends HTMLElement {
     rander(){
         console.log("RANDER FUNCTION IS HERE");
         const uuss = async () => {
+            console.log("token : " + getCookie('access'));
+            if (!getCookie('access')){
+                navigateTo('/login');
+            }
             this.info = await fetchUserData();
-            // this.match =  await fetchUserData('match_history');
-            // console.log(this.info);
-            // console.log("---->" + this.match);
+            // if(!this.info.id){
+            //     navigateTo('/login');
+            // }
             document.getElementById('username').textContent = this.info.username
         }
         uuss();
@@ -455,7 +463,7 @@ class homePage extends HTMLElement {
     }
     connectedCallback(){
         this.rander();
-        this.getData();
+        // this.getData();
         this.staticHome();
         toGame();
 

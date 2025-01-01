@@ -1,10 +1,13 @@
 
 
-import {fetchUserData} from './readData.js';
+import {fetchUserData , fetchMatchData, getCookie} from './readData.js';
 
-import {fetchMatchData} from './readData.js';
+// import {fetchMatchData} from './readData.js';
 
 import { navigateTo } from '../routing.js';
+// const info = await fetchUserData();
+// this.narotu = await fetchMatchData();
+
 
 function serachBar(){
     return `
@@ -940,63 +943,64 @@ class profilePage extends HTMLElement {
     constructor() {
         super();
     }
-    statsPlayer(){
-        console.log('----HEREHEREHEREHEREHERE-----');
-        // console.log(fetchMatchData().image);
-        // const data = fetchMatchData();
-        // const data = fetchMatchData();
-        // data.forEach(da => {
-        //     console.log(da.user1);
-        // });
-        this.narotu = 
-         [
-            { player: "ahbajaou",  img: "/images/ah.png"},
-            { player: "arahmoun", img: "/images/ara.png"},
-            { player: "iantar", img: "/images/iantar.jpeg"}
-          ];
-
+    async statsPlayer() {
+        // Fetch match data
+        this.narotu = (await fetchMatchData()).matchHistory;
+    
+        if (!this.narotu || this.narotu.length === 0) {
+            console.log('No match history data found.');
+            return;
+        }
+    
         const onevsone = document.querySelector('.players');
         let from = '';
-        this.narotu.forEach(element => {
-                // console.log('hhhhhhhhhh');
-                from += `
-                    <tr>
-                        <td>
-                            <div>
-                                <img src="${element.img}" alt="Larry" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                                <span>${element.player}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div>15</div>
-                        </td>
-                        <td>
-                            <div>Win</div>
-                        </td>
-                        <td>
-                            <div>
-                                <div>2024-03-17</div>
-                                <div>11:15</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div>Lose</div>
-                        </td>
-                        <td>
-                            <div>3</div>
-                        </td>
-                        <td>
-                            <div>
-                                <img src="${element.img}" alt="Bird" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
-                                <span>${element.player}</span>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+    
+        // Process each match and construct the table rows
+        this.narotu.forEach(match => {
+            const player1 = match.user1;
+            const player2 = match.user2;
+            const winner = match.winner.username;
+            const loser = winner === player1.username ? player2.username : player1.username;
+    
+            from += `
+                <tr>
+                    <td>
+                        <div>
+                            <img src="${player1.image}" alt="${player1.username}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>${player1.username}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>${match.user1_score}</div>
+                    </td>
+                    <td>
+                        <div>${winner === player1.username ? 'Win' : 'Lose'}</div>
+                    </td>
+                    <td>
+                        <div>
+                            <div>2024-03-17</div>
+                            <div>11:15</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>${winner === player2.username ? 'Win' : 'Lose'}</div>
+                    </td>
+                    <td>
+                        <div>${match.user2_score}</div>
+                    </td>
+                    <td>
+                        <div>
+                            <img src="${player2.image}" alt="${player2.username}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <span>${player2.username}</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
         });
+    
+        // Render the table rows in the DOM
         onevsone.innerHTML = from;
     }
-
     slidFriend() {
         const friendSection = document.querySelector('.flag'); // Access the first element with the class
         friendSection.addEventListener('click', (e) => {
@@ -1136,10 +1140,12 @@ class profilePage extends HTMLElement {
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
-
+            if (!getCookie('access')){
+                navigateTo('/login');
+            }
             this.info = await fetchUserData();
             if (this.info){
-                console.log(this.info.image);
+                // console.log(this.info.image);
                 if (!this.info.username){
                     this.info.username = "ASTRO"
                 }

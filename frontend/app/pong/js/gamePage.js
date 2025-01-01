@@ -11,11 +11,19 @@ import { manageLocalTournament } from './manage_local_tour.js';
 
 import { createWinnerCard } from './winnerCard.js';
 
+import { getCookie} from '../../page/readData.js';
+import { navigateTo } from '../../routing.js';
+
 
 class GamePage extends HTMLElement {
 
     constructor() {
         super();
+        console.log("token is : " + getCookie('access'));
+
+            if (!getCookie('access')){
+                navigateTo('/login');
+            }
         const gameIcon = document.getElementById('game');
         // gameIcon.setAttribute('part','my0')
         // Create Shadow DOM
@@ -52,10 +60,10 @@ class GamePage extends HTMLElement {
         shadow.appendChild(style);
         shadow.appendChild(main);
         render(menu(), main);
-        render(GameOver(), main);
     }
 
     connectedCallback(){
+
         this.innerHTML = `
             <style>
             @media (min-width: 320px) and (max-width: 1024px) {
