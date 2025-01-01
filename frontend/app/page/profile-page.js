@@ -1,6 +1,6 @@
 
 
-import {fetchUserData , fetchMatchData} from './readData.js';
+import {fetchUserData , fetchMatchData, getCookie} from './readData.js';
 
 // import {fetchMatchData} from './readData.js';
 
@@ -1140,19 +1140,10 @@ class profilePage extends HTMLElement {
     render() {
         console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
-
+            if (!getCookie('access')){
+                navigateTo('/login');
+            }
             this.info = await fetchUserData();
-            // console.log("--->" + this.info);
-            // this.narotu = await fetchMatchData();
-            // this.narotu.matchHistory.forEach((match, index) => {
-            //     console.log(`Match ${index + 1}:`);
-            //     console.log(`User 1: ${match.user1.username} (Score: ${match.user1_score})`);
-            //     console.log(`User 2: ${match.user2.username} (Score: ${match.user2_score})`);
-            //     console.log(`Winner: ${match.winner.username}`);
-            //     console.log(`---`);
-            // });
-            // await fetchMatchData().then( data =>{
-            // })
             if (this.info){
                 // console.log(this.info.image);
                 if (!this.info.username){

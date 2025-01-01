@@ -1,5 +1,7 @@
 
-console.log('LogoutPage connected!');
+import {fetchUserData , getCookie , logoutUser} from './readData.js';
+
+import { navigateTo } from '../routing.js';
 
 class LogoutPage extends HTMLElement {
     constructor() {
@@ -49,7 +51,7 @@ class LogoutPage extends HTMLElement {
             <div class="logout-popup-content">
                 <h2 class="confirmtext" >Confirm Logout</h2>
                 <p class="paratext">Are you sure you want to log out?</p>
-                <button type="" id="" class="btn-home btn btn-secondary " >Logout</button>
+                <button type="click" id="tologout" class="btn-home btn btn-secondary " >Logout</button>
             </div>
         </div>
         `;
@@ -58,9 +60,22 @@ class LogoutPage extends HTMLElement {
         const logoutConfirm = document.getElementById('logoutConfirm');
 
     }
-
+    async tolog(){
+        const log = document.querySelector("#tologout")
+        log.addEventListener('click' , async (e) =>{
+            console.log('start log out');
+            const info = await fetchUserData();
+            logoutUser(info.username);
+            navigateTo('/login');
+            
+        });
+    }
     connectedCallback() {
+        if (!getCookie('access')){
+            navigateTo('/login');
+        }
         this.render(); // Correct method name
+        this.tolog();
     }
 }
 

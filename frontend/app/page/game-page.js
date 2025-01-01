@@ -1,6 +1,8 @@
 
 // import {gamePage} from '/home/chebchoub/Desktop/ping/frontend/app/pong/js/gamePage.js'
+import {fetchUserData , getCookie} from './readData.js';
 
+import { navigateTo } from '../routing.js';
 class gamePage extends HTMLElement {
 
     navar = `
@@ -77,6 +79,10 @@ class gamePage extends HTMLElement {
         `;
     }
     connectedCallback(){
+        // console.log("token is : " + getCookie('access'));
+        if (!getCookie('access')){
+            navigateTo('/login');
+        }
         this.rander();
     }
 }

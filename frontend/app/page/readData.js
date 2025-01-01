@@ -1,5 +1,21 @@
 
- 
+import { navigateTo } from "../routing.js";
+
+// navigateTo('/login');
+
+export function getCookie(name) {
+    const cookies = document.cookie.split('; '); // Split by '; ' to get individual key-value pairs
+    for (let i = 0; i < cookies.length; i++) {
+        const [key, value] = cookies[i].split('='); // Split each pair by '='
+        if (key === name) {
+            return decodeURIComponent(value); // Decode in case the value is URL-encoded
+        }
+    }
+    return null; // Return null if not found
+}
+
+// console.log("token : " + getCookie('access'));
+
 export const readData = (function() {
     let data = [];
 
@@ -42,6 +58,7 @@ export async function fetchUserData() {
         // Return the fetched data (which will be an array)
         return data;
     } catch (error) {
+        // navigateTo('/login');
         console.error("Error in fetchUserData:", error);
         return []; // Return an empty array in case of an error
     }
@@ -74,64 +91,27 @@ export async function fetchMatchData() {
     }
 }
 
+export async function logoutUser(user) {
+    
+    const data = { username: user };
+    try{
+        const res = await fetch("https://localhost:3000/logout/", {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        if (res.ok) {
+                console.log('POST METHOD HAS BEEN SUCCESS')
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
+}
 
-
-// Example usage: Fetch match data and log it
-
-
-// export async function fetchMatchData() {
-//     console.log("this where i fetch")
-//     try {
-        // const res = await fetch("https://localhost:3000/match_history/", {
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     credentials: 'include', // Sends cookies along with the request
-        // });
-
-//         // Check if the response is successfuurl
-//         if (!res.ok) {
-//             throw new Error(`Error fetching data: ${res.statusText}`);
-//         }
-
-//         // Parse the response JSON to an array
-//         console.log("here" + res)
-//         const data = await res.json();
-
-//         // Return the fetched data (which will be an array)
-//         return data;
-//     } catch (error) {
-//         console.error("Error in fetchUserData:", error);
-//         return []; // Return an empty array in case of an error
-//     }
-// } 
-// export async function fetchUserMatchHistory() {
-//     try {
-//         // Make a GET request to the API
-//         const res = await fetch("https://localhost:3000/match_history/", {
-//             method: 'GET',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             credentials: 'include', // Sends cookies along with the request
-//         });
-
-//         // Check if the response is successful
-//         if (!res.ok) {
-//             throw new Error(`Error fetching data: ${res.statusText}`);
-//         }
-
-//         // Parse the response JSON to an array
-//         const data = await res.json();
-//         console.log(data);
-//         // Return the fetched data (which will be an array)
-//         return data;
-//     } catch (error) {
-//         console.error("Error in fetchUserData:", error);
-//         return []; // Return an empty array in case of an error
-//     }
-// }
 
 
 export async function postInfo(alias,redir){
