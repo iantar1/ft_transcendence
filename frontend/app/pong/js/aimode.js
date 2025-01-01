@@ -114,6 +114,8 @@ export function ai_mode()
     pongCanvas.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls( camera, renderer.domElement );
 
+    resizeCanvas();
+
     // Particle system for background
     function createStarfield() {
         const geometry = new THREE.BufferGeometry();
@@ -140,7 +142,6 @@ export function ai_mode()
     const starfield = createStarfield();
     scene.add(starfield);
     
-    resizeCanvas();
     
     const socket = new WebSocket(ai_URL);
     // Handle WebSocket events
@@ -196,9 +197,7 @@ export function ai_mode()
             updateScore();
         }
         if (data.type === "game_over") {
-            score = data.score;
-
-            gameOver(data.winner, score);
+            gameOver(data.winner, data.score);
         }
     };
     socket.onclose = () => {
