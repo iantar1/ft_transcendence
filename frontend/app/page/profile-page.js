@@ -226,13 +226,12 @@ const addFriends = () => {
 
     <div  class="addfriend d-flex justify-content-center align-items-center" style="gap :10px; background:var(--dark); border-radius :5px;" >
         <button  type="click" class="flag btn-home btn btn-secondary " style="font-size :100%; border-radius :5px;  background:var(--red); display: flex; justify-content: center; align-items: center;" >
-            <i style="color: #fff;" class="fa-position: staticsolid fa-user-plus"></i>
+            <i style="color: #fff;" class="fa fa-user-plus" aria-hidden="true"></i>
         </button>
         <span class="forAdd" style="" ></span>
         <div class="scrollable-div" style="" >
 
         </div>
-
     </div>
     `;
 }
@@ -416,8 +415,8 @@ class profilePage extends HTMLElement {
             }
             .progress .progress-value{
                 position: relative;
-                left: -45px;
-                top: 4px;
+                left: 0px;
+                top: -15px;
                 font-size: 14px;
                 font-weight: bold;
                 color: #fff;
@@ -763,7 +762,7 @@ class profilePage extends HTMLElement {
     <span class="cycle-right">
         <span class="cycle-bar"></span>
     </span>
-    <div class="cycle-value">90%</div>
+    <div id="cycleValue" class="cycle-value"></div>
     </div>
 
 <style>
@@ -1161,8 +1160,12 @@ class profilePage extends HTMLElement {
 
        
                 // Optional: If you need to update duplicate or additional elements, create aliases
-                document.getElementById('winone').textContent = stats.wins;
-                document.getElementById('loseone').textContent = stats.losses;
+                console.log("stats win : " +  stats.wins);
+                document.getElementById('win').textContent = "0";
+                document.getElementById('winone').textContent = "0%";
+                document.getElementById('lose').textContent = "0";
+                document.getElementById('loseone').textContent = "0%";
+                document.getElementById('cycleValue').textContent = "0%";
 
             }
             else{

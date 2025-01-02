@@ -128,7 +128,7 @@ class LoadingScreen {
         break;
       case '/game':
         betweenPage();
-        content.innerHTML = '<game-page></game-page>';
+        content.innerHTML = '<pongxo-page></pongxo-page>';
         break;
       case '/setting':
         betweenPage();
