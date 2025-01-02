@@ -179,9 +179,11 @@ export function local_1vs1()
         }
         if (data.type === "game_over") {
             score = data.score;
+            wsOpen = false;
             cancelAnimationFrame(animationId);
             socket.close();
-            render(GameOver(data.winner, score), gamePage.shadowRoot.querySelector('.game-page'));
+            gameOver(data.winner, data.score);
+            
         }
     };
     socket.onclose = () => {
@@ -494,6 +496,34 @@ export function local_1vs1()
                 onComplete(); // Trigger the game start
             }
         }, 60);
+    }
+
+    function gameOver(winner, score) {
+        console.log("Game Over :", winner, score);
+        
+        const explosion = new THREE.Points(
+            new THREE.SphereGeometry(20, 32, 32),
+            new THREE.PointsMaterial({
+                color: winner === 'player1' ? 0x00ff00 : 0xff0000,
+                size: 2
+            })
+        );
+        
+        scene.add(explosion);
+        console.log(explosion);
+        
+        
+        gsap.to(explosion.scale, {
+            x: 10,
+            y: 10,
+            z: 10,
+            duration: 1,
+            ease: "power2.out",
+            onComplete: () => {
+                scene.remove(explosion);
+                render(GameOver(winner, score), gamePage.shadowRoot.querySelector('.game-page'));
+            }
+        });
     }
 
 
