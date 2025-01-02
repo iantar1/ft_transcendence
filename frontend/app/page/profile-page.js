@@ -1,6 +1,6 @@
 
 
-import {fetchUserData , fetchMatchData, getCookie} from './readData.js';
+import {fetchUserData , fetchMatchData, getCookie , fetchStatsData} from './readData.js';
 
 // import {fetchMatchData} from './readData.js';
 
@@ -226,7 +226,7 @@ const addFriends = () => {
 
     <div  class="addfriend d-flex justify-content-center align-items-center" style="gap :10px; background:var(--dark); border-radius :5px;" >
         <button  type="click" class="flag btn-home btn btn-secondary " style="font-size :100%; border-radius :5px;  background:var(--red); display: flex; justify-content: center; align-items: center;" >
-            <i style="color: #fff;" class="fa-solid fa-user-plus"></i>
+            <i style="color: #fff;" class="fa-position: staticsolid fa-user-plus"></i>
         </button>
         <span class="forAdd" style="" ></span>
         <div class="scrollable-div" style="" >
@@ -537,6 +537,9 @@ class profilePage extends HTMLElement {
     `;
     winorLoseStyle = `
         <style>
+            .winorlose{
+                overflow-y: auto;
+            }
             .userleft{
                 width :100%;
                 height :75px;
@@ -638,8 +641,7 @@ class profilePage extends HTMLElement {
                             width :100vw;
                             height :50vh;
                             background: none;
-                            overflow: hidden;
-
+                            overflow-y: auto;
                         }
                         .userInfo{
                             flex-basis: 10%;
@@ -678,13 +680,13 @@ class profilePage extends HTMLElement {
             <div class="cont-progress" >
                     <div class="cart" >
                         <h4>Total Win</h4>
-                        <p>0</p>
-                        <h4>0%</h4>
+                        <p id="win" >0</p>
+                        <h4 id="winone" >0%</h4>
                     </div>
                     <div class="cart" >
                         <h4>Total Lose</h4>
-                        <p>0</p>
-                        <h4>0%</h4>
+                        <p id="lose" >0</p>
+                        <h4 id="loseone" >0%</h4>
                     </div>
             </div>
         </div>
@@ -966,7 +968,7 @@ class profilePage extends HTMLElement {
                 <tr>
                     <td>
                         <div>
-                            <img src="${player1.image}" alt="${player1.username}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                            <img src="${player1.image}" alt="${player1.username}" style="object-fit: cover; display:block;  width:55px; height: 55px;  border-radius: 50%; ">
                             <span>${player1.username}</span>
                         </div>
                     </td>
@@ -989,8 +991,8 @@ class profilePage extends HTMLElement {
                         <div>${match.user2_score}</div>
                     </td>
                     <td>
-                        <div>
-                            <img src="${player2.image}" alt="${player2.username}" style="width: 50px; height: 50px; border-radius: 50%; display: block;">
+                        <div style="" >
+                            <img  src="${player2.image}" alt="${player2.username}" style="object-fit: cover; display:block;  width:55px; height: 55px; border-radius: 50%; ">
                             <span>${player2.username}</span>
                         </div>
                     </td>
@@ -1155,6 +1157,13 @@ class profilePage extends HTMLElement {
                 document.getElementById('username').textContent = this.info.username
                 document.getElementById('img_intra').src = this.info.image
                 document.getElementById('BIO').textContent = 'ash dak temchi lzine'
+                const stats = await fetchStatsData(); // Fetch the stats data
+
+       
+                // Optional: If you need to update duplicate or additional elements, create aliases
+                document.getElementById('winone').textContent = stats.wins;
+                document.getElementById('loseone').textContent = stats.losses;
+
             }
             else{
                 navigateTo('/login');
@@ -1171,6 +1180,9 @@ class profilePage extends HTMLElement {
             ${this.gamerankStyle}
             <style>
             ${this.navar}
+                .editTabel{
+                    height :95%;
+                }
                 table.table tbody tr:nth-child(odd) { 
                     background-color: var(--dark); 
                 }
@@ -1205,10 +1217,7 @@ class profilePage extends HTMLElement {
         `;
 
         this.querySelector('.cycle-progress').innerHTML = this.cycleProgress;   
-        // cycleProg();
-        // this.cycleRander();
-        // losrWin.appendChild(onevsone);
-            // });
+ 
             const backToSearch = document.querySelector('#tosetting');
             backToSearch.addEventListener('click', () => {
                 navigateTo('/setting')
