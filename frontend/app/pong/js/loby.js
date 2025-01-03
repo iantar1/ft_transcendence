@@ -82,7 +82,7 @@ export function menu() {
   const title = document.createElement('div');
   container.classList.add('game-buttons-container');
   title.classList.add('game-title');
-  title.textContent = "Pong War";
+  title.textContent = "Pong Wars";
 
   // Create buttons
   const aiButton = createButton('AI Mode');

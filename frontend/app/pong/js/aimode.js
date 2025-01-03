@@ -79,7 +79,7 @@ export function ai_mode()
     let tableWidth, tableHeight;
     // Enhanced scene setup
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x00ff00, 0.0025);
+    scene.fog = new THREE.FogExp2(0x000011, 0.0025);
     scene.background = new THREE.Color(0x000011);
 
 
@@ -104,17 +104,17 @@ export function ai_mode()
     camera.position.set(0, 15, 35);
     scene.add(camera);
 
-
+    camera.position.z = width < 768 ? 50 : 35;
 
     renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
     renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     pongCanvas.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls( camera, renderer.domElement );
-
     resizeCanvas();
+
 
     // Particle system for background
     function createStarfield() {
@@ -123,9 +123,9 @@ export function ai_mode()
         
         for (let i = 0; i < 5000; i++) {
             vertices.push(
-                Math.random() * 2000 - 1000,
-                Math.random() * 2000 - 1000,
-                Math.random() * 2000 - 1000
+                Math.random() * 500 - 250,
+                Math.random() * 500 - 250,
+                Math.random() * 500 - 250
             );
         }
         
@@ -133,9 +133,11 @@ export function ai_mode()
         const material = new THREE.PointsMaterial({
             color: 0xffffff,
             size: 2,
-            transparent: true
+            transparent: true,
+            depthWrite: false,
+            alphaMap : new THREE.TextureLoader().load('/app/pong/assets/kenney_particle-pack/PNG (Transparent)/star_06.png'),
         });
-        
+
         return new THREE.Points(geometry, material);
     }
     
@@ -197,6 +199,9 @@ export function ai_mode()
             updateScore();
         }
         if (data.type === "game_over") {
+            window.removeEventListener("resize", resizeCanvas);
+            document.removeEventListener("keydown", movePaddle);
+            document.removeEventListener("keyup", stopPaddle);
             gameOver(data.winner, data.score);
         }
     };
@@ -226,9 +231,13 @@ export function ai_mode()
     function resizeCanvas() {
         width = pongCanvas.clientWidth ;
         height = pongCanvas.clientHeight ;
+        canvas.width = width;
+        canvas.height = height;
 
-        console.log("sizes : ", pongCanvas.clientWidth / pongCanvas.clientHeight);
+        console.log("sizes : ", canvas.clientWidth  , canvas.clientWidth );
         camera.fov = Math.min(95, Math.max(75, 60 * (height / width)));
+        camera.position.z = Math.min(45, Math.max(35, 60 * (height / width)));
+        console.log("Z : ",camera.position.z);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width , height);

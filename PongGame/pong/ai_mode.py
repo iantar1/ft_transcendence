@@ -74,11 +74,6 @@ class AIConsumer(AsyncWebsocketConsumer):
                 self.group_room,
                 {
                     "type": "start",
-                    "player1": self.player1,
-                    "player2": self.player2,
-                    "ball": self.ball,
-                    "score": self.score,
-                    "paddle": self.paddle,
                 }
             )
                 
