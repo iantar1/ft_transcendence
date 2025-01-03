@@ -35,8 +35,8 @@ html , body{
   align-items: center;
   background:#000000;
   scroll-behavior: smooth;
-  /* overflow-y: hidden;
-   overflow-x: hidden; */
+  /* overflow-y: hidden; */
+   /* overflow-x: scroll; */
 }
 
 .main{
