@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, MatchHistory, Stats, Friendship
+from .models import User, MatchHistory, Stats
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,11 +62,11 @@ class StatsSerializer(serializers.ModelSerializer):
 
 
 
-class   FriendshipSerializer(serializers.ModelSerializer):
+# class   FriendshipSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Friendship
-        fields = ['from_user', 'to_user', 'status', 'action']
+#     class Meta:
+#         model = Friendship
+#         fields = ['from_user', 'to_user', 'status', 'action']
 
 # {
 # "from_user":"iantar",
