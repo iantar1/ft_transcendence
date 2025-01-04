@@ -165,21 +165,21 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
             print( f"game over : {self.score}")
 
             # Prepare data for match history
-            match_data = {
-                "opponent_username": self.opponent.username,
-                "opponent_score": self.score["player2"],
-                "user_score": self.score["player1"],
-            }
+            # match_data = {
+            #     "opponent_username": self.opponent.username,
+            #     "opponent_score": self.score["player2"],
+            #     "user_score": self.score["player1"],
+            # }
 
             # Send the match history to backend
-            try:
-                response = requests.post(BACKEND_URL, json=match_data, timeout=5)
-                if response.status_code == 200:
-                    print("Match history successfully sent to backend 1")
-                else:
-                    print(f"Failed to send match history: {response.status_code} - {response.text}")
-            except requests.exceptions.RequestException as e:
-                print(f"Error sending match history: {e}")
+            # try:
+            #     response = requests.post(BACKEND_URL, json=match_data, timeout=5)
+            #     if response.status_code == 200:
+            #         print("Match history successfully sent to backend 1")
+            #     else:
+            #         print(f"Failed to send match history: {response.status_code} - {response.text}")
+            # except requests.exceptions.RequestException as e:
+            #     print(f"Error sending match history: {e}")
             
             await self.send(text_data=json.dumps(
             {

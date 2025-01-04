@@ -41,6 +41,24 @@ export function tournamentBracket(
 
         }
 
+        .bracket-content::-webkit-scrollbar {
+            width: 4px; /* Narrow scrollbar for a mobile-like feel */
+            height: 4px;
+        }
+
+        .bracket-content::-webkit-scrollbar-thumb {
+            background: var(--red); /* Thumb color */
+            border-radius: 5px; /* Rounded thumb for a smooth look */
+        }
+
+        .bracket-content::-webkit-scrollbar-thumb:hover {
+            background: #fff; /* Darker color on hover */
+        }
+
+        .bracket-content::-webkit-scrollbar-track {
+            background: transparent; /* Transparent track for minimalistic style */
+        }
+
         .round-bracket {
             display: flex;
             flex-direction: column;
@@ -307,10 +325,10 @@ export function tournamentBracket(
             submitTournament("submit", matches[0].player1, 6);
         }
         else {
-            submitTournament("submit", matches[0].player1, 6);
+            // submitTournament("submit", matches[0].player1, 6);
 
-            // console.log('start match');
-            // ws.send(JSON.stringify({ type: 'countdown' }));
+            console.log('start match');
+            ws.send(JSON.stringify({ type: 'countdown' }));
         }
     });
 
