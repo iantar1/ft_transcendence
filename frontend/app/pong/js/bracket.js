@@ -307,8 +307,10 @@ export function tournamentBracket(
             submitTournament("submit", matches[0].player1, 6);
         }
         else {
-            console.log('start match');
-            ws.send(JSON.stringify({ type: 'countdown' }));
+            submitTournament("submit", matches[0].player1, 6);
+
+            // console.log('start match');
+            // ws.send(JSON.stringify({ type: 'countdown' }));
         }
     });
 

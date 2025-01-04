@@ -117,7 +117,7 @@ export function submitTournament(
         if (typeof window.ethereum !== 'undefined') {
             // Initialize web3 instance
             web3 = new Web3(window.ethereum);
-
+            
             // Request account access2
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });

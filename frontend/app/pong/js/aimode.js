@@ -185,15 +185,24 @@ export function ai_mode()
 
             player1.position.x = data.player1.x;
             player2.position.x = data.player2.x;
-            ball.position.x = data.ball.x;
-            ball.position.z = data.ball.z;
+            ball.ball.position.x = data.ball.x;
+            ball.ball.position.z = data.ball.z;
+            score = data.score;
+        }
+        if (data.type === "hit_wall") {
+
+            ball.createImpact(data.ball, ball.ball.position);
+            player1.position.x = data.player1.x;
+            player2.position.x = data.player2.x;
+            ball.ball.position.x = data.ball.x;
+            ball.ball.position.z = data.ball.z;
             score = data.score;
         }
         if (data.type === "goal") {
             player1.position.x = data.player1.x;
             player2.position.x = data.player2.x;
-            ball.position.x = data.ball.x;
-            ball.position.z = data.ball.z;
+            ball.ball.position.x = data.ball.x;
+            ball.ball.position.z = data.ball.z;
             score = data.score;
             shakeCamera();
             updateScore();
@@ -458,66 +467,255 @@ export function ai_mode()
     //     scene.add(TableG);
     // }
 
-    function createBallWithTrail(config) {
-        const ballGroup = new THREE.Group();
+    // function createBallWithTrail(config) {
+    //     const ballGroup = new THREE.Group();
         
-        const sphereGeometry = new THREE.SphereGeometry(config.radius, 32, 32);
-        const sphereMaterial = new THREE.MeshPhongMaterial({
+    //     const sphereGeometry = new THREE.SphereGeometry(config.radius, 32, 32);
+    //     const sphereMaterial = new THREE.MeshPhongMaterial({
+    //         color: 0xff8800,
+    //         emissive: 0xff4400,
+    //         shininess: 100
+    //     });
+        
+    //     const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    //     sphereMesh.castShadow = true;
+        
+    //     ballGroup.add(sphereMesh);
+        
+    //     // Add glow effect
+    //     const glowMaterial = new THREE.ShaderMaterial({
+    //         uniforms: {
+    //             c: { value: 0.5 },
+    //             p: { value: 4.5 },
+    //             glowColor: { value: new THREE.Color(0xff4400) },
+    //             time: { value: 0 },
+    //         },
+    //         vertexShader: `
+    //             varying vec3 vNormal;
+    //             void main() {
+    //                 vNormal = normalize(normalMatrix * normal);
+    //                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    //             }
+    //         `,
+    //         fragmentShader: `
+    //             uniform vec3 glowColor;
+    //             uniform float c;
+    //             uniform float p;
+    //             uniform float time;
+    //             varying vec3 vNormal;
+    //             void main() {
+    //                 float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
+    //                 intensity *= abs(sin(time * 0.01));
+    //                 gl_FragColor = vec4(glowColor, intensity);
+    //             }
+    //         `,
+    //         transparent: true,
+    //         side: THREE.BackSide
+    //     });
+        
+    //     const glowMesh = new THREE.Mesh(
+    //         new THREE.SphereGeometry(config.radius * 1.2, 32, 32),
+    //         glowMaterial
+    //     );
+        
+    //     ballGroup.add(glowMesh);
+    //     return ballGroup;
+    // }
+
+    function createEnhancedBall(config) {
+        const ballGroup = new THREE.Group();
+    
+        // Core ball with glow
+        const ballGeometry = new THREE.SphereGeometry(config.radius, 32, 32);
+        const ballMaterial = new THREE.MeshStandardMaterial({
             color: 0xff8800,
             emissive: 0xff4400,
-            shininess: 100
+            emissiveIntensity: 0.5,
+            metalness: 0.7,
+            roughness: 0.2,
         });
         
-        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphereMesh.castShadow = true;
+        const ballCore = new THREE.Mesh(ballGeometry, ballMaterial);
+        ballCore.castShadow = true;
+        ballGroup.add(ballCore);
+    
+        // Dynamic Trail System
+        const trailLength = 20;
+        const trailGeometry = new THREE.BufferGeometry();
+        const trailPositions = new Float32Array(trailLength * 3);
+        const trailColors = new Float32Array(trailLength * 3);
         
-        ballGroup.add(sphereMesh);
+        trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+        trailGeometry.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
         
-        // Add glow effect
-        const glowMaterial = new THREE.ShaderMaterial({
+        const trailMaterial = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.6
+        });
+    
+        const trail = new THREE.Line(trailGeometry, trailMaterial);
+        ballGroup.add(trail);
+    
+        // Speed ring effect
+        const ringGeometry = new THREE.RingGeometry(config.radius * 1.2, config.radius * 1.4, 32);
+        const ringMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                c: { value: 0.5 },
-                p: { value: 4.5 },
-                glowColor: { value: new THREE.Color(0xff4400) },
                 time: { value: 0 },
+                speed: { value: 0 },
+                color: { value: new THREE.Color(0xff8800) }
             },
             vertexShader: `
-                varying vec3 vNormal;
+                varying vec2 vUv;
                 void main() {
-                    vNormal = normalize(normalMatrix * normal);
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 0.0, 1.0);
                 }
             `,
             fragmentShader: `
-                uniform vec3 glowColor;
-                uniform float c;
-                uniform float p;
                 uniform float time;
-                varying vec3 vNormal;
+                uniform float speed;
+                uniform vec3 color;
+                varying vec2 vUv;
+                
                 void main() {
-                    float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
-                    intensity *= abs(sin(time * 0.01));
-                    gl_FragColor = vec4(glowColor, intensity);
+                    float pulse = sin(time * 5.0 + vUv.x * 10.0) * 0.5 + 0.5;
+                    float speedFactor = clamp(speed / 30.0, 0.0, 1.0);
+                    vec3 finalColor = mix(color, vec3(1.0), speedFactor * pulse);
+                    float alpha = pulse * speedFactor;
+                    gl_FragColor = vec4(finalColor, alpha);
                 }
             `,
             transparent: true,
-            side: THREE.BackSide
+            side: THREE.DoubleSide
         });
+    
+        const speedRing = new THREE.Mesh(ringGeometry, ringMaterial);
+        speedRing.rotation.x = Math.PI / 2;
+        ballGroup.add(speedRing);
+    
+        // Impact particles system
+        const particleCount = 50;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleVelocities = new Float32Array(particleCount * 3);
         
-        const glowMesh = new THREE.Mesh(
-            new THREE.SphereGeometry(config.radius * 1.2, 32, 32),
-            glowMaterial
-        );
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
         
-        ballGroup.add(glowMesh);
-        return ballGroup;
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0xff8800,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.8
+        });
+    
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        ballGroup.add(particles);
+    
+        // Ball state and methods
+        const state = {
+            velocity: new THREE.Vector3(),
+            lastPositions: Array(trailLength).fill(new THREE.Vector3()),
+            impactTime: 0,
+            particlesActive: false
+        };
+    
+        function updateTrail() {
+            const positions = trail.geometry.attributes.position.array;
+            const colors = trail.geometry.attributes.color.array;
+    
+            // Shift positions and update colors
+            for(let i = trailLength - 1; i > 0; i--) {
+                const i3 = i * 3;
+                const prev3 = (i - 1) * 3;
+                
+                positions[i3] = positions[prev3];
+                positions[i3 + 1] = positions[prev3 + 1];
+                positions[i3 + 2] = positions[prev3 + 2];
+                
+                // Fade trail color
+                colors[i3] = 1.0 * (1 - i / trailLength);
+                colors[i3 + 1] = 0.5 * (1 - i / trailLength);
+                colors[i3 + 2] = 0.2 * (1 - i / trailLength);
+            }
+    
+            // Add current position
+            positions[0] = ballCore.position.x;
+            positions[1] = ballCore.position.y;
+            positions[2] = ballCore.position.z;
+            colors[0] = 1;
+            colors[1] = 0.5;
+            colors[2] = 0.2;
+    
+            trail.geometry.attributes.position.needsUpdate = true;
+            trail.geometry.attributes.color.needsUpdate = true;
+        }
+    
+        function createImpactEffect(position, normal) {
+            const positions = particles.geometry.attributes.position.array;
+            
+            for(let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                // Reset particle position to impact point
+                positions[i3] = position.x;
+                positions[i3 + 1] = position.y;
+                positions[i3 + 2] = position.z;
+                
+                // Set random velocity in hemisphere around normal
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI / 2;
+                particleVelocities[i3] = Math.sin(phi) * Math.cos(theta) + normal.x;
+                particleVelocities[i3 + 1] = Math.sin(phi) * Math.sin(theta) + normal.y;
+                particleVelocities[i3 + 2] = Math.cos(phi) + normal.z;
+            }
+            
+            state.particlesActive = true;
+            state.impactTime = 0;
+        }
+    
+        function update(delta) {
+            // Update speed ring
+            const speed = state.velocity.length();
+            speedRing.material.uniforms.time.value += delta;
+            speedRing.material.uniforms.speed.value = speed;
+            
+            // Update trail
+            updateTrail();
+    
+            // Update particles if active
+            if(state.particlesActive) {
+                const positions = particles.geometry.attributes.position.array;
+                
+                for(let i = 0; i < particleCount; i++) {
+                    const i3 = i * 3;
+                    positions[i3] += particleVelocities[i3] * delta;
+                    positions[i3 + 1] += particleVelocities[i3 + 1] * delta;
+                    positions[i3 + 2] += particleVelocities[i3 + 2] * delta;
+                }
+                
+                particles.geometry.attributes.position.needsUpdate = true;
+                
+                state.impactTime += delta;
+                if(state.impactTime > 1) {
+                    state.particlesActive = false;
+                }
+            }
+        }
+    
+        return {
+            ball: ballGroup,
+            update,
+            createImpact: createImpactEffect,
+            state
+        };
     }
 
     function ballCreation() {
 
-        ball = createBallWithTrail(ball_config);
-        ball.position.set(ball_config.x, ball_config.y + 0.1, ball_config.z);
-        scene.add(ball);
+        ball = createEnhancedBall(ball_config);
+        ball.ball.position.set(ball_config.x, ball_config.y + 0.1, ball_config.z);
+        scene.add(ball.ball);
     } 
 
     // Enhanced paddle creation with effects
@@ -612,9 +810,16 @@ export function ai_mode()
         createScore();
     }
 
+    const clock = new THREE.Clock();
+
     function animate (time)
     {
         animationId = requestAnimationFrame(animate);
+
+
+        const delta = clock.getDelta();
+        ball.update(delta);
+
 
         // Update starfield
         starfield.rotation.y += 0.0001;
@@ -624,10 +829,12 @@ export function ai_mode()
         player2.children[1].material.uniforms.time.value = time * 0.001
 
         // Update ball trail
-        if (ball) {
-            const trailMaterial = ball.children[1].material;
-            trailMaterial.uniforms.time.value = time * 0.001;
-        }
+        // if (ball) {
+        //     const trailMaterial = ball.children[1].material;
+        //     trailMaterial.uniforms.time.value = time * 0.001;
+        // }
+
+
         // walls animation
         leftWall.children[1].material.uniforms.time.value = time * 0.001;
         rightWall.children[1].material.uniforms.time.value = time * 0.001;
