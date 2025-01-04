@@ -130,12 +130,12 @@ def generateNewTokens(response, access_token, refresh_token, playload):
 class UserView(APIView):
     
     def get(self, request):
-        # access_token = request.COOKIES.get('access')
-        # refresh_token = request.COOKIES.get('refresh')
+        access_token = request.COOKIES.get('access')
+        refresh_token = request.COOKIES.get('refresh')
         
-        # if not access_token:
-        #     raise AuthenticationFailed('Unauthenticated')
-        access_token, refresh_token = checkAuthenticationAnsReturnTokens(request)
+        if not access_token or not refresh_token:
+            raise AuthenticationFailed('Unauthenticated')
+        # access_token, refresh_token = checkAuthenticationAnsReturnTokens(request)
         response = Response()
         try:
             playload = jwt.decode(access_token, 'access_secret', algorithms=['HS256'])
