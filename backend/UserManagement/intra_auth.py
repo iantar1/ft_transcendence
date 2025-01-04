@@ -57,6 +57,7 @@ def createUpdateUser(data_json)-> User:
                   'image':File(img_temp, name=filename),
                   'username':data_json.get("login")},
     )
+    
     user.save()
     return user
     
