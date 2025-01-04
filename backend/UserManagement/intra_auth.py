@@ -119,10 +119,8 @@ def auth(request):
     response.set_cookie(key="access", value=access_token, httponly=False)
     response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     
-    response['Authorization'] = f'Bearer {access_token}'
+    # response['Authorization'] = f'Bearer {access_token}'
     
-    # You can also add additional user data if needed
-    # response['X-User-Data'] = serializer.data
 
     return response
     return Response(serializer.data)

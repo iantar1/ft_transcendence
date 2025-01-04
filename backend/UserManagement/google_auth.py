@@ -4,9 +4,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .models import *
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.core import serializers
-import requests
 from config.settings import env
 import os
 from dotenv import load_dotenv
@@ -36,8 +35,7 @@ AUTH_URI = f"{google_auth_url}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}
 def home(request):
     return redirect(AUTH_URI)
 
-# views.py
-import requests
+
 from django.shortcuts import redirect
 from django.http import JsonResponse
 
@@ -84,15 +82,20 @@ def get_code(request):
         "grant_type": "authorization_code"
     }
     response = requests.post(OUUTH_TOKEN_URI, data=plyload)
-    print(f"the resposnse josn: {response.json()}")
+
     access_token = response.json().get('access_token')
     userInfoJson = getUserInfo(access_token)
-    # User = storeUser(user)
-    print(f"the code: {code}")
+
     user = storeUser(userInfoJson.json())
-    serializedUserData = UserSerializer(user)
-    return JsonResponse(serializedUserData.data)
-    return HttpResponse(user, content_type="application/json")
+
+    access_token = create_access_token(user.id)
+    refresh_token = create_refresh_token(user.id)
+
+    response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
+    response.set_cookie(key="access", value=access_token, httponly=False)
+    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+    return response
+
 
 def getUserInfo(access_token):
     url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -172,7 +175,9 @@ def auth(request):
     'response': response
     }
     access_token = create_access_token(user.id)
-    response.set_cookie(key="access", value=access_token, httponly=True)
+    refresh_token = create_refresh_token(user.id)
+    response.set_cookie(key="access", value=access_token)
+    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     return response
     return Response(serializer.data)
 
