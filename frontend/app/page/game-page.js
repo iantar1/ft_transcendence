@@ -69,15 +69,35 @@ class gamePage extends HTMLElement {
                 const result = `${first4}...${last4}`;
                 btnwallet.textContent = result;
                 console.log('Connected account:', accounts[0]);
-                // document.getElementById('connectwallet').addEventListener('mouseenter', () => {
-                //     console.log("ADD HOVER HERE");
-
-                //   });
-                // document.getElementById('connectwallet').addEventListener('mouseleave', () => {
-                //     console.log("ADD HOVER HERE");
-                // });
-                // Initialize contract instance
-                // contract = new web3.eth.Contract(abi, contractAddress);
+                if (btnwallet)
+                {
+                    btnwallet.remove();
+                }
+                // document.getElementById('connectwallet');
+                const container = document.getElementById('container');
+                container.className = "dropdown";
+                const newButton = document.createElement('div');
+                newButton.innerHTML = `
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        ${result}
+                    </button>
+                    <div style="width:20vw; height :80vh;" class="dropdown-menu dropdown-menu-dark">
+                        <div class="" style="width:90%; height:10%; display:flex; align-items: center; justify-content: center; gap :5px;" >
+                            <img id="img_eth" style="object-fit: cover; display:block;   width: 40px; height: 40px; border-radius: 50%;"  src="${this.info.image}" >
+                            <span>${result}</span> 
+                        </div>
+                        <div style="height:80%; border :1px solid;" ></div>
+                        <div style="height:10%;" >
+                            <button type="button" style="height:70%; display: flex; justify-content: center; align-items: center;" class="btn btn-danger">
+                            <i class="fa-solid fa-right-from-bracket"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                // newButton.id = 'btnwallet'; // Assign the same ID
+                container.appendChild(newButton);
             } catch (error) {
                 console.error("User denied account access", error);
             }
@@ -86,8 +106,20 @@ class gamePage extends HTMLElement {
         }
 
     }
-    rander(){
-        // <gamePage></gamePage>
+    info = [];
+    rander(){     
+        const uuss = async () => {
+            if (!getCookie('access')){
+                navigateTo('/login');
+            }
+                this.info  = await fetchUserData();
+            // if (info){
+            //     document.getElementById('img_eth').src = info.image;
+                
+            // }
+    
+        }
+        uuss();   
         this.innerHTML = `
             <style>
             ${this.navar}
@@ -141,99 +173,22 @@ class gamePage extends HTMLElement {
             background:rgb(0 0 0 / 0.5);
             border-radius: 5px;
         }
-        .btn-container {
-            position: relative;
-        }
-
-        .main-btn {
-            padding: 15px 30px;
-            font-size: 16px;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .popup {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 250px;
-            display: none;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .popup::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            right: 20px;
-            border-width: 0 10px 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent white transparent;
-        }
-        .popup-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            justify-content: center;
-        }
-
-        .popup-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .popup-btn.primary {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .popup-btn.secondary {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .popup-btn:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
         @media (min-width: 320px) and (max-width: 1024px) {
             pongxo-page{
                 flex-direction: column;
             }
-
           }
             </style>
-                <div style="width: 90%; height: 5%; display: flex; justify-content: right; align-items: center;">
-                    <div class="btn-container">
-                    <button 
-                        class="main-btn" 
-                        type="button" 
-                        id="connectwallet" 
-                        style="background: var(--red); border: none;">
-                        Connect Wallet
-                    </button>
-                    <div class="popup">
-                        <h3 style="margin-top: 0;">Hello!</h3>
-                        <p>Would you like to continue?</p>
-                        <div class="popup-buttons">
-                        <button class="popup-btn primary" >Confirm</button>
-                        <button class="popup-btn secondary" >Cancel</button>
-                        </div>
-                    </div>
-                    </div>
+                <div id="container" style="width: 90%; height: 5%; display: flex; justify-content: right; align-items: center;">
+                        <button 
+                            class="btn btn-secondary" 
+                            type="button" 
+                            id="connectwallet" 
+                            style="background: var(--red); border: none;">
+                            Connect Wallet
+                        </button>
                 </div>
-            <div style="height:93%; display:flex;flex-direction: row; justify-content: center;align-items: center;" >
+            <div style="height:90%; display:flex;flex-direction: row; justify-content: center;align-items: center;" >
                 <div class="scroll-item">
                 <button id="topong" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
                 <div class="track-items" >
@@ -250,11 +205,10 @@ class gamePage extends HTMLElement {
         `;
         this.topong();
         const btnwallet = document.getElementById('connectwallet');
-        btnwallet.addEventListener('click' , (e) =>{
+        btnwallet.addEventListener('click', (e) => {
             console.log("HERE WE ADD WALLET");
             this.init();
-        })
-
+        }, { once: true });
     }
     topong(){
         document.getElementById('topong').addEventListener('click' , e => {
