@@ -136,7 +136,9 @@ export function online_1vs1()
         const material = new THREE.PointsMaterial({
             color: 0xffffff,
             size: 2,
-            transparent: true
+            transparent: true,
+            depthWrite: false,
+            alphaMap : new THREE.TextureLoader().load('/app/pong/assets/kenney_particle-pack/PNG (Transparent)/star_06.png'),
         });
         
         return new THREE.Points(geometry, material);
