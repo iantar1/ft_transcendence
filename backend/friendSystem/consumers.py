@@ -2,8 +2,13 @@ from channels.generic.websocket import WebsocketConsumer
 import json
 from UserManagement.views import friendRequestHandling
 from UserManagement.models import User
+from UserManagement.serializers import UserSerializer
 from rest_framework.exceptions import AuthenticationFailed
 import jwt
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+
 
 user_channels = {}
 
@@ -21,7 +26,12 @@ def get_user_by_token(token):
 class   Notifications(WebsocketConsumer):
     def getUserUsername(self, access, refresh):
         user = get_user_by_token(access)
-        print("user: ", user, flush=True)
+        userInfo = UserSerializer(user).data
+        print("id: ", userInfo["id"])
+        user_channels[userInfo["id"]] = self.channel_name
+        self.send_to_user(userInfo["id"], "axuuuuuuuuuuuuuuu")
+        print("user: ", userInfo, flush=True)
+
 
 
     def connect(self):
@@ -62,7 +72,17 @@ class   Notifications(WebsocketConsumer):
 
         self.send(text_data=json.dumps(data))
 
-
+    def send_to_user(self, user_id, message):
+        channel_layer = get_channel_layer()
+        if user_id in user_channels:
+            channel_name = user_channels[user_id]
+            async_to_sync(channel_layer.send)(
+                channel_name,
+                {
+                    "type": "websocket.send",
+                    "text": json.dumps(message),
+                },
+            )
 # Redis is used as a storage layer
 # for channel names and group names.
 # These are stored within Redis so 
