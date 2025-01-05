@@ -53,8 +53,207 @@ class gamePage extends HTMLElement {
     constructor(){
         super();
     }
-    rander(){
-        // <gamePage></gamePage>
+    async init() {
+        if (typeof window.ethereum !== 'undefined') {
+            const web3 = new Web3(window.ethereum);
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const btnwallet = document.getElementById('connectwallet');
+                const first4 = accounts[0].slice(0, 4);
+                const last4 = accounts[0].slice(-4);
+                const result = `${first4}...${last4}`;
+                btnwallet.textContent = result;
+    
+                const container = document.getElementById('container');
+                container.className = "dropdown";
+                container.innerHTML = `
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            ${result}
+                        </button>
+                        <div style="width:20vw; height:80vh;" class="dropdown-menu dropdown-menu-dark">
+                            <div class="" style="width:90%; height:10%; display:flex; align-items: center; justify-content: center; gap:5px;">
+                                <img id="img_eth" style="object-fit: cover; display:block; width: 40px; height: 40px; border-radius: 50%;" src="${this.info.image}">
+                                <span>${result}</span> 
+                            </div>
+                            <div style="height:70%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;">
+                                <button id="submitBtn" class="btn btn-primary" style="width: 80%;">Submit</button>
+                                <button id="getBtn" class="btn btn-info" style="width: 80%;">Get</button>
+                            </div>
+                            <div style="height:10%; width:100%; display: flex; justify-content: center; align-items: center;">
+                                <button id="disconnect" type="button" class="flag btn-home btn btn-secondary" style="font-size:100%; width:50%; height:50%; border-radius:5px; border:none; background:var(--red); display: flex; justify-content: center; align-items: center;">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+    
+                // Add event listeners for the new buttons
+                const submitBtn = document.getElementById('submitBtn');
+                const getBtn = document.getElementById('getBtn');
+    
+                submitBtn.addEventListener('click', () => {
+                    try {
+                        // Add your submit logic here
+                        showNotification('success', 'Operation completed successfully!');
+                    } catch (error) {
+                        showNotification('error', 'An error occurred during submission.');
+                    }
+                });
+    
+                getBtn.addEventListener('click', () => {
+                    // Sample tournament data - replace with your actual data
+                    const tournamentData = [
+                        {
+                            tournament: "Crypto Cup 2024",
+                            players: [
+                                { address: "0xAB12...789C", rank: 1, points: 150 },
+                                { address: "0xDE34...567F", rank: 2, points: 120 },
+                                { address: "0xGH56...234I", rank: 3, points: 90 }
+                            ]
+                        },
+                        {
+                            tournament: "Web3 Championship",
+                            players: [
+                                { address: "0xJK78...901L", rank: 1, points: 200 },
+                                { address: "0xMN90...123O", rank: 2, points: 180 },
+                                { address: "0xPQ12...345R", rank: 3, points: 160 }
+                            ]
+                        }
+                    ];
+    
+                    // Create and show popup with tournament table
+                    const popup = document.createElement('div');
+                    popup.className = 'modal fade show';
+                    popup.style.display = 'block';
+                    popup.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                    
+                    // Generate tournament tables HTML
+                    const tournamentsHTML = tournamentData.map(tournament => `
+                        <div class="tournament-section mb-4">
+                            <h6 class="tournament-title text-light mb-3">${tournament.tournament}</h6>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th>Rank</th>
+                                            <th>Player</th>
+                                            <th>Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${tournament.players.map(player => `
+                                            <tr>
+                                                <td>
+                                                    <span class="badge bg-${player.rank === 1 ? 'warning' : player.rank === 2 ? 'secondary' : 'bronze'}">#${player.rank}</span>
+                                                </td>
+                                                <td class="text-light">${player.address}</td>
+                                                <td class="text-light">${player.points}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `).join('');
+    
+                    popup.innerHTML = `
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content bg-dark">
+                                <div class="modal-header" style="background-color: #1a237e; border-bottom: 1px solid #303f9f;">
+                                    <h5 class="modal-title text-light">Tournament Rankings</h5>
+                                    <button type="button" class="btn-close btn-close-white" onclick="this.closest('.modal').remove()"></button>
+                                </div>
+                                <div class="modal-body bg-dark text-light">
+                                    ${tournamentsHTML}
+                                </div>
+                                <div class="modal-footer" style="background-color: #1a237e; border-top: 1px solid #303f9f;">
+                                    <button type="button" class="btn btn-outline-light" onclick="this.closest('.modal').remove()">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+    
+                    // Add custom CSS for dark theme
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .bg-bronze {
+                            background-color: #cd7f32;
+                        }
+                        .tournament-section {
+                            border-bottom: 1px solid #303f9f;
+                            padding-bottom: 1rem;
+                        }
+                        .tournament-section:last-child {
+                            border-bottom: none;
+                        }
+                        .table-dark {
+                            background-color: #1a237e;
+                            color: #fff;
+                        }
+                        .table-dark tbody tr:hover {
+                            background-color: #283593;
+                        }
+                        .modal-content {
+                            border: 1px solid #303f9f;
+                        }
+                        .table-primary {
+                            background-color: #283593 !important;
+                            color: #fff;
+                        }
+                        .modal-body {
+                            background-color: #0a1232 !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    document.body.appendChild(popup);
+                });
+    
+                // Add notification system
+                const showNotification = (type, message) => {
+                    const notification = document.createElement('div');
+                    notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} notification`;
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 15px;
+                        border-radius: 4px;
+                        z-index: 1000;
+                    `;
+                    notification.textContent = message;
+                    document.body.appendChild(notification);
+    
+                    // Remove notification after 3 seconds
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                };
+    
+                this.disconnectWallet(); // Ensure the disconnect logic is set up
+            } catch (error) {
+                console.error("User denied account access", error);
+            }
+        } else {
+            console.log('Please install MetaMask!');
+        }
+    }
+    info = [];
+    rander(){     
+        const uuss = async () => {
+            if (!getCookie('access')){
+                navigateTo('/login');
+            }
+                this.info  = await fetchUserData();
+            // if (info){
+            //     document.getElementById('img_eth').src = info.image;
+                
+            // }
+    
+        }
+        uuss();   
         this.innerHTML = `
             <style>
             ${this.navar}
@@ -74,7 +273,7 @@ class gamePage extends HTMLElement {
                 align-items: center;
                 justify-content: center;
                 overflow: hidden;
-                flex-direction: row;
+                flex-direction: column;
                 gap :10px;
             }
             #game{ 
@@ -108,26 +307,73 @@ class gamePage extends HTMLElement {
             background:rgb(0 0 0 / 0.5);
             border-radius: 5px;
         }
-          @media (min-width: 320px) and (max-width: 1024px) {
+        @media (min-width: 320px) and (max-width: 1024px) {
             pongxo-page{
                 flex-direction: column;
             }
           }
             </style>
-            <div class="scroll-item">
+                <div id="container" style="width: 90%; height: 5%; display: flex; justify-content: right; align-items: center;">
+                        <button 
+                            class="btn btn-secondary" 
+                            type="button" 
+                            id="connectwallet" 
+                            style="background: var(--red); border: none;">
+                            Connect Wallet
+                        </button>
+                </div>
+            <div style="height:90%; display:flex;flex-direction: row; justify-content: center;align-items: center;" >
+                <div class="scroll-item">
                 <button id="topong" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
                 <div class="track-items" >
-                    <img  class="w-100 h-100" src="/images/pong.png">
+                <img  class="w-100 h-100" src="/images/pong.png">
                 </div>
-            </div>
-            <div class="scroll-item">
+                </div>
+                <div class="scroll-item">
                 <button id="togame" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
                 <div class="track-items" >
-                    <img  class="w-100 h-100" src="/images/xo.png">
+                <img  class="w-100 h-100" src="/images/xo.png">
+                </div>
                 </div>
             </div>
         `;
         this.topong();
+        this.connectWallet(1);
+    }
+    connectWallet(flag) {
+        if (flag === 1) {
+            const btnwallet = document.getElementById('connectwallet');
+            btnwallet.addEventListener('click', () => {
+                console.log("HERE WE ADD WALLET");
+                this.init();
+            }, { once: true }); // Ensures the event runs only once
+        } else {
+            console.log('BEFORE CLICK');
+            this.disconnectWallet();
+        }
+    }
+    
+    disconnectWallet() {
+        const btnwallet = document.getElementById('disconnect');
+        if (btnwallet) {
+            btnwallet.removeEventListener('click', this.handleDisconnect); // Remove existing listener
+            btnwallet.addEventListener('click', this.handleDisconnect.bind(this), { once: true });
+        }
+    }
+    
+    handleDisconnect() {
+        console.log("HERE WE DISCONNECT THE WALLET");
+        const container = document.getElementById('container');
+        container.innerHTML = `
+            <button 
+                class="btn btn-secondary" 
+                type="button" 
+                id="connectwallet" 
+                style="background: var(--red); border: none;">
+                Connect Wallet
+            </button>
+        `;
+        this.connectWallet(1); // Reinitialize the wallet connection
     }
     topong(){
         document.getElementById('topong').addEventListener('click' , e => {

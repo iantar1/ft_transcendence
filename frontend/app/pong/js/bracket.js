@@ -1,7 +1,7 @@
 import { render } from "./render.js";
 import { menu } from "./loby.js";
 import { createWinnerCard } from "./winnerCard.js";
-
+import { submitTournament } from "./submitTournament.js"
 
 export function tournamentBracket(
     matches = [
@@ -293,8 +293,7 @@ export function tournamentBracket(
     cancelButton.textContent = 'cancel';
 
     if (currentMatch > 3) {
-        startButton.style.display = 'none';
-        startButton.disabled = true;
+        startButton.textContent = 'save';
     }
 
     buttons.appendChild(cancelButton);
@@ -304,10 +303,13 @@ export function tournamentBracket(
     // Event listeners
     startButton.addEventListener('click', () => {
 
-        console.log('start match');
-
-        
+        if (currentMatch > 3) {
+            submitTournament("submit", matches[0].player1, 6);
+        }
+        else {
+            console.log('start match');
             ws.send(JSON.stringify({ type: 'countdown' }));
+        }
     });
 
     cancelButton.addEventListener('click', () => {
