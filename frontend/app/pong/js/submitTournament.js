@@ -6,131 +6,337 @@ export function submitTournament(
     ) {
     let web3;
     let contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'; // Replace with your deployed contract address
-    let abi =[
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": false,
-              "internalType": "string",
-              "name": "playerName",
-              "type": "string"
-            },
-            {
-              "indexed": false,
-              "internalType": "string",
-              "name": "tournaname",
-              "type": "string"
-            },
-            {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "score",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "timestamp",
-              "type": "uint256"
-            }
-          ],
-          "name": "ScoreSubmitted",
-          "type": "event"
-        },
-        {
-          "inputs": [],
-          "name": "getScores",
-          "outputs": [
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "tournaname",
-                  "type": "string"
-                },
-                {
-                  "internalType": "string",
-                  "name": "playerName",
-                  "type": "string"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "score",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "timestamp",
-                  "type": "uint256"
-                }
-              ],
-              "internalType": "struct TournamentScores.Score[]",
-              "name": "",
-              "type": "tuple[]"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "scores",
-          "outputs": [
-            {
-              "internalType": "string",
-              "name": "tournaname",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "playerName",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "score",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "timestamp",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "playerName",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "tournaname",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "score",
-              "type": "uint256"
-            }
-          ],
-          "name": "submitScore",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        }
-      ];
+    let abi = [
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "tournamentName",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "indexed": false,
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player1",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "indexed": false,
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player2",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "indexed": false,
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player3",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "indexed": false,
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player4",
+            "type": "tuple"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          }
+        ],
+        "name": "TournamentAdded",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "player1Name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "player1Rank",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "player2Name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "player2Rank",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "player3Name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "player3Rank",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "player4Name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "player4Rank",
+            "type": "uint256"
+          }
+        ],
+        "name": "addTournament",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getTournaments",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rank",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct TournamentDetails.Player",
+                "name": "player1",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rank",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct TournamentDetails.Player",
+                "name": "player2",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rank",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct TournamentDetails.Player",
+                "name": "player3",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rank",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct TournamentDetails.Player",
+                "name": "player4",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint256",
+                "name": "timestamp",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct TournamentDetails.Tournament[]",
+            "name": "",
+            "type": "tuple[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "tournaments",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player1",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player2",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player3",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "rank",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct TournamentDetails.Player",
+            "name": "player4",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
     let contract;
 
     // Function to initialize web3 and request account access
