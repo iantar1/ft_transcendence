@@ -174,6 +174,10 @@ class UserView(APIView):
 class LogoutView(APIView):
     
     def post(self, request):
+        token = request.COOKIES.get('access')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        print("logout")
         response = Response()
         response.delete_cookie('access')
         response.delete_cookie('refresh')
@@ -190,7 +194,6 @@ class UpdateView(APIView):
     
         if not token:
             raise AuthenticationFailed('Unauthenticated')
-        
         try:
             playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:

@@ -122,11 +122,13 @@ export async function logoutUser(user) {
     const data = { username: user };
     try{
         const res = await fetch("https://localhost:3000/logout/", {
-            method: 'POST', 
+            method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
+                // 'X-CSRFToken': getCookie('csrftoken'),
             },
-            body: JSON.stringify(data),
+            // body: JSON.stringify(data),
         })
         if (res.ok) {
                 console.log('POST METHOD HAS BEEN SUCCESS')
