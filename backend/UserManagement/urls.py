@@ -22,11 +22,7 @@ urlpatterns = [
     path('stats/', StatsView.as_view()),
     path('intra/', intra_auth.auth),#change the rediract uri
     path('accounts/google/login/callback/', google_auth.get_code),
-<<<<<<< HEAD
     path('users_ranking/', UsersRanking.as_view()),
-=======
-    
->>>>>>> 49df0c3c01f443561dafc2533c93bb3f81f8d69f
 
 
 

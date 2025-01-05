@@ -6,3 +6,4 @@ backend/media/images/*
 backend/friendSystem/migrations/__pycache__/*
 backend/friendSystem/__pycache__/*
 backend/config/__pycache__/*
+backend/UserManagement/__pycache__/*
