@@ -79,7 +79,7 @@ class gamePage extends HTMLElement {
                 const newButton = document.createElement('div');
                 newButton.innerHTML = `
                 <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button  type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         ${result}
                     </button>
                     <div style="width:20vw; height :80vh;" class="dropdown-menu dropdown-menu-dark">
@@ -87,10 +87,10 @@ class gamePage extends HTMLElement {
                             <img id="img_eth" style="object-fit: cover; display:block;   width: 40px; height: 40px; border-radius: 50%;"  src="${this.info.image}" >
                             <span>${result}</span> 
                         </div>
-                        <div style="height:80%; border :1px solid;" ></div>
-                        <div style="height:10%;" >
-                            <button type="button" style="height:70%; display: flex; justify-content: center; align-items: center;" class="btn btn-danger">
-                            <i class="fa-solid fa-right-from-bracket"></i>Logout
+                        <div style="height:80%;" ></div>
+                        <div style="height:10%; width :100%; display: flex; justify-content: center; align-items: center;" >
+                            <button  id="disconnect" type="click" class="flag btn-home btn btn-secondary " style="font-size :100%; width :50%; height:50%; border-radius :5px; border :none; background:var(--red); display: flex; justify-content: center; align-items: center;" >
+                                Logout
                             </button>
                         </div>
                     </div>
@@ -98,6 +98,10 @@ class gamePage extends HTMLElement {
                 `;
                 // newButton.id = 'btnwallet'; // Assign the same ID
                 container.appendChild(newButton);
+                document.getElementById('disconnect').addEventListener('click' , (e) =>{
+                    console.log("HERE WE DESCONNECT THE ");
+                    this.connectWallet();
+                })
             } catch (error) {
                 console.error("User denied account access", error);
             }
@@ -204,10 +208,35 @@ class gamePage extends HTMLElement {
             </div>
         `;
         this.topong();
-        const btnwallet = document.getElementById('connectwallet');
+        this.connectWallet(1);
+    }
+    connectWallet(flag){
+        if (flag == 1){
+            const btnwallet = document.getElementById('connectwallet');
+            btnwallet.addEventListener('click', (e) => {
+                console.log("HERE WE ADD WALLET");
+                this.init();
+            }, { once: true });
+        }else{
+            console.log('BEFOR CLICK')
+            this.diconnectWallet();
+        }
+    }
+    diconnectWallet(){
+        const btnwallet = document.getElementById('disconnect');
         btnwallet.addEventListener('click', (e) => {
             console.log("HERE WE ADD WALLET");
-            this.init();
+            const container = document.getElementById('container');
+            container.innerHTML = ``;
+            container.innerHTML = `
+                    <button 
+                        class="btn btn-secondary" 
+                        type="button" 
+                        id="connectwallet" 
+                        style="background: var(--red); border: none;">
+                        Connect Wallet
+                    </button>
+            `;
         }, { once: true });
     }
     topong(){

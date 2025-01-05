@@ -251,6 +251,26 @@ class ChangeBioImage(APIView):
         return Response(serializer.data)
 
 
+class ChangeBio(APIView):
+
+    def post(self, request):
+        token = request.COOKIES.get('access')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        try:
+            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
+        serializer = ImageBioSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
 def get_user_by_token(token):
     if not token:
         raise AuthenticationFailed('x1Unauthenticated')
@@ -266,7 +286,11 @@ def get_user_by_token(token):
 # "new_password1":"test1",
 # "new_password2":"test1"
 # }
-
+    
+# {
+# "bio":"hello",
+# "username":"ahbajaou"
+# }
 
 
 class MatchHistoryView(APIView):
@@ -435,7 +459,7 @@ class FriendShipView(APIView):
 
 
     def acceptFriendRequest(self, to_user, from_user):
-        relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
+        relation = Friendship.objects.get(from_user=to_user, to_user=from_user)
         if relation == None:
             return Response({"error": "friendship not found"}, status=404)
         relation.status = 'accept'
@@ -467,6 +491,7 @@ class FriendShipView(APIView):
 #the friend system :
 # url: /friend_ship/
 #POST :
+
 # {
 # "from_user":"sende username",
 # "to_user":"receiver username",

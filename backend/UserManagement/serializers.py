@@ -4,7 +4,7 @@ from .models import User, MatchHistory, Stats, Friendship
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image', 'bio']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image', 'bio', 'score']
         extra_kwargs = {'password': {'write_only': True}}
         #it will only be used for creating or updating data and will not be included in the serialized output
         
@@ -36,6 +36,12 @@ class ImageBioSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'bio', 'image', 'username']
+
+class BioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'bio', 'username']
 
 
 class PLayerMaatchSerializer(serializers.ModelSerializer):
