@@ -48,6 +48,9 @@ class getstartedPage extends HTMLElement {
 
     pagetwostyle = `
         <style>
+            body{
+                overflow: hidden;
+            }
             .page-2{
                 width :100%;
                 height :70vh;
@@ -128,7 +131,10 @@ class getstartedPage extends HTMLElement {
             color :var(--red);
             font-size:5vw;
         }
-           @media (min-width: 320px) and (max-width: 1024px) {
+        @media (min-width: 320px) and (max-width: 1024px) {
+            body{
+                overflow: scroll;
+            }
            .content-gsp{
                 height :80vh;
            }     

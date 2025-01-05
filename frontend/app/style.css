@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-/* @import url('https://www.fontspace.com/sf-distant-galaxy-font-f6436'); */
 
 @font-face {
     font-family: "Pong War";
@@ -36,8 +35,8 @@ html , body{
   align-items: center;
   background:#000000;
   scroll-behavior: smooth;
-  /* overflow-y: hidden;
-   overflow-x: hidden; */
+  /* overflow-y: hidden; */
+   /* overflow-x: scroll; */
 }
 
 .main{

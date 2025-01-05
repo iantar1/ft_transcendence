@@ -33,3 +33,9 @@ services:
       - ./frontend:/usr/share/nginx/html
       - ./backend/media/images:/usr/share/nginx/html/media/images
 
+  blockchain:
+    build: ./blockchain
+    ports:
+      - "8545:8545" 
+    volumes:
+      - ./blockchain:/usr/src/app 

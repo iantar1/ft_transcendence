@@ -113,7 +113,7 @@ class Local1vs1Consumer(AsyncWebsocketConsumer):
             {
                 "type": "game_over",
                 "score": self.score,
-                "winner": "WIN" if self.score["player1"] >= WINNING_SCORE else "LOSE"
+                "winner": "player1" if self.score["player1"] >= WINNING_SCORE else "player2"
             }))
 
         self.is_active = False

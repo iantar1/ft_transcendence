@@ -43,6 +43,12 @@ class ImageBioSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'bio', 'image', 'username']
 
+class BioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'bio', 'username']
+
 
 class PLayerMaatchSerializer(serializers.ModelSerializer):
     class Meta:

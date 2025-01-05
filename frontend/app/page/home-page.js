@@ -38,7 +38,7 @@ class homePage extends HTMLElement {
     <div class="content-home " >
     <div class="cart-home" >
             <img  class="img-home" src="/images/astro4.png">
-            <h3 class="title-home" >Good evening, <span id="username" ></span></h3>
+            <h3 class="title-home" ><span style="color :#fff;" id="curentTime" ></span>, <span id="username" ></span></h3>
             <h1>Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
@@ -415,6 +415,20 @@ class homePage extends HTMLElement {
             //     navigateTo('/login');
             // }
             document.getElementById('username').textContent = this.info.username
+            var data = [
+                [0, 4, "Good night"], 
+                [5, 11, "Good morning"],          //Store messages in an array
+                [12, 17, "Good afternoon"],
+                [18, 24, "Good night"]
+            ],
+                hr = new Date().getHours();
+            
+            for(var i = 0; i < data.length; i++){
+                if(hr >= data[i][0] && hr <= data[i][1]){
+                    document.getElementById('curentTime').textContent = data[i][2];
+                    console.log(data[i][2]);
+                }
+            }
         }
         uuss();
         this.innerHTML = `

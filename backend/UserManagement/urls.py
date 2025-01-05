@@ -16,12 +16,17 @@ urlpatterns = [
     path('verify_otp/', VerifyOTPView.as_view()),
     path('change_password/', ChangePasswordView.as_view()),
     path('bio_image/', ChangeBioImage.as_view()),
+    path('bio/', ChangeBioImage.as_view()),
     path('redintra/', intra_auth.home),
     path('match_history/', MatchHistoryView.as_view()),
     path('stats/', StatsView.as_view()),
     path('intra/', intra_auth.auth),#change the rediract uri
     path('accounts/google/login/callback/', google_auth.get_code),
+<<<<<<< HEAD
     path('users_ranking/', UsersRanking.as_view()),
+=======
+    
+>>>>>>> 49df0c3c01f443561dafc2533c93bb3f81f8d69f
 
 
 
@@ -45,3 +50,5 @@ urlpatterns = [
 
 ]
 
+# level 
+# ranking
