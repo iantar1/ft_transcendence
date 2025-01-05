@@ -342,7 +342,6 @@ class   UsersRanking(APIView):
             raise AuthenticationFailed('Unauthenticated')
         users = User.objects.all().order_by('-score')
         serializer = UsersRankingSerializer(users, many=True)
-        # return Response()
         return Response(serializer.data, status=200)
 
         

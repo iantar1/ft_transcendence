@@ -19,6 +19,7 @@ class   Notifications(WebsocketConsumer):
         print("send")
         # text_data = json.dumps("hello from backend")
         text_data = "hello from backend"
+        text_data = {"":"", "":"", "":""}
         return super().send(text_data, bytes_data, close)
 
 
