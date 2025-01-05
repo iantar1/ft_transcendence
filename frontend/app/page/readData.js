@@ -141,7 +141,6 @@ export async function logoutUser(user) {
 }
 
 export async function postMethode(alias,redir){
-    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     console.log("post function" + redir);
     const form = document.querySelector(alias);
     const fromData = new FormData(form);
@@ -152,7 +151,6 @@ export async function postMethode(alias,redir){
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                // 'X-CSRFToken': csrftoken, // Include the token here
 
             },
             body: JSON.stringify(data),
