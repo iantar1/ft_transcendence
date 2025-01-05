@@ -7,109 +7,130 @@ export function submitTournament(
     let web3;
     let contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'; // Replace with your deployed contract address
     let abi =[
-    {
-        "anonymous": false,
-        "inputs": [
+        {
+          "anonymous": false,
+          "inputs": [
             {
-                "indexed": false,
-                "internalType": "string",
-                "name": "playerName",
-                "type": "string"
+              "indexed": false,
+              "internalType": "string",
+              "name": "playerName",
+              "type": "string"
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "score",
-                "type": "uint256"
+              "indexed": false,
+              "internalType": "string",
+              "name": "tournaname",
+              "type": "string"
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256"
-            }
-        ],
-        "name": "ScoreSubmitted",
-        "type": "event"
-    },
-    {
-        "inputs": [],
-        "name": "getScores",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "string",
-                        "name": "playerName",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "score",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "timestamp",
-                        "type": "uint256"
-                    }
-                ],
-                "internalType": "struct TournamentScores.Score[]",
-                "name": "",
-                "type": "tuple[]"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "scores",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "playerName",
-                "type": "string"
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "score",
+              "type": "uint256"
             },
             {
-                "internalType": "uint256",
-                "name": "score",
-                "type": "uint256"
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "ScoreSubmitted",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "getScores",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "tournaname",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "playerName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "score",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct TournamentScores.Score[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "scores",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "tournaname",
+              "type": "string"
             },
             {
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "playerName",
-                "type": "string"
+              "internalType": "string",
+              "name": "playerName",
+              "type": "string"
             },
             {
-                "internalType": "uint256",
-                "name": "score",
-                "type": "uint256"
+              "internalType": "uint256",
+              "name": "score",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
             }
-        ],
-        "name": "submitScore",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }
-    ];
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "playerName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tournaname",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "score",
+              "type": "uint256"
+            }
+          ],
+          "name": "submitScore",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ];
     let contract;
 
     // Function to initialize web3 and request account access
