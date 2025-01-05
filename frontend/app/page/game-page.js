@@ -53,6 +53,15 @@ class gamePage extends HTMLElement {
     constructor(){
         super();
     }
+    getBadgeColor(rank) {
+        switch(rank) {
+            case 1: return 'warning';
+            case 2: return 'secondary';
+            case 3: return 'bronze';
+            case 4: return 'blue';
+            default: return 'default';
+        }
+    }    
     async init() {
         if (typeof window.ethereum !== 'undefined') {
             const web3 = new Web3(window.ethereum);
@@ -71,14 +80,14 @@ class gamePage extends HTMLElement {
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             ${result}
                         </button>
-                        <div style="width:20vw; height:80vh;" class="dropdown-menu dropdown-menu-dark">
+                        <div style="width:20vw; height:80vh; background : var(--blue);" class="dropdown-menu" >
                             <div class="" style="width:90%; height:10%; display:flex; align-items: center; justify-content: center; gap:5px;">
                                 <img id="img_eth" style="object-fit: cover; display:block; width: 40px; height: 40px; border-radius: 50%;" src="${this.info.image}">
                                 <span>${result}</span> 
                             </div>
                             <div style="height:70%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;">
                                 <button id="submitBtn" class="btn btn-primary" style="width: 80%;">Submit</button>
-                                <button id="getBtn" class="btn btn-info" style="width: 80%;">Get</button>
+                                <button id="getBtn" class="btn btn-info" style="color :#fff; width: 80%;">Get</button>
                             </div>
                             <div style="height:10%; width:100%; display: flex; justify-content: center; align-items: center;">
                                 <button id="disconnect" type="button" class="flag btn-home btn btn-secondary" style="font-size:100%; width:50%; height:50%; border-radius:5px; border:none; background:var(--red); display: flex; justify-content: center; align-items: center;">
@@ -110,7 +119,9 @@ class gamePage extends HTMLElement {
                             players: [
                                 { address: "0xAB12...789C", rank: 1, points: 150 },
                                 { address: "0xDE34...567F", rank: 2, points: 120 },
-                                { address: "0xGH56...234I", rank: 3, points: 90 }
+                                { address: "0xPQ12...345R", rank: 3, points: 160 },
+                                { address: "0xGH56...234I", rank: 4, points: 90 }
+                                
                             ]
                         },
                         {
@@ -118,7 +129,8 @@ class gamePage extends HTMLElement {
                             players: [
                                 { address: "0xJK78...901L", rank: 1, points: 200 },
                                 { address: "0xMN90...123O", rank: 2, points: 180 },
-                                { address: "0xPQ12...345R", rank: 3, points: 160 }
+                                { address: "0xPQ12...345R", rank: 3, points: 160 },
+                                { address: "0xPQ12...345R", rank: 4, points: 160 }
                             ]
                         }
                     ];
@@ -135,18 +147,18 @@ class gamePage extends HTMLElement {
                             <h6 class="tournament-title text-light mb-3">${tournament.tournament}</h6>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover">
-                                    <thead>
-                                        <tr class="table-primary">
+                                    <thead style="">
+                                        <tr class="" style="" >
                                             <th>Rank</th>
                                             <th>Player</th>
-                                            <th>Points</th>
+                                            <th>Score</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         ${tournament.players.map(player => `
                                             <tr>
                                                 <td>
-                                                    <span class="badge bg-${player.rank === 1 ? 'warning' : player.rank === 2 ? 'secondary' : 'bronze'}">#${player.rank}</span>
+                                                    <span class="badge bg-${this.getBadgeColor(player.rank)}">#${player.rank}</span>
                                                 </td>
                                                 <td class="text-light">${player.address}</td>
                                                 <td class="text-light">${player.points}</td>
@@ -161,15 +173,15 @@ class gamePage extends HTMLElement {
                     popup.innerHTML = `
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content bg-dark">
-                                <div class="modal-header" style="background-color: #1a237e; border-bottom: 1px solid #303f9f;">
+                                <div class="modal-header" style="background : var(--blue); border:none;">
                                     <h5 class="modal-title text-light">Tournament Rankings</h5>
                                     <button type="button" class="btn-close btn-close-white" onclick="this.closest('.modal').remove()"></button>
                                 </div>
                                 <div class="modal-body bg-dark text-light">
                                     ${tournamentsHTML}
                                 </div>
-                                <div class="modal-footer" style="background-color: #1a237e; border-top: 1px solid #303f9f;">
-                                    <button type="button" class="btn btn-outline-light" onclick="this.closest('.modal').remove()">Close</button>
+                                <div class="modal-footer" style="background : var(--blue); border:none;">
+                                    <button style="background : var(--red); border :none;" type="button" class="btn btn-outline-light" onclick="this.closest('.modal').remove()">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -179,10 +191,12 @@ class gamePage extends HTMLElement {
                     const style = document.createElement('style');
                     style.textContent = `
                         .bg-bronze {
-                            background-color: #cd7f32;
+                            background : var(--red);
+                        }
+                        .bg-blue{
+                            background : blue;
                         }
                         .tournament-section {
-                            border-bottom: 1px solid #303f9f;
                             padding-bottom: 1rem;
                         }
                         .tournament-section:last-child {
@@ -196,14 +210,10 @@ class gamePage extends HTMLElement {
                             background-color: #283593;
                         }
                         .modal-content {
-                            border: 1px solid #303f9f;
-                        }
-                        .table-primary {
-                            background-color: #283593 !important;
-                            color: #fff;
+                            border: none;
                         }
                         .modal-body {
-                            background-color: #0a1232 !important;
+                            background : var(--blue)  !important;
                         }
                     `;
                     document.head.appendChild(style);
