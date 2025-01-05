@@ -74,9 +74,9 @@ export function online_1vs1()
     const online_URL = 'wss://'+window.location.host+'/ws/online_1vs1/';
     let wsOpen = false;
     const selectedMode = "online_1vs1";
-    let ball_config, ball, player1_config,leftWall, rightWall, player2_config, plane, table_config, paddle, score, animationId, role,scoreManager ;
+    let ball_config, ball;
+    let leftWall, rightWall, plane, table_config, paddle, score, animationId, role,scoreManager ;
     let playerDirection = 0;
-    let player1ScoreMesh, player2ScoreMesh;
     let player1 , player2;
     let renderer, controls;
     
