@@ -138,3 +138,5 @@ class FriendShipView(APIView):
         return Response({'success':'the friend has been removed succefull'}, status=200)
 
 
+def friendRequestHandling(data):
+    print("data received: in the view: ", data, flush=True)

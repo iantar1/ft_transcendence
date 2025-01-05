@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'friendSystem',
+    'channels',
     # 'rest_framework_simplejwt',
     # 'django_otp',
     # 'django_otp.plugins.otp_static',
@@ -78,6 +79,14 @@ ASGI_APPLICATION = "config.asgi.application"
 #     },
 # }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # For development
+        # For production, use a Redis backend:
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {"hosts": [("localhost", 6379)]},
+    }
+}
 SESSION_COOKIE_SAMESITE = None
 
 CORS_ORIGIN_ALLOW_ALL = True

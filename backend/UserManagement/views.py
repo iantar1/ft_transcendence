@@ -373,6 +373,8 @@ class   UsersRanking(APIView):
         return Response(serializer.data, status=200)
 
         
+def friendRequestHandling(data):
+    print("data received: in the view: ", data, flush=True)
 
 
 # def checkIfTheRelationExsit(user1, user2, action):
