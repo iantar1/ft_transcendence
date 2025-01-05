@@ -53,8 +53,73 @@ class gamePage extends HTMLElement {
     constructor(){
         super();
     }
-    rander(){
-        // <gamePage></gamePage>
+    async  init() {
+        if (typeof window.ethereum !== 'undefined') {
+            // Initialize web3 instance
+            web3 = new Web3(window.ethereum);
+
+            // Request account access2
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const btnwallet = document.getElementById('connectwallet');
+                const first4 = accounts[0].slice(0, 4); // First 4 characters
+                const last4 = accounts[0].slice(-4); // Last 4 characters
+
+                // Combine them into the desired format
+                const result = `${first4}...${last4}`;
+                btnwallet.textContent = result;
+                console.log('Connected account:', accounts[0]);
+                if (btnwallet)
+                {
+                    btnwallet.remove();
+                }
+                // document.getElementById('connectwallet');
+                const container = document.getElementById('container');
+                container.className = "dropdown";
+                const newButton = document.createElement('div');
+                newButton.innerHTML = `
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        ${result}
+                    </button>
+                    <div style="width:20vw; height :80vh;" class="dropdown-menu dropdown-menu-dark">
+                        <div class="" style="width:90%; height:10%; display:flex; align-items: center; justify-content: center; gap :5px;" >
+                            <img id="img_eth" style="object-fit: cover; display:block;   width: 40px; height: 40px; border-radius: 50%;"  src="${this.info.image}" >
+                            <span>${result}</span> 
+                        </div>
+                        <div style="height:80%; border :1px solid;" ></div>
+                        <div style="height:10%;" >
+                            <button type="button" style="height:70%; display: flex; justify-content: center; align-items: center;" class="btn btn-danger">
+                            <i class="fa-solid fa-right-from-bracket"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                // newButton.id = 'btnwallet'; // Assign the same ID
+                container.appendChild(newButton);
+            } catch (error) {
+                console.error("User denied account access", error);
+            }
+        } else {
+            console.log('Please install MetaMask!');
+        }
+
+    }
+    info = [];
+    rander(){     
+        const uuss = async () => {
+            if (!getCookie('access')){
+                navigateTo('/login');
+            }
+                this.info  = await fetchUserData();
+            // if (info){
+            //     document.getElementById('img_eth').src = info.image;
+                
+            // }
+    
+        }
+        uuss();   
         this.innerHTML = `
             <style>
             ${this.navar}
@@ -74,7 +139,7 @@ class gamePage extends HTMLElement {
                 align-items: center;
                 justify-content: center;
                 overflow: hidden;
-                flex-direction: row;
+                flex-direction: column;
                 gap :10px;
             }
             #game{ 
@@ -108,26 +173,42 @@ class gamePage extends HTMLElement {
             background:rgb(0 0 0 / 0.5);
             border-radius: 5px;
         }
-          @media (min-width: 320px) and (max-width: 1024px) {
+        @media (min-width: 320px) and (max-width: 1024px) {
             pongxo-page{
                 flex-direction: column;
             }
           }
             </style>
-            <div class="scroll-item">
+                <div id="container" style="width: 90%; height: 5%; display: flex; justify-content: right; align-items: center;">
+                        <button 
+                            class="btn btn-secondary" 
+                            type="button" 
+                            id="connectwallet" 
+                            style="background: var(--red); border: none;">
+                            Connect Wallet
+                        </button>
+                </div>
+            <div style="height:90%; display:flex;flex-direction: row; justify-content: center;align-items: center;" >
+                <div class="scroll-item">
                 <button id="topong" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
                 <div class="track-items" >
-                    <img  class="w-100 h-100" src="/images/pong.png">
+                <img  class="w-100 h-100" src="/images/pong.png">
                 </div>
-            </div>
-            <div class="scroll-item">
+                </div>
+                <div class="scroll-item">
                 <button id="togame" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
                 <div class="track-items" >
-                    <img  class="w-100 h-100" src="/images/xo.png">
+                <img  class="w-100 h-100" src="/images/xo.png">
+                </div>
                 </div>
             </div>
         `;
         this.topong();
+        const btnwallet = document.getElementById('connectwallet');
+        btnwallet.addEventListener('click', (e) => {
+            console.log("HERE WE ADD WALLET");
+            this.init();
+        }, { once: true });
     }
     topong(){
         document.getElementById('topong').addEventListener('click' , e => {

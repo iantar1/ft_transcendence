@@ -172,6 +172,7 @@ export function manageLocalTournament(participants, tournamentName) {
 
         if (data.type === "start") {
             render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+            resizeCanvas();
             table_config = data.table;
             paddle = data.paddle;
             ball_config = data.ball;
