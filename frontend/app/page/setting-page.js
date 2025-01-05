@@ -1,5 +1,5 @@
 
-import {fetchUserData , getCookie} from './readData.js';
+import {fetchUserData , getCookie ,postMethode} from './readData.js';
 
 import { navigateTo } from '../routing.js';
 
@@ -543,42 +543,28 @@ class settingPage extends HTMLElement {
             console.log('HERE HERE DELETE IMAGE');
         });
     }
-    infoPost(){
+    infoPost(url){
         // console.log('HERE WE CAN POST YOUR DATA')
         // const buttons = document.querySelector('#postData');
         //     buttons.addEventListener('click', () => {
         //         alert('Button clicked!');
         //     });
-        document.querySelector('#myForm').addEventListener('submit', function (event) {
+        document.querySelector('#myForm').addEventListener('submit', async function (event) {
             event.preventDefault(); // Prevent form submission and page reload
         
-            const form = event.target; // Reference to the form
-            const formData = new FormData(form); // Collect form data
+            // const form = event.target; // Reference to the form
+            // const formData = new FormData(form); // Collect form data
         
-            // Convert FormData to a JSON object
-            const jsonObject = {};
-            formData.forEach((value, key) => {
-                jsonObject[key] = value;
-            });
+            // // Convert FormData to a JSON object
+            // const jsonObject = {};
+            // formData.forEach((value, key) => {
+            //     jsonObject[key] = value;
+            // });
         
             // Log the JSON data
-            console.log('Form Data as JSON:', jsonObject);
-        
-            // Example of sending JSON data with Fetch API
-            // fetch('https://example.com/submit', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(jsonObject), // Convert object to JSON string
-            // })
-            // .then((response) => response.json())
-            // .then((data) => {
-            //     console.log('Success:', data);
-            // })
-            // .catch((error) => {
-            //     console.error('Error:', error);
-            // });
+            // console.log('Form Data as JSON:', jsonObject);
+            postMethode('#myForm',url);
+
         });
         
     }
@@ -830,7 +816,7 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.profEdit();
-            this.infoPost();
+            this.infoPost('bio_image');
 
 
             });
@@ -842,7 +828,7 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.passEdit();
-            this.infoPost();
+            this.infoPost('change_password');
 
             });
             const authEdit = document.querySelector('.authSetting');
@@ -853,7 +839,7 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.passSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.authEdit();
-            this.infoPost();
+            this.infoPost("");
 
             });
             this.displayNav();
