@@ -336,6 +336,17 @@ class StatsView(APIView):
         # print(stats)
         return Response(serialer.data, status=200)
 
+
+class   UsersRanking(APIView):
+    def get(self, request):
+        users = User.objects.all().order_by('-score')
+        serializer = UsersRankingSerializer(users, many=True)
+        # return Response()
+        return Response(serializer.data, status=200)
+
+        
+
+
 # def checkIfTheRelationExsit(user1, user2, action):
 #     # Check if a friendship exists between the two users in either direction
 #     if  Friendship.objects.filter(from_user=user1, to_user=user2, status=action).exists():

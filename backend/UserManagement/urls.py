@@ -21,6 +21,7 @@ urlpatterns = [
     path('stats/', StatsView.as_view()),
     path('intra/', intra_auth.auth),#change the rediract uri
     path('accounts/google/login/callback/', google_auth.get_code),
+    path('users_ranking/', UsersRanking.as_view()),
 
 
 
