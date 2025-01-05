@@ -331,14 +331,15 @@ class StatsView(APIView):
         if stats == None:
             return Response({"error":"stats not found"}, status=404)
         serialer = StatsSerializer(stats)
-        # print(serialer.data)
-        print("----------------------------")
-        # print(stats)
         return Response(serialer.data, status=200)
 
 
 class   UsersRanking(APIView):
     def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
         users = User.objects.all().order_by('-score')
         serializer = UsersRankingSerializer(users, many=True)
         # return Response()
