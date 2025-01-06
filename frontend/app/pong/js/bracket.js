@@ -10,6 +10,7 @@ export function tournamentBracket(
     ],
     currentMatch = 1,
     ws = null,
+    ranekd = null
 ) {
     const style = document.createElement('style');
     style.textContent = `
@@ -320,15 +321,15 @@ export function tournamentBracket(
 
     // Event listeners
     startButton.addEventListener('click', async () => {
-        let players = {
-            player1 : "ayoub",
-            player2 : "ahmed",
-            player3 : "hamza",
-            player4 : "omar"
-        }
+        // let players = {
+        //     player1 : "ayoub",
+        //     player2 : "ahmed",
+        //     player3 : "hamza",
+        //     player4 : "omar"
+        // }
 
         if (currentMatch > 3) {
-            await submitTournament("submit", players, "lbotola");
+            await submitTournament("submit", ranekd, "lbotola");
         }
         else {
             // submitTournament("submit", matches[0].player1, 6);
@@ -355,9 +356,6 @@ export function tournamentBracket(
         container.appendChild(CurrentRound);
     }
     container.appendChild(buttons);
-    // if (currentMatch > 3) {
-    //     container.appendChild(createWinnerCard(matches[2].winner));
-    // }
 
     return container;
 }
