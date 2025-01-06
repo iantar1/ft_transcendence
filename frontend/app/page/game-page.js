@@ -3,6 +3,7 @@
 import {fetchUserData , getCookie} from './readData.js';
 
 import { navigateTo } from '../routing.js';
+import { submitTournament } from '../pong/js/submitTournament.js';
 class gamePage extends HTMLElement {
 
     navar = `
@@ -53,58 +54,242 @@ class gamePage extends HTMLElement {
     constructor(){
         super();
     }
-    async  init() {
+    getBadgeColor(rank) {
+        switch(rank) {
+            case 1: return 'warning';
+            case 2: return 'secondary';
+            case 3: return 'bronze';
+            case 4: return 'blue';
+            default: return 'default';
+        }
+    }    
+    async init() {
         if (typeof window.ethereum !== 'undefined') {
-            // Initialize web3 instance
-            web3 = new Web3(window.ethereum);
-
-            // Request account access2
+            const web3 = new Web3(window.ethereum);
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const btnwallet = document.getElementById('connectwallet');
-                const first4 = accounts[0].slice(0, 4); // First 4 characters
-                const last4 = accounts[0].slice(-4); // Last 4 characters
-
-                // Combine them into the desired format
+                const first4 = accounts[0].slice(0, 4);
+                const last4 = accounts[0].slice(-4);
                 const result = `${first4}...${last4}`;
                 btnwallet.textContent = result;
-                console.log('Connected account:', accounts[0]);
-                if (btnwallet)
-                {
-                    btnwallet.remove();
-                }
-                // document.getElementById('connectwallet');
+    
                 const container = document.getElementById('container');
                 container.className = "dropdown";
-                const newButton = document.createElement('div');
-                newButton.innerHTML = `
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        ${result}
-                    </button>
-                    <div style="width:20vw; height :80vh;" class="dropdown-menu dropdown-menu-dark">
-                        <div class="" style="width:90%; height:10%; display:flex; align-items: center; justify-content: center; gap :5px;" >
-                            <img id="img_eth" style="object-fit: cover; display:block;   width: 40px; height: 40px; border-radius: 50%;"  src="${this.info.image}" >
-                            <span>${result}</span> 
-                        </div>
-                        <div style="height:80%; border :1px solid;" ></div>
-                        <div style="height:10%;" >
-                            <button type="button" style="height:70%; display: flex; justify-content: center; align-items: center;" class="btn btn-danger">
-                            <i class="fa-solid fa-right-from-bracket"></i>Logout
-                            </button>
+                container.innerHTML = `
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            ${result}
+                        </button>
+                        <div style="width:20vw; height:80vh; background : var(--blue);" class="dropdown-menu" >
+                            <div class="" style="width:90%; height:10%; display:flex; align-items: center; justify-content: center; gap:5px;">
+                                <img id="img_eth" style="object-fit: cover; display:block; width: 40px; height: 40px; border-radius: 50%;" src="${this.info.image}">
+                                <span>${result}</span> 
+                            </div>
+                            <div style="height:70%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;">
+                                <button id="submitBtn" class="btn btn-primary" style="width: 80%;">Submit</button>
+                                <button id="getBtn" class="btn btn-info" style="color :#fff; width: 80%;">Get</button>
+                            </div>
+                            <div style="height:10%; width:100%; display: flex; justify-content: center; align-items: center;">
+                                <button id="disconnect" type="button" class="flag btn-home btn btn-secondary" style="font-size:100%; width:50%; height:50%; border-radius:5px; border:none; background:var(--red); display: flex; justify-content: center; align-items: center;">
+                                    Logout
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
                 `;
-                // newButton.id = 'btnwallet'; // Assign the same ID
-                container.appendChild(newButton);
+    
+                // Add event listeners for the new buttons
+                const submitBtn = document.getElementById('submitBtn');
+                const getBtn = document.getElementById('getBtn');
+    
+                submitBtn.addEventListener('click', () => {
+                    try {
+                        // Add your submit logic here
+                        showNotification('success', 'Operation completed successfully!');
+                    } catch (error) {
+                        showNotification('error', 'An error occurred during submission.');
+                    }
+                });
+    
+                getBtn.addEventListener('click', async () => {
+
+                    const data = await submitTournament("getScore");
+                    console.log("xxxxx ", data);
+                    
+                    let tournamentData = [
+                        {
+                            tournament: data[0].name,
+                            players: [
+                                { address: data[0].player1.name, rank: 1, points: 150 },
+                                { address: data[0].player2.name, rank: 2, points: 120 },
+                                { address: data[0].player3.name, rank: 3, points: 160 },
+                                { address: data[0].player4.name, rank: 4, points: 90 }
+                            ]
+                        },
+                        {
+                            tournament: data[1].name,
+                            players: [
+                                { address: data[1].player1.name, rank: 1, points: 80 },
+                                { address: data[1].player2.name, rank: 2, points: 70 },
+                                { address: data[1].player3.name, rank: 3, points: 50 },
+                                { address: data[1].player4.name, rank: 4, points: 20 }
+                            ]
+                        },
+                        {
+                            tournament: data[0].name,
+                            players: [
+                                { address: data[0].player1.name, rank: 1, points: 150 },
+                                { address: data[0].player2.name, rank: 2, points: 120 },
+                                { address: data[0].player3.name, rank: 3, points: 160 },
+                                { address: data[0].player4.name, rank: 4, points: 90 }
+                            ]
+                        },
+                        {
+                            tournament: data[1].name,
+                            players: [
+                                { address: data[1].player1.name, rank: 1, points: 80 },
+                                { address: data[1].player2.name, rank: 2, points: 70 },
+                                { address: data[1].player3.name, rank: 3, points: 50 },
+                                { address: data[1].player4.name, rank: 4, points: 20 }
+                            ]
+                        },
+                        {
+                            tournament: data[0].name,
+                            players: [
+                                { address: data[0].player1.name, rank: 1, points: 150 },
+                                { address: data[0].player2.name, rank: 2, points: 120 },
+                                { address: data[0].player3.name, rank: 3, points: 160 },
+                                { address: data[0].player4.name, rank: 4, points: 90 }
+                            ]
+                        },
+                        {
+                            tournament: data[1].name,
+                            players: [
+                                { address: data[1].player1.name, rank: 1, points: 80 },
+                                { address: data[1].player2.name, rank: 2, points: 70 },
+                                { address: data[1].player3.name, rank: 3, points: 50 },
+                                { address: data[1].player4.name, rank: 4, points: 20 }
+                            ]
+                        },
+                    ];
+                    // Sample tournament data - replace with your actual data
+          
+    
+                    // Create and show popup with tournament table
+                    const popup = document.createElement('div');
+                    popup.className = 'modal fade show';
+                    popup.style.display = 'block';
+                    popup.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                    
+                    // Generate tournament tables HTML
+                    const tournamentsHTML = tournamentData.map(tournament => `
+                        <div class="tournament-section mb-4">
+                            <h6 class="tournament-title text-light mb-3">${tournament.tournament}</h6>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover">
+                                    <thead style="">
+                                        <tr class="" style="" >
+                                            <th>Rank</th>
+                                            <th>Player</th>
+                                            <th>Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${tournament.players.map(player => `
+                                            <tr>
+                                                <td>
+                                                    <span class="badge bg-${this.getBadgeColor(player.rank)}">#${player.rank}</span>
+                                                </td>
+                                                <td class="text-light">${player.address}</td>
+                                                <td class="text-light">${player.points}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `).join('');
+    
+                    popup.innerHTML = `
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content bg-dark">
+                                <div class="modal-header" style="background : var(--blue); border:none;">
+                                    <h5 class="modal-title text-light">Tournament Rankings</h5>
+                                    <button type="button" class="btn-close btn-close-white" onclick="this.closest('.modal').remove()"></button>
+                                </div>
+                                <div class="modal-body bg-dark text-light">
+                                    ${tournamentsHTML}
+                                </div>
+                                <div class="modal-footer" style="background : var(--blue); border:none;">
+                                    <button style="background : var(--red); border :none;" type="button" class="btn btn-outline-light" onclick="this.closest('.modal').remove()">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+    
+                    // Add custom CSS for dark theme
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .bg-bronze {
+                            background : var(--red);
+                        }
+                        .bg-blue{
+                            background : blue;
+                        }
+                        .tournament-section {
+                            padding-bottom: 1rem;
+                        }
+                        .tournament-section:last-child {
+                            border-bottom: none;
+                        }
+                        .table-dark {
+                            background-color: #1a237e;
+                            color: #fff;
+                        }
+                        .table-dark tbody tr:hover {
+                            background-color: #283593;
+                        }
+                        .modal-content {
+                            border: none;
+                        }
+                        .modal-body {
+                            background : var(--blue)  !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    document.body.appendChild(popup);
+                });
+    
+                // Add notification system
+                const showNotification = (type, message) => {
+                    const notification = document.createElement('div');
+                    notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} notification`;
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 15px;
+                        border-radius: 4px;
+                        z-index: 1000;
+                    `;
+                    notification.textContent = message;
+                    document.body.appendChild(notification);
+    
+                    // Remove notification after 3 seconds
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                };
+    
+                this.disconnectWallet(); // Ensure the disconnect logic is set up
             } catch (error) {
                 console.error("User denied account access", error);
             }
         } else {
             console.log('Please install MetaMask!');
         }
-
     }
     info = [];
     rander(){     
@@ -204,11 +389,42 @@ class gamePage extends HTMLElement {
             </div>
         `;
         this.topong();
-        const btnwallet = document.getElementById('connectwallet');
-        btnwallet.addEventListener('click', (e) => {
-            console.log("HERE WE ADD WALLET");
-            this.init();
-        }, { once: true });
+        this.connectWallet(1);
+    }
+    connectWallet(flag) {
+        if (flag === 1) {
+            const btnwallet = document.getElementById('connectwallet');
+            btnwallet.addEventListener('click', () => {
+                console.log("HERE WE ADD WALLET");
+                this.init();
+            }, { once: true }); // Ensures the event runs only once
+        } else {
+            console.log('BEFORE CLICK');
+            this.disconnectWallet();
+        }
+    }
+    
+    disconnectWallet() {
+        const btnwallet = document.getElementById('disconnect');
+        if (btnwallet) {
+            btnwallet.removeEventListener('click', this.handleDisconnect); // Remove existing listener
+            btnwallet.addEventListener('click', this.handleDisconnect.bind(this), { once: true });
+        }
+    }
+    
+    handleDisconnect() {
+        console.log("HERE WE DISCONNECT THE WALLET");
+        const container = document.getElementById('container');
+        container.innerHTML = `
+            <button 
+                class="btn btn-secondary" 
+                type="button" 
+                id="connectwallet" 
+                style="background: var(--red); border: none;">
+                Connect Wallet
+            </button>
+        `;
+        this.connectWallet(1); // Reinitialize the wallet connection
     }
     topong(){
         document.getElementById('topong').addEventListener('click' , e => {

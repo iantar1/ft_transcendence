@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'UserManagement',
     'rest_framework',
     'corsheaders',
+    'friendSystem',
     # 'rest_framework_simplejwt',
     # 'django_otp',
     # 'django_otp.plugins.otp_static',
@@ -64,6 +66,17 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     'UserManagement.middleware.new_middleware',
 ]
+
+ASGI_APPLICATION = "config.asgi.application"
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6000)],
+#         },
+#     },
+# }
 
 SESSION_COOKIE_SAMESITE = None
 

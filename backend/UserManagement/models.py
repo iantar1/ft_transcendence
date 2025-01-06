@@ -16,10 +16,10 @@ class User(AbstractUser):
     #a one to one relationship 
     
 
-def save_post_user(sender, instance, **kwargs):
-    print("a user has been saved")
+# def save_post_user(sender, instance, **kwargs):
+#     print("a user has been saved")
 
-post_save.connect(save_post_user, sender=User)
+# post_save.connect(save_post_user, sender=User)
 
 
 class Stats(models.Model):
@@ -45,42 +45,42 @@ class MatchHistory(models.Model):
     #     return f"Match between {self.user1} and {self.user2} on {self.played_at}"
 
 
-class Friendship(models.Model):
-    STATUS_CHOICES = [
-        ('sent', 'Sent'),
-        ('accepted', 'Accepted'),
-        ('rejected', 'Rejected'),
-    ]
+# class Friendship(models.Model):
+#     STATUS_CHOICES = [
+#         ('sent', 'Sent'),
+#         ('accepted', 'Accepted'),
+#         ('rejected', 'Rejected'),
+#     ]
     
-    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_from')
-    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_to')
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='sent')
-    created_at = models.DateTimeField(auto_now_add=True)
+#     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_from')
+#     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_to')
+#     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='sent')
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.from_user.username} - {self.to_user.username} ({self.status})'
-
-
-class   FriendsProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friend_profile')
-    friends = models.ManyToManyField(User, blank=True, related_name='friends_of_user')
+#     def __str__(self):
+#         return f'{self.from_user.username} - {self.to_user.username} ({self.status})'
 
 
-    def get_friends(self):
-        return self.friends.all()
+# class   FriendsProfile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friend_profile')
+#     friends = models.ManyToManyField(User, blank=True, related_name='friends_of_user')
+
+
+#     def get_friends(self):
+#         return self.friends.all()
     
-    def get_friends_number(self):
-        return self.friends.all().count()
+#     def get_friends_number(self):
+#         return self.friends.all().count()
     
-    def remove_friend(self, friend):
-        if friend in self.friends.all():
-            self.friends.remove(friend)
-            return True
-        return False
+#     def remove_friend(self, friend):
+#         if friend in self.friends.all():
+#             self.friends.remove(friend)
+#             return True
+#         return False
 
 
-    def __str__(self):
-        return str(self.user) + "'s friend"
+#     def __str__(self):
+#         return str(self.user) + "'s friend"
 
 
 

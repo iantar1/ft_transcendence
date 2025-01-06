@@ -94,7 +94,7 @@ export async function fetchMatchData() {
 export async function fetchStatsData() {
     try {
 
-        const res = await fetch("https://localhost:3000/match_history/", {
+        const res = await fetch("https://localhost:3000/stats/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -122,11 +122,13 @@ export async function logoutUser(user) {
     const data = { username: user };
     try{
         const res = await fetch("https://localhost:3000/logout/", {
-            method: 'POST', 
+            method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
+                // 'X-CSRFToken': getCookie('csrftoken'),
             },
-            body: JSON.stringify(data),
+            // body: JSON.stringify(data),
         })
         if (res.ok) {
                 console.log('POST METHOD HAS BEEN SUCCESS')
@@ -138,6 +140,31 @@ export async function logoutUser(user) {
     }
 }
 
+export async function postMethode(alias,redir){
+    console.log("post function" + redir);
+    const form = document.querySelector(alias);
+    const fromData = new FormData(form);
+    const data = Object.fromEntries(fromData);
+    try{
+        const res = await fetch("https://localhost:3000/change_password/", {
+            method: 'POST', 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+
+            },
+            body: JSON.stringify(data),
+        })
+        if (res.ok) {
+                console.log('POST METHOD HAS BEEN SUCCESS')
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
+
+}
 
 
 export async function postInfo(alias,redir){
