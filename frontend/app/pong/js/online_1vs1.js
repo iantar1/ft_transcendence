@@ -165,28 +165,27 @@ export function online_1vs1()
         const data = JSON.parse(e.data);
         console.table('data', data)
         if (data.type === "start") {
-            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+            setTimeout(() => {
+                render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+                table_config = data.table;
+                paddle = data.paddle;
+                ball_config = data.ball;
+                score = data.score;
+                role = data.role;
+                updateCameraPosition(role);
+                table();
+                ballCreation();
+                playerCreation();
+                scoreManager = new ScoreManager(scene);
 
-            table_config = data.table;
-            paddle = data.paddle;
-            player1_config = data.player1;
-            player2_config = data.player2;
-            ball_config = data.ball;
-            score = data.score;
-            role = data.role;
-            updateCameraPosition(role);
-            table();
-            ballCreation();
-            playerCreation();
-            scoreManager = new ScoreManager(scene);
-
-            startCountdown(3, () => {
-                animate();
-                socket.send(JSON.stringify({ 
-                    type: "start_game",
-                }));
-                console.log("sending start_game");
-            });
+                startCountdown(3, () => {
+                    animate();
+                    socket.send(JSON.stringify({ 
+                        type: "start_game",
+                    }));
+                    console.log("sending start_game");
+                });
+            }, 3000);
         }
         if (data.type === "update") {
 

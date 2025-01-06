@@ -12,12 +12,14 @@ export function waitingPage() {
     let usr_data, opp_data = null;
     async function getData() {
         usr_data = await fetchUserData();
-        
+        opp_data = null ;
     } 
     // Fetch initial data
     getData().then(() => updateUserCards());
 
-    console.table(usr_data)
+    console.table("user : "+usr_data)
+    console.table("opponent : "+opp_data)
+
 
 
     const waiting = document.createElement('div');
@@ -78,6 +80,7 @@ export function waitingPage() {
             color: white;
             text-shadow: #FC0 1px 0 10px;
             font-size: 16px;
+            transition: 0.5s ease;
         }
         .user_image {
             width: 100px;
@@ -86,6 +89,7 @@ export function waitingPage() {
             border: 1px solid white;
             border-radius: 50%;
             object-fit: cover;
+            transition: 0.5s ease;
         }
         .loader {
             border: 10px solid #f3f3f3;
@@ -162,9 +166,18 @@ export function waitingPage() {
 
 
     // Periodically update user data
-    setInterval(async () => {
+    const intervalId = setInterval(async () => {
+        console.log("Updates matchmaking    ...");
+        
         await getData();
         updateUserCards();
+        if (usr_data && opp_data){
+            midel_info.textContent = 'fight for your life';
+            if (intervalId) {
+                clearInterval(intervalId);
+                console.log("Updates stopped.");
+            }
+        }
     }, 5000); // Update every 5 seconds
 
     return waiting;
