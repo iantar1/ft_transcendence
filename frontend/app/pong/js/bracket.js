@@ -41,6 +41,24 @@ export function tournamentBracket(
 
         }
 
+        .bracket-content::-webkit-scrollbar {
+            width: 4px; /* Narrow scrollbar for a mobile-like feel */
+            height: 4px;
+        }
+
+        .bracket-content::-webkit-scrollbar-thumb {
+            background: var(--red); /* Thumb color */
+            border-radius: 5px; /* Rounded thumb for a smooth look */
+        }
+
+        .bracket-content::-webkit-scrollbar-thumb:hover {
+            background: #fff; /* Darker color on hover */
+        }
+
+        .bracket-content::-webkit-scrollbar-track {
+            background: transparent; /* Transparent track for minimalistic style */
+        }
+
         .round-bracket {
             display: flex;
             flex-direction: column;
@@ -301,12 +319,20 @@ export function tournamentBracket(
 
 
     // Event listeners
-    startButton.addEventListener('click', () => {
+    startButton.addEventListener('click', async () => {
+        let players = {
+            player1 : "ayoub",
+            player2 : "ahmed",
+            player3 : "hamza",
+            player4 : "omar"
+        }
 
         if (currentMatch > 3) {
-            submitTournament("submit", matches[0].player1, 6);
+            await submitTournament("submit", players, "lbotola");
         }
         else {
+            // submitTournament("submit", matches[0].player1, 6);
+
             console.log('start match');
             ws.send(JSON.stringify({ type: 'countdown' }));
         }

@@ -4,9 +4,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .models import *
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.core import serializers
-import requests
 from config.settings import env
 import os
 from dotenv import load_dotenv
@@ -36,8 +35,7 @@ AUTH_URI = f"{google_auth_url}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}
 def home(request):
     return redirect(AUTH_URI)
 
-# views.py
-import requests
+
 from django.shortcuts import redirect
 from django.http import JsonResponse
 
@@ -84,15 +82,20 @@ def get_code(request):
         "grant_type": "authorization_code"
     }
     response = requests.post(OUUTH_TOKEN_URI, data=plyload)
-    print(f"the resposnse josn: {response.json()}")
+
     access_token = response.json().get('access_token')
     userInfoJson = getUserInfo(access_token)
-    # User = storeUser(user)
-    print(f"the code: {code}")
-    user = storeUser(userInfoJson.json())
-    serializedUserData = UserSerializer(user)
-    return JsonResponse(serializedUserData.data)
-    return HttpResponse(user, content_type="application/json")
+
+    user = createUpdateUser(userInfoJson.json())
+
+    access_token = create_access_token(user.id)
+    refresh_token = create_refresh_token(user.id)
+
+    response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
+    response.set_cookie(key="access", value=access_token, httponly=False)
+    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+    return response
+
 
 def getUserInfo(access_token):
     url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -101,14 +104,13 @@ def getUserInfo(access_token):
     return userInfor
 
 
-def storeUser(data)-> User:
+def createUpdateUser(data)-> User:
     # check if the user already exsit
-    existing_user = User.objects.filter(email=data.get("email")).first()
-    existing_user = User.objects.filter(username=data.get("given_name") + data.get("family_name")).first()
+    # existing_user = User.objects.filter(email=data.get("email")).first()
+    # existing_user = User.objects.filter(username=data.get("given_name") + data.get("family_name")).first()
 
-    if existing_user:
-        print("User already exists.")
-        return existing_user
+    # if existing_user:
+    #     return existing_user
     response = requests.get(data.get("picture"))
     if response.status_code == 200:
         img_temp = NamedTemporaryFile(delete=True, suffix='.png')
@@ -118,14 +120,24 @@ def storeUser(data)-> User:
         # Extract the image filename from the URL
         filename = os.path.basename(data.get("picture")) + ".png"
 
-    user = User(
-            # id=data["id"],
-            first_name = data.get("given_name"),
-            last_name = data.get("family_name"),
-            email = data.get("email"),
-            image = File(img_temp, name=filename),#set default if you can't get the image
-            username = data.get("given_name") + data.get("family_name")
-        )
+
+    # user = User(
+    #         first_name = data.get("given_name"),
+    #         last_name = data.get("family_name"),
+    #         email = data.get("email"),
+    #         image = File(img_temp, name=filename),#set default if you can't get the image
+    #         username = data.get("given_name") + data.get("family_name")
+    #     )
+
+    user, created = User.objects.update_or_create(
+        username=data.get("given_name") + data.get("family_name"),
+        email=data.get("email"),
+        defaults={'first_name':data.get("given_name"),
+                  'last_name':data.get("family_name"),
+                  'email':data.get("email"),
+                  'image':File(img_temp, name=filename),
+                  'username':data.get("given_name") + data.get("family_name")},
+    )
     user.save()
     return user
     
@@ -139,7 +151,7 @@ def getData(access_token) -> User:
     }
     response = requests.get(url, headers=headers)
     print(f"the resposnse josn: {response.json()}")
-    return storeUser(response.json())
+    return createUpdateUser(response.json())
 
 from rest_framework.renderers import JSONRenderer
 
@@ -154,12 +166,10 @@ def auth(request):
                'redirect_uri':REDIRECT_URI,}
     r = requests.post(OUUTH_TOKEN_URI, data=payload)
     print(f"here: {r.json()}")
-    # try:
-        # intra_access_token =  r.cookies.get('access_token')
+
     intra_access_token = r.json().get('access_token')#['access_token']
     user = getData(intra_access_token)
-    # except:
-    #     raise AuthenticationFailed('Unauthenticated')
+
     print(f"------------------------>>>>>> {intra_access_token}")
         
     serializer = UserSerializer(user)
@@ -172,12 +182,8 @@ def auth(request):
     'response': response
     }
     access_token = create_access_token(user.id)
-    response.set_cookie(key="access", value=access_token, httponly=True)
+    refresh_token = create_refresh_token(user.id)
+    response.set_cookie(key="access", value=access_token)
+    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
     return response
-    return Response(serializer.data)
 
-# read the subject again
-# recreate a new intra auth
-# use jwt and set the cookie and redirct to home
-# if unthenticated user try to acess the /home rediract him to /register
-# authentcate with google 
