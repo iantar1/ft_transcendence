@@ -203,7 +203,7 @@ class LocalMatchmaking(AsyncWebsocketConsumer):
                 "name": self.tournament,
                 "matches": self.matches,
                 "round": self.current_round,
-                "ranked": ranked
+                "ranked": ranked if self.current_round == 4 else None
             }))
         self.restart_game()
         self.is_active = False

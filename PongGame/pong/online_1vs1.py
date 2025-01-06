@@ -4,7 +4,7 @@ import asyncio
 import uuid
 import requests
 from channels.generic.websocket import AsyncWebsocketConsumer # type: ignore
-BACKEND_URL = "http://localhost:8000/match_history/"
+BACKEND_URL = "http://backend:8000/match_history/"
 player_queue = []
 
 # class GameSettings:
@@ -168,7 +168,7 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
 
             # Prepare data for match history
             match_data = {
-                "opponent_username": "arahmoun",
+                "opponent_username": "iantar",
                 "opponent_score": self.score["player2"],
                 "user_score": self.score["player1"],
             }
@@ -177,7 +177,6 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
             cookies = {
                 "access": access,
                 "refresh": refresh
-                # You can add the refresh token or other cookies if needed
             }
 
             # Send the match history to backend
@@ -345,31 +344,3 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
         }
     
 
-
-# access = get_access()
-# refresh = get_refresh()
-
-# # Define the cookies with the access token
-# cookies = {
-#     "access": access
-#     # You can add the refresh token or other cookies if needed
-# }
-
-# match_data = {
-#     "opponent_username": self.opponent.username,
-#     "opponent_score": self.score["player2"],
-#     "user_score": self.score["player1"],
-# }
-
-# # Send the match history to backend
-# try:
-#     response = requests.post(BACKEND_URL, json=match_data, cookies=cookies, timeout=5)
-#     if response.status_code == 200:
-#         print("Match history successfully sent to backend")
-#     else:
-#         print(f"Failed to send match history: {response.status_code} - {response.text}")
-# except requests.exceptions.RequestException as e:
-#     print(f"Error sending match history: {e}")
-
-
-# cookies = self.scope.get("cookies", {})

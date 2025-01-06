@@ -117,62 +117,15 @@ class gamePage extends HTMLElement {
                     const data = await submitTournament("getScore");
                     console.log("xxxxx ", data);
                     
-                    let tournamentData = [
-                        {
-                            tournament: data[0].name,
-                            players: [
-                                { address: data[0].player1.name, rank: 1, points: 150 },
-                                { address: data[0].player2.name, rank: 2, points: 120 },
-                                { address: data[0].player3.name, rank: 3, points: 160 },
-                                { address: data[0].player4.name, rank: 4, points: 90 }
-                            ]
-                        },
-                        {
-                            tournament: data[1].name,
-                            players: [
-                                { address: data[1].player1.name, rank: 1, points: 80 },
-                                { address: data[1].player2.name, rank: 2, points: 70 },
-                                { address: data[1].player3.name, rank: 3, points: 50 },
-                                { address: data[1].player4.name, rank: 4, points: 20 }
-                            ]
-                        },
-                        {
-                            tournament: data[0].name,
-                            players: [
-                                { address: data[0].player1.name, rank: 1, points: 150 },
-                                { address: data[0].player2.name, rank: 2, points: 120 },
-                                { address: data[0].player3.name, rank: 3, points: 160 },
-                                { address: data[0].player4.name, rank: 4, points: 90 }
-                            ]
-                        },
-                        {
-                            tournament: data[1].name,
-                            players: [
-                                { address: data[1].player1.name, rank: 1, points: 80 },
-                                { address: data[1].player2.name, rank: 2, points: 70 },
-                                { address: data[1].player3.name, rank: 3, points: 50 },
-                                { address: data[1].player4.name, rank: 4, points: 20 }
-                            ]
-                        },
-                        {
-                            tournament: data[0].name,
-                            players: [
-                                { address: data[0].player1.name, rank: 1, points: 150 },
-                                { address: data[0].player2.name, rank: 2, points: 120 },
-                                { address: data[0].player3.name, rank: 3, points: 160 },
-                                { address: data[0].player4.name, rank: 4, points: 90 }
-                            ]
-                        },
-                        {
-                            tournament: data[1].name,
-                            players: [
-                                { address: data[1].player1.name, rank: 1, points: 80 },
-                                { address: data[1].player2.name, rank: 2, points: 70 },
-                                { address: data[1].player3.name, rank: 3, points: 50 },
-                                { address: data[1].player4.name, rank: 4, points: 20 }
-                            ]
-                        },
-                    ];
+                    const tournamentData = data.map((tournament, index) => ({
+                        tournament: tournament.name,
+                        players: [
+                            { address: tournament.player1.name, rank: 1, points: 150 },
+                            { address: tournament.player2.name, rank: 2, points: 120 },
+                            { address: tournament.player3.name, rank: 3, points: 160 },
+                            { address: tournament.player4.name, rank: 4, points: 90 }
+                        ]
+                    }));
                     // Sample tournament data - replace with your actual data
           
     

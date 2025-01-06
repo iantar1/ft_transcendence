@@ -5,12 +5,13 @@ import { submitTournament } from "./submitTournament.js"
 
 export function tournamentBracket(
     matches = [
-        { player1: 'T1', player2: 'T2' },	
-        { player1: 'T3', player2: 'T4' },
+        { player1: 'player 1', player2: 'player 2' },	
+        { player1: 'player 3', player2: 'player 4' },
     ],
     currentMatch = 1,
     ws = null,
-    ranekd = null
+    ranekd = null,
+    name = null
 ) {
     const style = document.createElement('style');
     style.textContent = `
@@ -34,6 +35,7 @@ export function tournamentBracket(
         }
 
         .bracket-content {
+            padding: 10px;
             width :90%;
             display: flex;
             align-items: center;
@@ -88,7 +90,7 @@ export function tournamentBracket(
         }
 
         .team.winner {
-            background: var(--orange);
+            background: var(--red);
         }
 
         .team span {
@@ -136,7 +138,7 @@ export function tournamentBracket(
         }
 
         .final-winner {
-            background: var(--orange);
+            background: var(--red);
             padding: 1rem;
             border-radius: 5px;
             text-align: center;
@@ -214,7 +216,7 @@ export function tournamentBracket(
         const matchContainer = document.createElement('div');
         matchContainer.className = 'match-bracket';
         if (isCurrent) {
-            matchContainer.style.border = '4px solid green';
+            matchContainer.style.boxShadow = '0px 0px 10px 10px green';
         }
         if (!match) {
             const winner1 = createTeam("winner 1");
@@ -321,15 +323,8 @@ export function tournamentBracket(
 
     // Event listeners
     startButton.addEventListener('click', async () => {
-        // let players = {
-        //     player1 : "ayoub",
-        //     player2 : "ahmed",
-        //     player3 : "hamza",
-        //     player4 : "omar"
-        // }
-
         if (currentMatch > 3) {
-            await submitTournament("submit", ranekd, "lbotola");
+            await submitTournament("submit", ranekd, name);
         }
         else {
             // submitTournament("submit", matches[0].player1, 6);
