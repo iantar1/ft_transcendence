@@ -302,9 +302,15 @@ export function tournamentBracket(
 
     // Event listeners
     startButton.addEventListener('click', () => {
+        let players = {
+            player1 : "ayoub",
+            player2 : "ahmed",
+            player3 : "hamza",
+            player4 : "omar"
+        }
 
         if (currentMatch > 3) {
-            submitTournament("submit", matches[0].player1, 6);
+            submitTournament("submit", players, "lbotola");
         }
         else {
             console.log('start match');

@@ -1,7 +1,6 @@
-export function submitTournament(
+export async function submitTournament(
     event,
-    player = null,
-    playerscore = null,
+    players = null,
     name = null
     ) {
     let web3;
@@ -360,69 +359,73 @@ export function submitTournament(
         }
     }
 
-    // Submit score to contract
-    async function submitScore() {
-        const playerName = player;
-        const score = playerscore;
+    // add tournament 
+    async function addTournament() {
+      const tournamentName = name;
+      const player1Name = players.player1;
+      const player2Name = players.player2;
+      const player3Name = players.player3;
+      const player4Name = players.player4;
 
-        if (!contract) {
-            alert('Contract is not initialized. Please refresh the page.');
-            return;
-        }
+      if (!contract) {
+          alert('Contract is not initialized. Please refresh the page.');
+          return false;
+      }
 
-        const accounts = await web3.eth.getAccounts();
-        const account = accounts[0];
+      const accounts = await web3.eth.getAccounts();
+      const account = accounts[0];
 
-        try {
-            await contract.methods.submitScore(playerName, score).send({ from: account });
-            alert('Score Submitted!');
-        } catch (error) {
-            console.error("Error submitting score:", error);
-        }
-    }
+      try {
+          await contract.methods.addTournament(
+              tournamentName,
+              player1Name, 1,
+              player2Name, 2,
+              player3Name, 3,
+              player4Name, 4
+          ).send({ from: account });
+          return true;
+          // alert('Tournament Added!');
+      } catch (error) {
+          console.error("Error adding tournament:", error);
+      }
+  }
+
 
     // Get scores from the contract
-    async function getScores() {
-        if (!contract) {
-            alert('Contract is not initialized. Please refresh the page.');
-            return;
-        }
+    async function getTournaments() {
+      if (!contract) {
+          alert('Contract is not initialized. Please refresh the page.');
+          return;
+      }
 
-        try {
-            const scores = await contract.methods.getScores().call();
+      try {
+          const tournaments = await contract.methods.getTournaments().call();
+          console.table(tournaments);
+          return tournaments; // Store globally for filtering
+      } catch (error) {
+          console.error('Error fetching tournaments:', error);
+      }
+  }
 
-            console.log("geting scores : ", scores);
-            
-            // const scoreList = document.getElementById('scoreList');
-            // scoreList.innerHTML = '';
 
-            // scores.forEach(score => {
-            //     const listItem = document.createElement('li');
-            //     // const timestampp = new Date(score.timestamp.toNumber() * 1000).toLocaleString();
-            //     listItem.innerText = `Player: ${score.playerName}, Score: ${score.score}`;
-            //     scoreList.appendChild(listItem);
-            // });
-        } catch (error) {
-            console.error("Error fetching scores:", error);
-        }
-    }
+  // Initialize the application and submit score if the event is "submit"
+  async function handleSubmit() {
+      if (event === "submit") {
+          console.log("Try to submit score");
 
-    // Initialize the application and submit score if the event is "submit"
-    async function handleSubmit() {
-        if (event === "submit") {
-            console.log("Try to submit score");
+          // Wait for init to complete before submitting score
+          await init();
+          const result = await addTournament();
+          return result;
+      } else if (event === "getScore") {
+          console.log("Try to get score");
 
-            // Wait for init to complete before submitting score
-            await init();
-            submitScore();
-        } else if (event === "getScore") {
-            console.log("Try to get      score");
-
-            await init();
-            getScores();
-        }
-    }
-
+          await init();
+          const result = await getTournaments();
+          return result;
+      }
+  }
     // Call the handleSubmit function
-    handleSubmit();
+  const response =  await handleSubmit();
+  return response;
 }
