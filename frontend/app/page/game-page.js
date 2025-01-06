@@ -3,6 +3,7 @@
 import {fetchUserData , getCookie} from './readData.js';
 
 import { navigateTo } from '../routing.js';
+import { submitTournament } from '../pong/js/submitTournament.js';
 class gamePage extends HTMLElement {
 
     navar = `
@@ -111,29 +112,69 @@ class gamePage extends HTMLElement {
                     }
                 });
     
-                getBtn.addEventListener('click', () => {
-                    // Sample tournament data - replace with your actual data
-                    const tournamentData = [
+                getBtn.addEventListener('click', async () => {
+
+                    const data = await submitTournament("getScore");
+                    console.log("xxxxx ", data);
+                    
+                    let tournamentData = [
                         {
-                            tournament: "Crypto Cup 2024",
+                            tournament: data[0].name,
                             players: [
-                                { address: "0xAB12...789C", rank: 1, points: 150 },
-                                { address: "0xDE34...567F", rank: 2, points: 120 },
-                                { address: "0xPQ12...345R", rank: 3, points: 160 },
-                                { address: "0xGH56...234I", rank: 4, points: 90 }
-                                
+                                { address: data[0].player1.name, rank: 1, points: 150 },
+                                { address: data[0].player2.name, rank: 2, points: 120 },
+                                { address: data[0].player3.name, rank: 3, points: 160 },
+                                { address: data[0].player4.name, rank: 4, points: 90 }
                             ]
                         },
                         {
-                            tournament: "Web3 Championship",
+                            tournament: data[1].name,
                             players: [
-                                { address: "0xJK78...901L", rank: 1, points: 200 },
-                                { address: "0xMN90...123O", rank: 2, points: 180 },
-                                { address: "0xPQ12...345R", rank: 3, points: 160 },
-                                { address: "0xPQ12...345R", rank: 4, points: 160 }
+                                { address: data[1].player1.name, rank: 1, points: 80 },
+                                { address: data[1].player2.name, rank: 2, points: 70 },
+                                { address: data[1].player3.name, rank: 3, points: 50 },
+                                { address: data[1].player4.name, rank: 4, points: 20 }
                             ]
-                        }
+                        },
+                        {
+                            tournament: data[0].name,
+                            players: [
+                                { address: data[0].player1.name, rank: 1, points: 150 },
+                                { address: data[0].player2.name, rank: 2, points: 120 },
+                                { address: data[0].player3.name, rank: 3, points: 160 },
+                                { address: data[0].player4.name, rank: 4, points: 90 }
+                            ]
+                        },
+                        {
+                            tournament: data[1].name,
+                            players: [
+                                { address: data[1].player1.name, rank: 1, points: 80 },
+                                { address: data[1].player2.name, rank: 2, points: 70 },
+                                { address: data[1].player3.name, rank: 3, points: 50 },
+                                { address: data[1].player4.name, rank: 4, points: 20 }
+                            ]
+                        },
+                        {
+                            tournament: data[0].name,
+                            players: [
+                                { address: data[0].player1.name, rank: 1, points: 150 },
+                                { address: data[0].player2.name, rank: 2, points: 120 },
+                                { address: data[0].player3.name, rank: 3, points: 160 },
+                                { address: data[0].player4.name, rank: 4, points: 90 }
+                            ]
+                        },
+                        {
+                            tournament: data[1].name,
+                            players: [
+                                { address: data[1].player1.name, rank: 1, points: 80 },
+                                { address: data[1].player2.name, rank: 2, points: 70 },
+                                { address: data[1].player3.name, rank: 3, points: 50 },
+                                { address: data[1].player4.name, rank: 4, points: 20 }
+                            ]
+                        },
                     ];
+                    // Sample tournament data - replace with your actual data
+          
     
                     // Create and show popup with tournament table
                     const popup = document.createElement('div');

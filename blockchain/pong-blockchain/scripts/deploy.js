@@ -1,13 +1,13 @@
 const { ethers } = require('hardhat');
 
 async function main() {
-    const TournamentScores = await ethers.getContractFactory("TournamentScores");
+    const TournamentDetails = await ethers.getContractFactory("TournamentDetails");
 
-    const tournamentScores = await TournamentScores.deploy();
+    const tournamentDetails = await TournamentDetails.deploy();
 
-    await tournamentScores.deployed();
-    
-    console.log("TournamentScores deployed to:", tournamentScores.address);
+    await tournamentDetails.deployed();
+
+    console.log("TournamentDetails deployed to:", tournamentDetails.address);
 }
 
 main()

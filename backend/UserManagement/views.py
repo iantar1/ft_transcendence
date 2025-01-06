@@ -309,7 +309,7 @@ class MatchHistoryView(APIView):
         return Response({"matchHistory": match_history_list})
 
     def post(self, request):
-        print(request)
+        print("POST HISTORY : ", request)
         token = request.COOKIES.get('access')
         user = get_user_by_token(token)
         if user == None:

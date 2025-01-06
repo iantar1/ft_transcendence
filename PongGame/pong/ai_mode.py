@@ -106,7 +106,7 @@ class AIConsumer(AsyncWebsocketConsumer):
             self.move_paddel(self.player2)
             
             ##
-            self.move_ball()
+            await self.move_ball()
             await self.check_goals()
             if self.score["player1"] >= WINNING_SCORE or self.score["player2"] >= WINNING_SCORE:
                 await self.send_game_over()
@@ -135,6 +135,15 @@ class AIConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(
             {
                 "type": "update",
+                "player1": self.player1,
+                "player2": self.player2,
+                "ball": self.ball,
+                "score": self.score,
+            }))
+    async def send_collision(self):
+        await self.send(text_data=json.dumps(
+            {
+                "type": "hit_wall",
                 "player1": self.player1,
                 "player2": self.player2,
                 "ball": self.ball,
@@ -241,7 +250,7 @@ class AIConsumer(AsyncWebsocketConsumer):
         }))
 
 
-    def move_ball(self):
+    async def move_ball(self):
         self.ball["x"] += self.ball["dx"]
         self.ball["z"] += self.ball["dz"]
 
@@ -250,6 +259,7 @@ class AIConsumer(AsyncWebsocketConsumer):
         if self.ball["x"] - self.ball["radius"] <= -(TABLE_WIDTH / 2) + 1 or self.ball["x"] + self.ball["radius"] >= (TABLE_WIDTH / 2) - 1:
             print("hit the wall at : ", self.ball["z"])
             self.ball["dx"] *= -WALL_DAMPENING
+            await self.send_collision()
 
                  # check for paddle and ball collision  PLAYER 1
         if (self.ball["z"] + self.ball["radius"] >= self.player1['z'] - (self.paddle["deep"] / 2)
