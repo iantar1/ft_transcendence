@@ -44,9 +44,6 @@ export function local_1vs1()
         }
         .pongCanvas {
             display: flex;
-            position: absolute;
-            top: 0px;
-            left: 0px;
             width: 100%;
             height: 100%;
             justify-content: center;
@@ -96,13 +93,13 @@ export function local_1vs1()
     console.log("sizes : ", width, height);
 
     
-    const camera1 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
-    const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
+    const camera = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
+    // const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     
-    camera1.position.set(0, 15, 35);
-    camera2.position.set(0, 15, -35);
-    camera2.lookAt(0, 0, 0);
-    scene.add(camera1, camera2);
+    camera.position.set(15, 35, 0);
+    // camera2.position.set(0, 15, -35);
+    // camera2.lookAt(0, 0, 0);
+    scene.add(camera);
     
     
 
@@ -113,7 +110,7 @@ export function local_1vs1()
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     pongCanvas.appendChild(renderer.domElement);
-    controls = new THREE.OrbitControls( camera1, renderer.domElement );
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
 
     resizeCanvas();
 
@@ -160,7 +157,7 @@ export function local_1vs1()
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        console.table('data', data)
+        // console.table('data', data)
         if (data.type === "start") {
             table_config = data.table;
             paddle = data.paddle;
@@ -194,11 +191,12 @@ export function local_1vs1()
             ball.position.x = data.ball.x;
             ball.position.z = data.ball.z;
             score = data.score;
-            shakeCamera(camera1);
-            shakeCamera(camera2);
+            shakeCamera(camera);
+            // shakeCamera(camera2);
             scoreManager.addPoint(score);
         }
         if (data.type === "game_over") {
+            window.removeEventListener("resize", resizeCanvas);
             gameOver(data.winner, data.score);
             scoreManager.reset();            
         }
@@ -217,35 +215,60 @@ export function local_1vs1()
 
     function movePaddle(e)
     {
-        if(e.key === 'ArrowLeft') player2Direction = -1;
-        if(e.key === 'ArrowRight') player2Direction = 1;
-        if(e.key === 'a') player1Direction = -1;
-        if(e.key === 'd') player1Direction = 1;
+        if(e.key === 'ArrowDown') player2Direction = -1;
+        if(e.key === 'ArrowUp') player2Direction = 1;
+        if(e.key === 'w') player1Direction = -1;
+        if(e.key === 's') player1Direction = 1;
     }
 
     function stopPaddle(e)
     {
-        if (e.key === "ArrowLeft" || e.key === "ArrowRight")
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp")
             player2Direction = 0;
-        if (e.key === "a" || e.key === "d")
+        if (e.key === "w" || e.key === "s")
             player1Direction = 0;
     }
 
 
-    function resizeCanvas() {
-        width = document.documentElement.clientWidth;
-        height = document.documentElement.clientHeight;
-        canvas.width = width;
-        canvas.height = height;
-
-
-        camera1.aspect = (width / 2) / height;
-        camera2.aspect = (width / 2) / height;
-        camera2.updateProjectionMatrix();
-        camera1.updateProjectionMatrix();
-        renderer.setSize(width , height);
+    function adjustFOV(camera, aspect) {
+        // Define base FOV for a standard aspect ratio (e.g., 16:9)
+        const baseFOV = 75; // Adjust this base FOV to your preference
+        const aspectRatioThreshold = 1.5; // A typical threshold to distinguish large from small screens
+    
+        if (aspect > aspectRatioThreshold) {
+            // For larger screens (wider aspect ratios), decrease the FOV to zoom in
+            camera.fov = baseFOV - (aspect - aspectRatioThreshold) * 5;
+        } else {
+            // For smaller screens, increase the FOV to widen the view
+            camera.fov = baseFOV + (aspectRatioThreshold - aspect) * 5;
+        }
+    
+        // Ensure the FOV remains within a reasonable range
+        camera.fov = Math.max(75, Math.min(camera.fov, 80)); // Clamping FOV between 45 and 75
+    
+        // Update the projection matrix with the new FOV
+        camera.updateProjectionMatrix();
     }
 
+    function adjustCameraPosition(camera, aspect) {
+        let targetY = (aspect < 1) ? 35 * (1 / aspect) : 35;
+        camera.position.y = Math.max(35, Math.min(targetY, 50)); // Clamped to prevent extreme zooms
+    }
+
+
+    function resizeCanvas() {
+        width = pongCanvas.clientWidth ;
+        height = pongCanvas.clientHeight ;
+        const aspect = (width / height);
+
+        adjustFOV(camera, aspect);
+        adjustCameraPosition(camera, aspect);
+
+        camera.aspect = aspect;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(width , height);
+    }
     window.addEventListener("resize", resizeCanvas);
 
     function table() {
@@ -616,10 +639,19 @@ export function local_1vs1()
         }
     }
 
+    function updateCamera() {
+        camera.position.lerp(
+          new THREE.Vector3(camera.position.x, camera.position.y, ball.position.z * 0.05),
+          0.05
+        );
+        camera.lookAt(ball.position);
+    }
+
     function animate (time)
     {
         animationId = requestAnimationFrame(animate);
 
+        updateCamera();
 
         // Update starfield
         starfield.rotation.y += 0.0009;
@@ -642,7 +674,8 @@ export function local_1vs1()
 
         controls.update();
 
-        drawing();
+        renderer.render(scene, camera);
+        // drawing();
         if (wsOpen)
             sendPaddlePosition();
 
@@ -707,7 +740,8 @@ export function local_1vs1()
     
         // Update the countdown every second
         const interval = setInterval(() => {
-            drawing();
+            // drawing();
+            renderer.render(scene, camera);
 
             countdownElement.style.fillStyle = `rgba(255, 255, 255, ${opacity})`; // Fading effect
             countdownElement.style.font = `${100 * scale}px "Pong War", "Freeware"`; // Dynamic scaling
@@ -819,17 +853,17 @@ export function local_1vs1()
     }
 
 
-    function drawing(){
-        // Render for the first view (Player 1)  blue player in the left side 
-        renderer.setViewport(0, 0, width / 2, height);
-        renderer.setScissor(0, 0, width / 2, height);
-        renderer.setScissorTest(true);
-        renderer.render(scene, camera1);
+    // function drawing(){
+    //     // Render for the first view (Player 1)  blue player in the left side 
+    //     renderer.setViewport(0, 0, width / 2, height);
+    //     renderer.setScissor(0, 0, width / 2, height);
+    //     renderer.setScissorTest(true);
+    //     renderer.render(scene, camera);
         
-        // Render for the first view (Player 2) red player in the right side 
-        renderer.setViewport(width / 2, 0, width / 2, height);
-        renderer.setScissor(width / 2, 0, width / 2, height);
-        renderer.setScissorTest(true);
-        renderer.render(scene, camera2);
-    }
+    //     // Render for the first view (Player 2) red player in the right side 
+    //     renderer.setViewport(width / 2, 0, width / 2, height);
+    //     renderer.setScissor(width / 2, 0, width / 2, height);
+    //     renderer.setScissorTest(true);
+        // renderer.render(scene, camera2);
+    // }
 }
