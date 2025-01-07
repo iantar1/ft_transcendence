@@ -4,9 +4,6 @@ import { menu } from "./loby.js";
 import { fetchUserData } from "../../page/readData.js";
 
 
-
-
-
 export function waitingPage() {
 
     let usr_data, opp_data = null;

@@ -391,7 +391,10 @@ class LocalMatchmaking(AsyncWebsocketConsumer):
                      "winner": self.passtMatch[0]["winner"],
                      "scores": [self.passtMatch[0]["scores"][0], self.passtMatch[0]["scores"][1]]
                     },
-                    { "player1": self.participants[2], "player2": self.participants[3] , "winner": winner, "scores": [score["player1"], score["player2"]] },
+                    { "player1": self.participants[2], "player2": self.participants[3] ,
+                     "winner": winner,
+                     "scores": [score["player1"], score["player2"]]
+                    },
                     { "player1": self.passtMatch[0]["winner"], "player2": winner}
                 ]
                 self.passtMatch.append(self.matches[1])
@@ -408,7 +411,10 @@ class LocalMatchmaking(AsyncWebsocketConsumer):
                         "winner": self.passtMatch[1]["winner"],
                         "scores": [self.passtMatch[1]["scores"][0], self.passtMatch[1]["scores"][1]]
                     },
-                    { "player1": self.passtMatch[0]["winner"], "player2": self.passtMatch[1]["winner"], "winner": winner, "scores": [score["player1"], score["player2"]] }
+                    { "player1": self.passtMatch[0]["winner"], "player2": self.passtMatch[1]["winner"],
+                     "winner": winner,
+                     "scores": [score["player1"], score["player2"]]
+                    }
                 ]
                 self.passtMatch.append(self.matches[2])
             self.current_round += 1

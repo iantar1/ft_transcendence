@@ -33,6 +33,7 @@ export function tournamentBracket(
         }
 
         .bracket-content {
+            padding: 10px;
             width :90%;
             display: flex;
             align-items: center;
@@ -87,7 +88,7 @@ export function tournamentBracket(
         }
 
         .team.winner {
-            background: var(--orange);
+            background: var(--red);
         }
 
         .team span {
@@ -213,7 +214,7 @@ export function tournamentBracket(
         const matchContainer = document.createElement('div');
         matchContainer.className = 'match-bracket';
         if (isCurrent) {
-            matchContainer.style.border = '4px solid green';
+            matchContainer.style.boxShadow = '0px 0px 10px 10px green';
         }
         if (!match) {
             const winner1 = createTeam("winner 1");
