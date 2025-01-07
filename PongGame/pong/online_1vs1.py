@@ -2,8 +2,9 @@ import json
 import random
 import asyncio
 import uuid
+import requests
 from channels.generic.websocket import AsyncWebsocketConsumer # type: ignore
-
+BACKEND_URL = "http://backend:8000/match_history/"
 player_queue = []
 
 # class GameSettings:
@@ -31,12 +32,16 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
         }
         self.group_room = None
         self.role = None
-        self.ball = {}
+        self.opponent = None
+        self.ball = {}  
         self.player1 = {}
         self.player2 = {}
         self.score = {}
         self.table = {}
-        print(self.scope["user"], " are connected")
+        self.cookies = self.scope.get("cookies", {})
+        print(self.cookies)
+        self.username = self.scope["user"]
+
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -55,18 +60,20 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
         if data["type"] == "join_room":
             self.width = data["width"]
             self.height = data["height"]
+            print(self.username, " are connected")
+            print("scope :  " , self.scope)
             await self.restart_game()
             if len(player_queue) >= 2 :
                 if player_queue[0] == self:
-                    opponent = player_queue[1]
+                    self.opponent = player_queue[1]
                 else:
-                    opponent = player_queue[0]
+                    self.opponent = player_queue[0]
                 player_queue.remove(self)
-                player_queue.remove(opponent)
+                player_queue.remove(self.opponent)
                 self.group_room = f"room_{uuid.uuid4().hex[:6]}"
-                opponent.group_room = self.group_room
+                self.opponent.group_room = self.group_room
 
-                opponent.role = "player2"
+                self.opponent.role = "player2"
                 self.role = "player1"
 
                 # add the players to the same group
@@ -74,9 +81,9 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
                     self.group_room,
                     self.channel_name
                 )
-                await opponent.channel_layer.group_add(
-                    opponent.group_room,
-                    opponent.channel_name
+                await self.opponent.channel_layer.group_add(
+                    self.opponent.group_room,
+                    self.opponent.channel_name
                 )
 
                 dx = 1 if random.randint(0,1) > 0.5 else -1
@@ -157,7 +164,31 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
     
     async def game_over(self, event):
         if(self.is_active):
-            print("game over : ", self.score)
+            print( f"game over : {self.score}")
+
+            # Prepare data for match history
+            match_data = {
+                "opponent_username": "iantar",
+                "opponent_score": self.score["player2"],
+                "user_score": self.score["player1"],
+            }
+            access = self.cookies["access"]
+            refresh = self.cookies["refresh"]
+            cookies = {
+                "access": access,
+                "refresh": refresh
+            }
+
+            # Send the match history to backend
+            try:
+                response = requests.post(BACKEND_URL, json=match_data, cookies=cookies, timeout=5)
+                if response.status_code == 200:
+                    print("Match history successfully sent to backend 1")
+                else:
+                    print(f"Failed to send match history: {response.status_code} - {response.text}")
+            except requests.exceptions.RequestException as e:
+                print(f"Error sending match history: {e}")
+            
             await self.send(text_data=json.dumps(
             {
                 "type": "game_over",
@@ -312,3 +343,4 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
             "player2": 0
         }
     
+

@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import User, MatchHistory, Stats, Friendship
+from .models import User, MatchHistory, Stats
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image', 'bio']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'image', 'bio', 'score']
         extra_kwargs = {'password': {'write_only': True}}
         #it will only be used for creating or updating data and will not be included in the serialized output
         
@@ -30,12 +30,24 @@ class UserSerializer(serializers.ModelSerializer):
         Stats.objects.create(user=user)
         return user
 
+class UsersRankingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = ['username', 'image', 'score']
+
+
 
 class ImageBioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = ['id', 'bio', 'image', 'username']
+
+class BioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'bio', 'username']
 
 
 class PLayerMaatchSerializer(serializers.ModelSerializer):
@@ -62,11 +74,11 @@ class StatsSerializer(serializers.ModelSerializer):
 
 
 
-class   FriendshipSerializer(serializers.ModelSerializer):
+# class   FriendshipSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Friendship
-        fields = ['from_user', 'to_user', 'status', 'action']
+#     class Meta:
+#         model = Friendship
+#         fields = ['from_user', 'to_user', 'status', 'action']
 
 # {
 # "from_user":"iantar",

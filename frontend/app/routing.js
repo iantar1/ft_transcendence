@@ -110,7 +110,7 @@ class LoadingScreen {
     // The page rendering logic
     switch (path) {
       case '/':
-        content.innerHTML = betweenPage();  // Call the loading screen for the home page
+        // Call the loading screen for the home page
         // Add your content here after the loading screen
         content.innerHTML = '<getstarted-page></getstarted-page>';
         break;
@@ -128,7 +128,7 @@ class LoadingScreen {
         break;
       case '/game':
         betweenPage();
-        content.innerHTML = '<game-page></game-page>';
+        content.innerHTML = '<pongxo-page></pongxo-page>';
         break;
       case '/setting':
         betweenPage();

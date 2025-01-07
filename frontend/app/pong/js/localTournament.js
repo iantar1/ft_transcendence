@@ -44,7 +44,7 @@ export function tournamentlocal() {
         padding: 10px;
         border: 1px solid var(--blue);
         border-radius: 5px;
-        font-family: "Pong War";
+        font-family: "Roboto";
     }
     button {
         padding: 10px 20px;

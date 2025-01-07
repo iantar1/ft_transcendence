@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'UserManagement',
     'rest_framework',
     'corsheaders',
+    'friendSystem',
     # 'rest_framework_simplejwt',
     # 'django_otp',
     # 'django_otp.plugins.otp_static',
@@ -65,6 +67,17 @@ MIDDLEWARE = [
     'UserManagement.middleware.new_middleware',
 ]
 
+ASGI_APPLICATION = "config.asgi.application"
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6000)],
+#         },
+#     },
+# }
+
 SESSION_COOKIE_SAMESITE = None
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -74,6 +87,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8080',
     'http://localhost:8000',  # Add the port where your frontend is running if different
     'https://localhost:3000',
+    'http://ponggame:5050',
+    'http://localhost:5050',
 ]
 
 CORS_ALLOW_CREDENTIALS = True # make sure this is set to True 

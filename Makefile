@@ -9,7 +9,6 @@ down:
 rm:
 	docker system prune -af
 
-
 re: rm up
 
 clear: down rm

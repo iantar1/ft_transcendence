@@ -44,9 +44,6 @@ export function local_1vs1()
         }
         .pongCanvas {
             display: flex;
-            position: absolute;
-            top: 0px;
-            left: 0px;
             width: 100%;
             height: 100%;
             justify-content: center;
@@ -65,9 +62,9 @@ export function local_1vs1()
 
     const local_URL = 'wss://'+window.location.host+'/ws/local_1vs1/';
     let wsOpen = false;
-    let ball_config, ball, player1_config, player2_config, plane, table_config, paddle, score, animationId, role, composer;
+    let ball_config, ball;
+    let scoreManager, plane, table_config, leftWall, rightWall, paddle, score, animationId;
     let player2Direction = 0, player1Direction = 0;
-    let player1ScoreMesh, player2ScoreMesh;
     let player1 , player2;
     let renderer, controls;
         
@@ -75,52 +72,77 @@ export function local_1vs1()
     const FontLoader = new THREE.FontLoader();
     
     let tableWidth, tableHeight;
+    // Enhanced scene setup
     const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x000011, 0.0025);
+    scene.background = new THREE.Color(0x000011);
 
-    let width = canvas.width ;
-    let height = canvas.height ;
+
+    const spotLight = new THREE.SpotLight(0xffffff, 0.2);
+    spotLight.position.set(0, 100, 0);
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 2048;
+    spotLight.shadow.mapSize.height = 2048;
+    scene.add(spotLight);
+
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    
+    let width = canvas.clientWidth ;
+    let height = canvas.clientHeight ;
 
     console.log("sizes : ", width, height);
+
     
-    const axesHelper = new THREE.AxesHelper(width / 2);
-    scene.add(axesHelper);
-    axesHelper.visible = false;
+    const camera = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
+    // const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     
-    let stats = new Stats();
-    const camera1 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
-    const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
-    
-    camera1.position.set(0, 30, 25);
-    camera2.position.set(0, 30, -25);
-    camera2.lookAt(0, 0, 0);
-    scene.add(camera1, camera2);
+    camera.position.set(15, 35, 0);
+    // camera2.position.set(0, 15, -35);
+    // camera2.lookAt(0, 0, 0);
+    scene.add(camera);
     
     
-    const grid = new THREE.GridHelper( 1000, 1000, 0xaaaaaa, 0xaaaaaa );
-    grid.material.opacity = 1;
-    grid.material.transparent = true;
-    grid.position.y = -1;
-    scene.add( grid );
-    grid.visible = false;
-    function initRenderer(){
+
+
+    renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    pongCanvas.appendChild(renderer.domElement);
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+    resizeCanvas();
+
+
+    // Particle system for background
+    function createStarfield() {
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
         
-        renderer = new THREE.WebGLRenderer( {canvas, antialias: true} );
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        pongCanvas.appendChild(renderer.domElement);
-        pongCanvas.appendChild( stats.dom );
-        controls = new THREE.OrbitControls( camera1, renderer.domElement );
+        for (let i = 0; i < 5000; i++) {
+            vertices.push(
+                Math.random() * 500 - 250,
+                Math.random() * 500 - 250,
+                Math.random() * 500 - 250
+            );
+        }
+        
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        const material = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 2,
+            transparent: true,
+            depthWrite: false,
+            alphaMap : new THREE.TextureLoader().load('/app/pong/assets/kenney_particle-pack/PNG (Transparent)/star_06.png'),
+        });
+
+        return new THREE.Points(geometry, material);
     }
     
-    
-    const directionalLight = new THREE.DirectionalLight(0xfdfbd3, 10, 800);
-    directionalLight.position.set(0, 500, 50);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
-    directionalLight.visible = false;
-    
+    const starfield = createStarfield();
+    scene.add(starfield);
+
     
     const socket = new WebSocket(local_URL);
     // Handle WebSocket events
@@ -135,21 +157,17 @@ export function local_1vs1()
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        console.table('data', data)
+        // console.table('data', data)
         if (data.type === "start") {
-            initRenderer();
-            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
             table_config = data.table;
             paddle = data.paddle;
-            player1_config = data.player1;
-            player2_config = data.player2;
             ball_config = data.ball;
             score = data.score;
 
             table();
             ballCreation();
             playerCreation();
-            createScore();
+            scoreManager = new ScoreManager(scene);
 
             startCountdown(3, () => {
                 animate();
@@ -173,15 +191,14 @@ export function local_1vs1()
             ball.position.x = data.ball.x;
             ball.position.z = data.ball.z;
             score = data.score;
-            shakeCamera(camera1);
-            shakeCamera(camera2);
-            updateScore();
+            shakeCamera(camera);
+            // shakeCamera(camera2);
+            scoreManager.addPoint(score);
         }
         if (data.type === "game_over") {
-            score = data.score;
-            cancelAnimationFrame(animationId);
-            socket.close();
-            render(GameOver(data.winner, score), gamePage.shadowRoot.querySelector('.game-page'));
+            window.removeEventListener("resize", resizeCanvas);
+            gameOver(data.winner, data.score);
+            scoreManager.reset();            
         }
     };
     socket.onclose = () => {
@@ -198,31 +215,61 @@ export function local_1vs1()
 
     function movePaddle(e)
     {
-        if(e.key === 'ArrowLeft') player2Direction = -1;
-        if(e.key === 'ArrowRight') player2Direction = 1;
-        if(e.key === 'a') player1Direction = -1;
-        if(e.key === 'd') player1Direction = 1;
+        if(e.key === 'ArrowDown') player2Direction = -1;
+        if(e.key === 'ArrowUp') player2Direction = 1;
+        if(e.key === 'w') player1Direction = -1;
+        if(e.key === 's') player1Direction = 1;
     }
 
     function stopPaddle(e)
     {
-        if (e.key === "ArrowLeft" || e.key === "ArrowRight")
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp")
             player2Direction = 0;
-        if (e.key === "a" || e.key === "d")
+        if (e.key === "w" || e.key === "s")
             player1Direction = 0;
     }
-    window.addEventListener("resize", () => {
-        canvas.width = document.documentElement.clientWidth;
-        canvas.height = document.documentElement.clientHeight;
 
-        width = canvas.width;
-        height = canvas.height;
-        camera1.aspect = (width / 2) / height;
-        camera2.aspect = (width / 2) / height;
-        camera2.updateProjectionMatrix();
-        camera1.updateProjectionMatrix();
+
+    function adjustFOV(camera, aspect) {
+        // Define base FOV for a standard aspect ratio (e.g., 16:9)
+        const baseFOV = 75; // Adjust this base FOV to your preference
+        const aspectRatioThreshold = 1.5; // A typical threshold to distinguish large from small screens
+    
+        if (aspect > aspectRatioThreshold) {
+            // For larger screens (wider aspect ratios), decrease the FOV to zoom in
+            camera.fov = baseFOV - (aspect - aspectRatioThreshold) * 5;
+        } else {
+            // For smaller screens, increase the FOV to widen the view
+            camera.fov = baseFOV + (aspectRatioThreshold - aspect) * 5;
+        }
+    
+        // Ensure the FOV remains within a reasonable range
+        camera.fov = Math.max(75, Math.min(camera.fov, 80)); // Clamping FOV between 45 and 75
+    
+        // Update the projection matrix with the new FOV
+        camera.updateProjectionMatrix();
+    }
+
+    function adjustCameraPosition(camera, aspect) {
+        let targetY = (aspect < 1) ? 35 * (1 / aspect) : 35;
+        camera.position.y = Math.max(35, Math.min(targetY, 50)); // Clamped to prevent extreme zooms
+    }
+
+
+    function resizeCanvas() {
+        width = pongCanvas.clientWidth ;
+        height = pongCanvas.clientHeight ;
+        const aspect = (width / height);
+
+        adjustFOV(camera, aspect);
+        adjustCameraPosition(camera, aspect);
+
+        camera.aspect = aspect;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(width , height);
-    });
+    }
+    window.addEventListener("resize", resizeCanvas);
 
     function table() {
         tableHeight = table_config.tableHeight;
@@ -247,7 +294,8 @@ export function local_1vs1()
         plane.position.set(0, -0.49, 0);
         TableG.add(plane);
         tableBound(tableWidth, tableHeight);
-        tableWalls(tableWidth, tableHeight);
+        createWalls(tableWidth, tableHeight);
+        scene.add(TableG);
     }
 
     function tableBound(tableWidth, tableHeight){
@@ -281,154 +329,353 @@ export function local_1vs1()
         TableG.add(boundY);
     }
 
+    function createWalls(tableWidth, tableHeight) {
+        const walls = new THREE.Group();
+    
+        const wallGeometry = new THREE.BoxGeometry(1, 2, tableHeight);
+        const glowShader = {
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                uniform vec3 color;
+                varying vec2 vUv;
+                
+                void main() {
+                    float pulse = sin(time * 2.0) * 0.5 + 0.5;
+                    float pattern = sin(vUv.y * 20.0 + time * 3.0) * 0.5 + 0.5;
+                    gl_FragColor = vec4(color, (pattern + pulse) * 0.5);
+                }
+            `
+        };
+    
+        function createWall(position, color) {
+            const wall = new THREE.Group();
+            
+            // Main wall
+            const wallMaterial = new THREE.MeshPhongMaterial({
+                color: color,
+                emissive: color,
+                emissiveIntensity: 0.5,
+                shininess: 100
+            });
+            const wallMesh = new THREE.Mesh(wallGeometry, wallMaterial);
+            wallMesh.castShadow = true;
+            
+            // Energy field
+            const energyMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    color: { value: new THREE.Color(color) }
+                },
+                vertexShader: glowShader.vertexShader,
+                fragmentShader: glowShader.fragmentShader,
+                transparent: true,
+                side: THREE.DoubleSide
+            });
+    
+            const energyField = new THREE.Mesh(
+                new THREE.BoxGeometry(1.5, 2.2, tableHeight + 1),
+                energyMaterial
+            );
+    
+            wall.add(wallMesh, energyField);
+            wall.position.copy(position);
+    
+            // Add light
+            const wallLight = new THREE.RectAreaLight(color, 2, tableHeight + 1, 2);
+            wallLight.position.copy(position);
+            wallLight.position.x = position.x < 0 ? 0.5 : -0.5;
+            wallLight.rotation.y = (position.x < 0 ? -Math.PI / 2 : Math.PI / 2);
+            // wall.rotation.y = Math.PI / 2;
+            wall.add(wallLight);
 
-    function tableWalls(tableWidth, tableHeight) {
-
-        const WallL = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, tableHeight / 2),
-            new THREE.MeshToonMaterial({
-                color: "cyan",
-                emissive: "cyan", // Emissive color (glow effect)
-                emissiveIntensity: 0.8 // Intensity of the emissive effect
-            })
+            
+            return wall;
+        }
+    
+        // Create walls with different colors
+        leftWall = createWall(
+            new THREE.Vector3(-tableWidth / 2 + 0.5, 0, 0),
+            0xff0044
         );
-        WallL.position.set(-(tableWidth / 2) + 0.5, 0, tableHeight / 4);
-        TableG.add(WallL);
-        
-        const rectLight1 = new THREE.RectAreaLight( "cyan", 2, tableHeight / 2, 3 );
-        rectLight1.position.set( WallL.position.x + 0.5, WallL.position.y , WallL.position.z);
-        rectLight1.rotation.y = -Math.PI / 2;
-        TableG.add( rectLight1 );
-        
-        const WallL1 = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, tableHeight / 2),
-            new THREE.MeshToonMaterial({
-                color: new THREE.Color("#e3052e"),
-                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
-                emissiveIntensity: 0.8 // Intensity of the emissive effect
-                })
+        rightWall = createWall(
+            new THREE.Vector3(tableWidth / 2 - 0.5, 0, 0),
+            0xff0044
         );
-        WallL1.position.set(-(tableWidth / 2) + 0.5, 0, -(tableHeight / 4));
-        TableG.add(WallL1);
-
-        const rectLight2 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
-        rectLight2.position.set( WallL1.position.x + 0.5, WallL1.position.y, WallL1.position.z);
-        rectLight2.rotation.y = -Math.PI / 2;
-        TableG.add( rectLight2 );
-        
-        const WallR = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, tableHeight / 2),
-            new THREE.MeshToonMaterial({
-                color: new THREE.Color("#e3052e"),
-                emissive: new THREE.Color("#e3052e"), // Emissive color (glow effect)
-                emissiveIntensity: 0.8 // Intensity of the emissive effect
-            })
-        );
-        WallR.position.set(tableWidth / 2 - 0.5, 0, tableHeight / 4);
-        TableG.add(WallR);
-
-        const rectLight3 = new THREE.RectAreaLight( new THREE.Color("#e3052e"), 2, tableHeight / 2, 3 );
-        rectLight3.position.set( WallR.position.x - 0.5, WallR.position.y, WallR.position.z);
-        rectLight3.rotation.y = Math.PI / 2;
-        TableG.add( rectLight3 );
-        
-        const WallR1 = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, tableHeight / 2),
-            new THREE.MeshToonMaterial({
-                color: "cyan",
-                emissive: "cyan", // Emissive color (glow effect)
-                emissiveIntensity: 0.8 // Intensity of the emissive effect
-            })
-        );
-        WallR1.position.set(tableWidth / 2 - 0.5, 0, -(tableHeight / 4));
-        TableG.add(WallR1);
-
-        const rectLight4 = new THREE.RectAreaLight( "cyan", 2, tableHeight / 2, 3 );
-        rectLight4.position.set( WallR1.position.x - 0.5, WallR1.position.y, WallR1.position.z);
-        rectLight4.rotation.y = Math.PI / 2;
-        TableG.add( rectLight4 );
-    //////////////////////////////////////////////////////
-        scene.add(TableG);
+    
+        walls.add(leftWall, rightWall);
+    
+        TableG.add(walls);
     }
+
+    function createBallWithTrail(config) {
+        const ballGroup = new THREE.Group();
+        
+        const sphereGeometry = new THREE.SphereGeometry(config.radius, 32, 32);
+        const sphereMaterial = new THREE.MeshPhongMaterial({
+            color: 0xff8800,
+            emissive: 0xff4400,
+            shininess: 100
+        });
+        
+        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphereMesh.castShadow = true;
+        
+        ballGroup.add(sphereMesh);
+        
+        // Add glow effect
+        const glowMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                c: { value: 0.5 },
+                p: { value: 4.5 },
+                glowColor: { value: new THREE.Color(0xff4400) },
+                time: { value: 0 },
+            },
+            vertexShader: `
+                varying vec3 vNormal;
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 glowColor;
+                uniform float c;
+                uniform float p;
+                uniform float time;
+                varying vec3 vNormal;
+                void main() {
+                    float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
+                    intensity *= abs(sin(time * 0.01));
+                    gl_FragColor = vec4(glowColor, intensity);
+                }
+            `,
+            transparent: true,
+            side: THREE.BackSide
+        });
+        
+        const glowMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(config.radius * 1.2, 32, 32),
+            glowMaterial
+        );
+        
+        ballGroup.add(glowMesh);
+        return ballGroup;
+    }
+
 
     function ballCreation() {
 
-        ball = new THREE.Mesh(
-            new THREE.SphereGeometry(ball_config.radius, 32, 32),
-            new THREE.MeshToonMaterial( { 
-                color: "orange",
-                emissive: "orange", // Emissive color (glow effect)
-                emissiveIntensity: 0.8 // Intensity of the emissive effect
-            })
-        );
-        ball.position.set(ball_config.x, ball_config.y, ball_config.z);
+        ball = createBallWithTrail(ball_config);
+        ball.position.set(ball_config.x, ball_config.y + 0.1, ball_config.z);
         scene.add(ball);
+    } 
+
+    // Enhanced paddle creation with effects
+    function createPaddle(color, emissiveColor) {
+        const paddleGroup = new THREE.Group();
+        
+        const paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, paddle.deep);
+        const paddleMaterial = new THREE.MeshPhongMaterial({
+            color: color,
+            emissive: emissiveColor,
+            emissiveIntensity: 0.5,
+            shininess: 100
+        });
+        
+        const paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterial);
+        paddleMesh.castShadow = true;
+        paddleGroup.add(paddleMesh);
+        
+        // Add energy field effect
+        const energyGeometry = new THREE.BoxGeometry(paddle.width + 0.5, paddle.height + 0.5, paddle.deep + 0.5);
+        const energyMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                color: { value: new THREE.Color(color) }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                uniform vec3 color;
+                varying vec2 vUv;
+                void main() {
+                    float pattern = sin(vUv.y * 20.0 + time) * 0.5 + 0.5;
+                    gl_FragColor = vec4(color, pattern * 0.3);
+                }
+            `,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        
+        const energyField = new THREE.Mesh(energyGeometry, energyMaterial);
+        energyField.rotation.x = Math.PI / 2;
+        paddleGroup.add(energyField);
+        
+        return paddleGroup;
     }
 
     function playerCreation() {
-        player1 = new THREE.Mesh(
-            new THREE.BoxGeometry(paddle.width, paddle.height, paddle.deep),
-            new THREE.MeshToonMaterial({
-                color: "cyan",
-                emissive: "cyan",
-                emissiveIntensity: 1.0
-            })
-        );
+        player1 = createPaddle("cyan", "cyan");
         player1.position.set(0, 0, (tableHeight / 2) - (paddle.deep / 2));
         scene.add(player1);
 
-        player2 = new THREE.Mesh(
-            new THREE.BoxGeometry(paddle.width, paddle.height, paddle.deep),
-            new THREE.MeshToonMaterial({
-                color: new THREE.Color("#e3052e"),
-                emissive: new THREE.Color("#e3052e"),
-                emissiveIntensity: 1.0
-            })
-        );
+        player2 = createPaddle(new THREE.Color("#e3052e"), new THREE.Color("#e3052e"));
         player2.position.set(0, 0, -(tableHeight / 2) + (paddle.deep / 2));
         scene.add(player2);
     }
 
 
-    function createScore() {
-        FontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
-            const player1Score = new THREE.TextGeometry(`${score.player1}`, {
-                font: font,
-                size: 10,
-                height: 0.01
-            });
-            player1ScoreMesh = new THREE.Mesh(player1Score, new THREE.MeshBasicMaterial({color: "white"}));
-            player1ScoreMesh.position.set(-3.5, -0.4, 14);
-            player1ScoreMesh.rotation.x = -Math.PI / 2;
-            scene.add(player1ScoreMesh);
 
-            const player2Score = new THREE.TextGeometry(`${score.player2}`, {
-                font: font,
-                size: 10,
-                height: 0.01
+    class ScoreManager {
+        constructor(scene) {
+            this.scene = scene;
+            this.scores = {
+                player1: 0,
+                player2: 0,
+                maxScore: 5
+            };
+            this.scoreMeshes = {
+                player1: null,
+                player2: null
+            };
+
+            // Initialize score displays
+            this.loadFont();
+        }
+    
+        loadFont() {
+            FontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+                this.font = font;
+                this.createScoreDisplays();
             });
-            player2ScoreMesh = new THREE.Mesh(player2Score, new THREE.MeshBasicMaterial({color: "white"}));
-            player2ScoreMesh.position.set(3.5, -0.4, -14);
-            player2ScoreMesh.rotation.y = Math.PI;
-            player2ScoreMesh.rotation.x = Math.PI / 2;
-            scene.add(player2ScoreMesh);
-        });
+        }
+    
+        createScoreDisplays() {
+            // Player 1 Score
+            const player1Score = new THREE.TextGeometry(`${this.scores.player1}`, {
+                font: this.font,
+                size: 10,
+                height: 0.1,
+                bevelEnabled: true,
+                bevelThickness: 0.1,
+                bevelSize: 0.1,
+                bevelSegments: 3
+            });
+    
+            this.scoreMeshes.player1 = new THREE.Mesh(
+                player1Score,
+                new THREE.MeshPhongMaterial({
+                    color: 0xffffff,
+                    metalness: 0.5,
+                    roughness: 0.5,
+                    emissive: 0x444444
+                })
+            );
+            this.scoreMeshes.player1.position.set(-3.5, -0.2, 14);
+            this.scoreMeshes.player1.rotation.x = -Math.PI / 2;
+            this.scene.add(this.scoreMeshes.player1);
+    
+            // Player 2 Score
+            const player2Score = new THREE.TextGeometry(`${this.scores.player2}`, {
+                font: this.font,
+                size: 10,
+                height: 0.1,
+                bevelEnabled: true,
+                bevelThickness: 0.1,
+                bevelSize: 0.1,
+                bevelSegments: 3
+            });
+    
+            this.scoreMeshes.player2 = new THREE.Mesh(
+                player2Score,
+                new THREE.MeshPhongMaterial({
+                    color: 0xffffff,
+                    metalness: 0.5,
+                    roughness: 0.5,
+                    emissive: 0x444444
+                })
+            );
+            this.scoreMeshes.player2.position.set(3.5, -0.2, -14);
+            this.scoreMeshes.player2.rotation.y = Math.PI;
+            this.scoreMeshes.player2.rotation.x = Math.PI / 2;
+            this.scene.add(this.scoreMeshes.player2);
+        }
+    
+        addPoint(score) {
+            this.scores = score;
+            for (const player in this.scoreMeshes) {
+                if (this.scoreMeshes[player]) {
+                    this.scene.remove(this.scoreMeshes[player]);
+                }
+            }
+            this.createScoreDisplays();
+        }
+        reset() {
+            this.scores.player1 = 0;
+            this.scores.player2 = 0;
+            this.updateScore();
+        }
+    
+        updateScore() {
+            for (const player in this.scoreMeshes) {
+                if (this.scoreMeshes[player]) {
+                    this.scene.remove(this.scoreMeshes[player]);
+                }
+            }
+            this.createScoreDisplays();
+        }
     }
 
-    function updateScore() {
-        scene.remove(player1ScoreMesh);
-        scene.remove(player2ScoreMesh);
-        createScore();
+    function updateCamera() {
+        camera.position.lerp(
+          new THREE.Vector3(camera.position.x, camera.position.y, ball.position.z * 0.05),
+          0.05
+        );
+        camera.lookAt(ball.position);
     }
 
-
-    function animate ()
+    function animate (time)
     {
         animationId = requestAnimationFrame(animate);
-        stats.update();
+
+        updateCamera();
+
+        // Update starfield
+        starfield.rotation.y += 0.0009;
+
+        // Update paddle energy fields
+        player1.children[1].material.uniforms.time.value = time * 0.001;
+        player2.children[1].material.uniforms.time.value = time * 0.001
+
+        // Update ball trail
+        if (ball) {
+            const trailMaterial = ball.children[1].material;
+            trailMaterial.uniforms.time.value = time * 0.001;
+        }
+
+        // walls animation
+        leftWall.children[1].material.uniforms.time.value = time * 0.001;
+        rightWall.children[1].material.uniforms.time.value = time * 0.001;
+
+
+
         controls.update();
 
-        drawing();
+        renderer.render(scene, camera);
+        // drawing();
         if (wsOpen)
             sendPaddlePosition();
 
@@ -443,24 +690,45 @@ export function local_1vs1()
         }));
     }
 
-    function shakeCamera(camera, intensity = 0.3, duration = 0.5) {
-        const originalPosition = camera.position.clone(); // Store the original position
+    // function shakeCamera(camera, intensity = 0.3, duration = 0.5) {
+    //     const originalPosition = camera.position.clone(); // Store the original position
     
-        // Animate shaking
-        gsap.to(camera.position, {
-            x: `+=${intensity}`,
-            y: `+=${intensity}`,
-            z: `+=${intensity}`,
-            duration: duration / 4,
-            yoyo: true,
-            repeat: 5,
-            onComplete: () => {
-                // Reset camera position after shaking
-                camera.position.copy(originalPosition);
+    //     // Animate shaking
+    //     gsap.to(camera.position, {
+    //         x: `+=${intensity}`,
+    //         y: `+=${intensity}`,
+    //         z: `+=${intensity}`,
+    //         duration: duration / 4,
+    //         yoyo: true,
+    //         repeat: 5,
+    //         onComplete: () => {
+    //             // Reset camera position after shaking
+    //             camera.position.copy(originalPosition);
+    //         }
+    //     });
+    // }
+    
+    function shakeCamera(camera) {
+        const originalPosition = camera.position.clone();
+        const shakeStrength = 0.3;
+        const shakeDuration = 200; // in milliseconds
+    
+        const startTime = Date.now();
+        function shake() {
+            const elapsed = Date.now() - startTime;
+            if (elapsed < shakeDuration) {
+                camera.position.x = originalPosition.x + ((Math.random() - 1) * 2) * shakeStrength;
+                camera.position.y = originalPosition.y + ((Math.random() - 1) * 2) * shakeStrength;
+                camera.position.z = originalPosition.z + ((Math.random() - 1) * 2) * shakeStrength;
+                requestAnimationFrame(shake);
+            } else {
+                camera.position.copy(originalPosition); // Reset camera position
             }
-        });
+        }
+        shake();
     }
-    
+
+
 
     function startCountdown(duration, onComplete) {
         countdownElement.style.display = 'flex'; // Hide the countdown element
@@ -472,8 +740,8 @@ export function local_1vs1()
     
         // Update the countdown every second
         const interval = setInterval(() => {
-            // renderer.render( scene, camera1 );
-            drawing();
+            // drawing();
+            renderer.render(scene, camera);
 
             countdownElement.style.fillStyle = `rgba(255, 255, 255, ${opacity})`; // Fading effect
             countdownElement.style.font = `${100 * scale}px "Pong War", "Freeware"`; // Dynamic scaling
@@ -496,18 +764,106 @@ export function local_1vs1()
         }, 60);
     }
 
-
-    function drawing(){
-        // Render for the first view (Player 1)  blue player in the left side 
-        renderer.setViewport(0, 0, width / 2, height);
-        renderer.setScissor(0, 0, width / 2, height);
-        renderer.setScissorTest(true);
-        renderer.render(scene, camera1);
+    // Enhanced game over effect
+    function gameOver(winner, score) {
+        // Create multiple explosion layers
+        function createExplosionLayer(radius, particleCount, speed) {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const velocities = [];
+            
+            // Create random particles in a sphere
+            for(let i = 0; i < particleCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const r = radius * Math.random();
+                
+                vertices.push(
+                    r * Math.sin(phi) * Math.cos(theta),
+                    r * Math.sin(phi) * Math.sin(theta),
+                    r * Math.cos(phi)
+                );
+                
+                // Add random velocity for each particle
+                velocities.push(
+                    (Math.random() - 0.5) * speed,
+                    (Math.random() - 0.5) * speed,
+                    (Math.random() - 0.5) * speed
+                );
+            }
+            
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            
+            const explosion = new THREE.Points(
+                geometry,
+                new THREE.PointsMaterial({
+                    color: winner === 'player1' ? 0x00ff00 : 0xff0000,
+                    size: 0.5,
+                    transparent: true,
+                    opacity: 1
+                })
+            );
+            
+            explosion.userData.velocities = velocities;
+            return explosion;
+        }
         
-        // Render for the first view (Player 2) red player in the right side 
-        renderer.setViewport(width / 2, 0, width / 2, height);
-        renderer.setScissor(width / 2, 0, width / 2, height);
-        renderer.setScissorTest(true);
-        renderer.render(scene, camera2);
+        // Create multiple layers of explosion
+        const explosionLayers = [
+            createExplosionLayer(20, 1000, 2),  // Core explosion
+            createExplosionLayer(15, 500, 1.5), // Middle layer
+            createExplosionLayer(10, 250, 1)    // Outer layer
+        ];
+        
+        explosionLayers.forEach(layer => scene.add(layer));
+        
+        // Animate explosion
+        let time = 0;
+        function animateExplosion() {
+            time += 0.016; // Approximately 60 FPS
+            
+            explosionLayers.forEach(layer => {
+                const positions = layer.geometry.attributes.position.array;
+                
+                // Update each particle position based on velocity
+                for(let i = 0; i < positions.length; i += 3) {
+                    positions[i] += layer.userData.velocities[i] * time;
+                    positions[i+1] += layer.userData.velocities[i+1] * time;
+                    positions[i+2] += layer.userData.velocities[i+2] * time;
+                }
+                
+                layer.geometry.attributes.position.needsUpdate = true;
+                layer.material.opacity = Math.max(0, 1 - time);
+            });
+            
+            if(time < 1) {
+                requestAnimationFrame(animateExplosion);
+            } else {
+                // Clean up and show game over screen
+                explosionLayers.forEach(layer => scene.remove(layer));
+                wsOpen = false;
+                cancelAnimationFrame(animationId);
+                socket.close();
+                render(GameOver(winner, score), 
+                    gamePage.shadowRoot.querySelector('.game-page'));
+            }
+        }
+        
+        animateExplosion();
     }
+
+
+    // function drawing(){
+    //     // Render for the first view (Player 1)  blue player in the left side 
+    //     renderer.setViewport(0, 0, width / 2, height);
+    //     renderer.setScissor(0, 0, width / 2, height);
+    //     renderer.setScissorTest(true);
+    //     renderer.render(scene, camera);
+        
+    //     // Render for the first view (Player 2) red player in the right side 
+    //     renderer.setViewport(width / 2, 0, width / 2, height);
+    //     renderer.setScissor(width / 2, 0, width / 2, height);
+    //     renderer.setScissorTest(true);
+        // renderer.render(scene, camera2);
+    // }
 }
