@@ -217,6 +217,8 @@ export function manageLocalTournament(participants, tournamentName) {
                     data.matches,
                     data.round,
                     ws,
+                    data.round > 3 ? data.ranked : null,
+                    tournamentName
                 ),
                 gamePage.shadowRoot.querySelector('.game-page'));
         }

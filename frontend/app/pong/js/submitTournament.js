@@ -375,15 +375,24 @@ export async function submitTournament(
       const accounts = await web3.eth.getAccounts();
       const account = accounts[0];
 
+      console.log('Sending transaction:', {
+          tournamentName,
+          players: [player1Name, player2Name, player3Name, player4Name],
+          account
+      });
+
       try {
-          await contract.methods.addTournament(
+
+          const receipt = await contract.methods.addTournament(
               tournamentName,
               player1Name, 1,
               player2Name, 2,
               player3Name, 3,
               player4Name, 4
-          ).send({ from: account });
+          ).send({ from: account});
+          console.log('Transaction successful:', receipt);
           return true;
+
           // alert('Tournament Added!');
       } catch (error) {
           console.error("Error adding tournament:", error);

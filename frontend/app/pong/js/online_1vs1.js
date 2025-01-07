@@ -116,7 +116,6 @@ export function online_1vs1()
     pongCanvas.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-    resizeCanvas();
     
 
     function createStarfield() {
@@ -167,6 +166,7 @@ export function online_1vs1()
         if (data.type === "start") {
             setTimeout(() => {
                 render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+                resizeCanvas();
                 table_config = data.table;
                 paddle = data.paddle;
                 ball_config = data.ball;

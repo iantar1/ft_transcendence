@@ -19,7 +19,7 @@ class BouncingBallLoader {
 
         for (let i = 0; i < starCount; i++) {
             const star = document.createElement('div');
-            star.className = 'star';
+            star.className = 'star';    
             star.style.left = `${Math.random() * 100}%`;
             star.style.top = `${Math.random() * 100}%`;
             star.style.width = `${Math.random() * 3}px`;

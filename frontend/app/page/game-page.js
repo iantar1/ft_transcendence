@@ -18,13 +18,16 @@ function getBadgeColor(rank) {
     }
 }   
 
-var web3 = "";
+var web3 = null;
+        
+var accounts = null;
 
 async function init() {
     if (typeof window.ethereum !== 'undefined') {
         web3 = new Web3(window.ethereum);
+
         try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const btnwallet = document.getElementById('connectwallet');
             const first4 = accounts[0].slice(0, 4);
             const last4 = accounts[0].slice(-4);
@@ -75,14 +78,15 @@ async function init() {
                     const data = await submitTournament("getScore");
                     // console.log("xxxxx ", data);
                     
+    
                     const tournamentData = data.map((tournament, index) => ({
                         tournament: tournament.name,
                         players: [
-                            { address: tournament.player1.name, rank: 1, points: tournament.player1.points },
-                            { address: tournament.player2.name, rank: 2, points: tournament.player2.points },
-                            { address: tournament.player3.name, rank: 3, points: tournament.player3.points },
-                            { address: tournament.player4.name, rank: 4, points: tournament.player4.points },
-                        ],
+                            { address: tournament.player1.name, rank: 1, points: 150 },
+                            { address: tournament.player2.name, rank: 2, points: 120 },
+                            { address: tournament.player3.name, rank: 3, points: 160 },
+                            { address: tournament.player4.name, rank: 4, points: 90 }
+                        ]
                     }));
                     // Sample tournament data - replace with your actual data
           
@@ -286,6 +290,7 @@ async function handleDisconnect() {
         try {
             // Reset web3 instance
             web3 = null;
+            accounts = null;
 
             // Clear wallet-related data
             localStorage.clear();

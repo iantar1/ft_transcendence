@@ -173,6 +173,7 @@ export function waitingPage() {
         updateUserCards();
         if (usr_data && opp_data){
             midel_info.textContent = 'fight for your life';
+            waiting.remove(cancel);
             if (intervalId) {
                 clearInterval(intervalId);
                 console.log("Updates stopped.");
