@@ -177,9 +177,9 @@ class AIConsumer(AsyncWebsocketConsumer):
         return target_x + error_margin
 
     def simulate_keypress(self, player):
-        if player["x"] < self.target_x :
+        if player["x"] + self.paddle["width"] / 2 < self.target_x :
             player["direction"] = 1  # Simulate "right arrow" keypress
-        elif player["x"] > self.target_x:
+        elif player["x"] - self.paddle["width"] / 2 > self.target_x:
             player["direction"] = -1  # Simulate "left arrow" keypress
         else:
             player["direction"] = 0  # No keypress
@@ -188,32 +188,58 @@ class AIConsumer(AsyncWebsocketConsumer):
             player["direction"] = 0
 
     def predict_ball_position(self):
-        future_z = self.ball["z"]
+        """
+        Predicts where the ball will intersect with the AI paddle's plane.
+        Takes into account wall bounces and speed changes after paddle hits.
+        Returns the predicted x-coordinate where the ball will cross the AI paddle's plane.
+        """
         future_x = self.ball["x"]
+        future_z = self.ball["z"]
         dx = self.ball["dx"]
         dz = self.ball["dz"]
-
-        while abs(future_z) < TABLE_HIEGHT / 2:
-            # Calculate time to the next wall collision
+        speed_multiplier = 1.0
+        
+        # If ball is moving away from AI, return current position
+        if dz >= 0:
+            return future_x
+            
+        while True:
+            # Check if ball has stopped moving horizontally
+            if dx == 0:
+                return future_x
+                
+            # Calculate time to reach next wall or paddle
             if dx > 0:
+                # Time to reach right wall
                 time_to_wall = (((TABLE_WIDTH / 2) - 1) - (future_x + self.ball["radius"])) / dx
             else:
-                time_to_wall = ((-(TABLE_WIDTH / 2) + 1) - (future_x - self.ball["radius"])) / abs(dx)
-
-            # Predict z position during this time 
-            potential_future_z = future_z + dz * time_to_wall
-
-            # Check if the ball stays within the bounds of the table height
-            if abs(potential_future_z) >= TABLE_HIEGHT / 2:
-                # The ball reaches the end of the table (goal area)
-                break
-  
-            # Update future_x and future_z after wall bounce
+                # Time to reach left wall
+                time_to_wall = ((-(TABLE_WIDTH / 2) + 1) - (future_x - self.ball["radius"])) / dx
+                
+            # Calculate where ball will be when it reaches wall
+            potential_z = future_z + dz * time_to_wall
+            
+            # If ball will reach AI paddle plane before hitting wall
+            if potential_z <= -(TABLE_HIEGHT / 2):
+                # Calculate final x position at AI paddle plane
+                time_to_paddle = (-(TABLE_HIEGHT / 2) - future_z) / dz
+                final_x = future_x + dx * time_to_paddle
+                
+                # Ensure prediction stays within table bounds
+                final_x = max(-(TABLE_WIDTH / 2) + 1, min(final_x, (TABLE_WIDTH / 2) - 1))
+                return final_x
+                
+            # Ball will hit wall first
             future_x += dx * time_to_wall
-            future_z = potential_future_z
-            dx *= -1  # Reverse the direction of dx upon wall collision
+            future_z = potential_z
+            
+            # Bounce off wall (reverse horizontal direction)
+            dx *= -1
+            
+            # Safety check for infinite loops
+            if time_to_wall <= 0:
+                return future_x
 
-        return future_x
 
     
     async def check_goals(self):

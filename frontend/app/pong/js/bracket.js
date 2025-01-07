@@ -5,11 +5,13 @@ import { submitTournament } from "./submitTournament.js"
 
 export function tournamentBracket(
     matches = [
-        { player1: 'T1', player2: 'T2' },	
-        { player1: 'T3', player2: 'T4' },
+        { player1: 'player 1', player2: 'player 2' },	
+        { player1: 'player 3', player2: 'player 4' },
     ],
     currentMatch = 1,
     ws = null,
+    ranekd = null,
+    name = null
 ) {
     const style = document.createElement('style');
     style.textContent = `
@@ -136,7 +138,7 @@ export function tournamentBracket(
         }
 
         .final-winner {
-            background: var(--orange);
+            background: var(--red);
             padding: 1rem;
             border-radius: 5px;
             text-align: center;
@@ -321,15 +323,8 @@ export function tournamentBracket(
 
     // Event listeners
     startButton.addEventListener('click', async () => {
-        let players = {
-            player1 : "ayoub",
-            player2 : "ahmed",
-            player3 : "hamza",
-            player4 : "omar"
-        }
-
         if (currentMatch > 3) {
-            await submitTournament("submit", players, "lbotola");
+            await submitTournament("submit", ranekd, name);
         }
         else {
             // submitTournament("submit", matches[0].player1, 6);
@@ -356,9 +351,6 @@ export function tournamentBracket(
         container.appendChild(CurrentRound);
     }
     container.appendChild(buttons);
-    // if (currentMatch > 3) {
-    //     container.appendChild(createWinnerCard(matches[2].winner));
-    // }
 
     return container;
 }
