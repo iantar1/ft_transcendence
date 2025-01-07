@@ -238,15 +238,51 @@ export function online_1vs1()
         render(menu(), gamePage.shadowRoot.querySelector('.game-page'));
     });
 
+    function adjustCameraPosition(camera, aspect) {
+        let targetZ = (aspect < 1) ? 35 * (1 / aspect) : 35;
+        let targetY = (aspect < 1) ? 15 * (1 / aspect) : 15;
+        camera.position.z = Math.max(35, Math.min(targetZ, 50)); // Clamped to prevent extreme zooms
+        camera.position.y = Math.max(15, Math.min(targetY, 30)); // Clamped to prevent extreme zooms
+    }
+    
+
+    function adjustFOV(camera, aspect) {
+        // Define base FOV for a standard aspect ratio (e.g., 16:9)
+        const baseFOV = 75; // Adjust this base FOV to your preference
+        const aspectRatioThreshold = 1.5; // A typical threshold to distinguish large from small screens
+    
+        if (aspect > aspectRatioThreshold) {
+            // For larger screens (wider aspect ratios), decrease the FOV to zoom in
+            camera.fov = baseFOV - (aspect - aspectRatioThreshold) * 5;
+        } else {
+            // For smaller screens, increase the FOV to widen the view
+            camera.fov = baseFOV + (aspectRatioThreshold - aspect) * 5;
+        }
+    
+        // Ensure the FOV remains within a reasonable range
+        camera.fov = Math.max(75, Math.min(camera.fov, 80)); // Clamping FOV between 45 and 75
+    
+        // Update the projection matrix with the new FOV
+        camera.updateProjectionMatrix();
+    }
+
     function resizeCanvas() {
         width = pongCanvas.clientWidth ;
         height = pongCanvas.clientHeight ;
+        const aspect = (width / height);
 
-        console.log("sizes : ", pongCanvas.clientWidth / pongCanvas.clientHeight);
-        camera.fov = Math.min(95, Math.max(75, 60 * (height / width)));
-        camera.aspect = width / height;
+        adjustFOV(camera, aspect);
+        adjustCameraPosition(camera, aspect);
+
+        camera.aspect = aspect;
         camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(width , height);
+
+        console.log("camera on z: ", camera.position.z);
+        console.log("camera on y: ", camera.position.y);
+        console.log("camera fov : ", camera.fov);
+        
     }
 
     window.addEventListener("resize", resizeCanvas);
@@ -621,14 +657,31 @@ export function online_1vs1()
     function updateCameraPosition(role) {
         if (role === "player1")
             camera.position.set(0, 15, 35);
-        if (role === "player2")
+        else if (role === "player2")
             camera.position.set(0, 15, -35);
+    }
+
+    function updateCamera() {
+        if (role === "player1"){
+            camera.position.lerp(
+                new THREE.Vector3(player1.position.x * 0.5, camera.position.y, camera.position.z),
+                0.05
+            );
+        }
+        else if (role === "player2"){
+            camera.position.lerp(
+                new THREE.Vector3(player2.position.x * 0.5, camera.position.y, camera.position.z),
+                0.05
+            );
+        }
     }
 
 
     function animate (time)
     {
         animationId = requestAnimationFrame(animate);
+
+        updateCamera();
 
         // Update starfield
         starfield.rotation.y += 0.0009;
