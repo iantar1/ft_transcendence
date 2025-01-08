@@ -47,19 +47,20 @@ export function menu() {
     }
 
     button {
-      padding: 10px 10px;
-      width: 200px;
-      font-family: "Pong War";
-      letter-spacing: 2px;
-      color: white;
-      background-color: var(--red);
-      border: 1px solid white;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size :100%;
-      transition: 0.5s ease;
+        width: 200px;
+        height: 50px;
+        background-color: rgba(228, 5, 47, 1);
+        border-radius: 12px;
+        border: none;
+        font-size: 100%;
+        z-index: 2000;
+        color: #fff;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        font-family: "Pong War", "Freeware";
+        font-weight: bold;
+        border :1px solid;
     }
-    
     button.hidden {
       display: none;
     }
@@ -69,7 +70,8 @@ export function menu() {
     }
 
     button:hover {
-      background-color: gray;
+       transform: scale(1.1);
+
   }`;
 
 

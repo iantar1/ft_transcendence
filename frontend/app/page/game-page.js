@@ -4,6 +4,7 @@ import {fetchUserData , getCookie} from './readData.js';
 
 import { navigateTo } from '../routing.js';
 import { submitTournament } from '../pong/js/submitTournament.js';
+// import { TicTacToe } from '../tictac/tix-taco.js';
 
 // const walletWeb3 = () => {
 
@@ -81,11 +82,12 @@ async function init() {
     
                     const tournamentData = data.map((tournament, index) => ({
                         tournament: tournament.name,
+                        time : new Date(tournament.timestamp * 1000).toLocaleString(),
                         players: [
-                            { address: tournament.player1.name, rank: 1, points: 150 },
+                            { address: tournament.player1.name, rank: 1, points: 160 },
                             { address: tournament.player2.name, rank: 2, points: 120 },
-                            { address: tournament.player3.name, rank: 3, points: 160 },
-                            { address: tournament.player4.name, rank: 4, points: 90 }
+                            { address: tournament.player3.name, rank: 3, points: 80 },
+                            { address: tournament.player4.name, rank: 4, points: 40 }
                         ]
                     }));
                     // Sample tournament data - replace with your actual data
@@ -100,7 +102,8 @@ async function init() {
                     // Generate tournament tables HTML
                     const tournamentsHTML = tournamentData.map(tournament => `
                         <div class="tournament-section mb-4">
-                            <h6 class="tournament-title text-light mb-3">${tournament.tournament}</h6>
+                            <h6  class="tournament-title text-light mb-3"> Tournament Name : <span style="color:#787878;">${tournament.tournament}</span></h6>
+                            <span style="color:#787878	; font-size :15px;" >${tournament.time}</span> 
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover">
                                     <thead style="">
@@ -108,7 +111,7 @@ async function init() {
                                             <th>Rank</th>
                                             <th>Player</th>
                                             <th>Score</th>
-                                        </tr>
+                                        </tr>                               
                                     </thead>
                                     <tbody>
                                         ${tournament.players.map(player => `
@@ -467,7 +470,7 @@ class gamePage extends HTMLElement {
                 </div>
                 </div>
                 <div class="scroll-item">
-                <button id="togame" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
+                <button id="toxo" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
                 <div class="track-items" >
                 <img  class="w-100 h-100" src="/images/xo.png">
                 </div>
@@ -494,6 +497,10 @@ class gamePage extends HTMLElement {
         document.getElementById('topong').addEventListener('click' , e => {
             const content = document.getElementById('content')
             content.innerHTML = '<game-page></game-page>';
+        });
+        document.getElementById('toxo').addEventListener('click' , e => {
+            const content = document.getElementById('content')
+            content.innerHTML = '<game-tictac></game-tictac>';
         });
     }
     connectedCallback(){
