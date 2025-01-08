@@ -80,7 +80,7 @@ export function ai_mode()
     // Enhanced scene setup
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x000011, 0.0025);
-    scene.background = new THREE.Color(0x000011);
+    // scene.background = new THREE.Color(0x000011);
 
 
     const spotLight = new THREE.SpotLight(0xffffff, 0.2);

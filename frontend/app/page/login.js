@@ -4,7 +4,7 @@ import {navigateTo} from '../routing.js';
 
 import {readData} from './readData.js';
 
-import {checkLogin} from './readData.js';
+import {getCookie} from './readData.js';
 
 
 const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0ebdda4b19ab43b23646a570a1cca0290462151e294cd51cfbd5a82c742adc8d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code";
@@ -581,6 +581,9 @@ class loginPage extends HTMLElement {
             });
         }
         rand(){
+            if (getCookie('access')){
+                navigateTo('/home');
+            }
             this.innerHTML = `
             <style>
             ${this.style}
