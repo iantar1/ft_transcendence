@@ -460,13 +460,13 @@ class gamePage extends HTMLElement {
                 </div>
             <div style="height:90%; display:flex;flex-direction: row; justify-content: center;align-items: center;" >
                 <div class="scroll-item">
-                <button id="topong" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
+                <button id="topong" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >Pong</button>
                 <div class="track-items" >
-                <img  class="w-100 h-100" src="/images/pong.png">
+                <img style="position :static;"  class="w-100 h-100" src="/images/pong.png">
                 </div>
                 </div>
                 <div class="scroll-item">
-                <button id="toxo" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >let's play</button>
+                <button id="toxo" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >TicTacTeo</button>
                 <div class="track-items" >
                 <img  class="w-100 h-100" src="/images/xo.png">
                 </div>

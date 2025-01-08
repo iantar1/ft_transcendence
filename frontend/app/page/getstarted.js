@@ -187,7 +187,22 @@ class getstartedPage extends HTMLElement {
                 flex-direction: column;
                 padding: 20px;
             }
+            body::-webkit-scrollbar {
+                width: 6px; /* Narrow scrollbar for a mobile-like feel */
+            }
     
+            body::-webkit-scrollbar-thumb {
+                background: var(--red); /* Thumb color */
+                border-radius: 10px; /* Rounded thumb for a smooth look */
+            }
+    
+            body::-webkit-scrollbar-thumb:hover {
+                background: #fff; /* Darker color on hover */
+            }
+    
+            body::-webkit-scrollbar-track {
+                background: transparent; /* Transparent track for minimalistic style */
+            }
             .titlehome {
                 color: #333;
                 font-size: 5vw;

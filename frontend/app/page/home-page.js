@@ -38,8 +38,11 @@ class homePage extends HTMLElement {
     <div class="content-home " >
     <div class="cart-home" >
             <img  class="img-home" src="/images/astro4.png">
-            <h3 class="title-home" ><span style="color :#fff;" id="curentTime" ></span>, <span id="username" ></span></h3>
-            <h1>Stars of War</h1>
+            <div class="text-container">
+                <h3 id="curentTime" class="scroll-text smooth" ></h3>
+                <h3 id="username" class="scroll-text" style="color:var(--red);" > </h3>
+            </div>
+            <h1 class="" >Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
             <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
@@ -62,6 +65,40 @@ class homePage extends HTMLElement {
         .content-home{
             gap :10px;
             
+        }
+        .text-container {
+            width :35%;
+            height: 30px;
+            overflow: hidden;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            flex-direction: row;
+        }
+        .scroll-text {
+            margin: 0;
+            line-height: 30px;
+            animation: scrollUp 5s linear infinite;
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased;
+        }
+        .smooth {
+            animation: scrollUpSmooth 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes scrollUpSmooth {
+            0% {
+                transform: translateY(100%);
+            }
+            15% {
+                transform: translateY(0);
+            }
+            85% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100%);
+            }
         }
         .cart-home{
             height :39vh;
@@ -414,21 +451,31 @@ class homePage extends HTMLElement {
             // if(!this.info.id){
             //     navigateTo('/login');
             // }
-            document.getElementById('username').textContent = this.info.username
-            var data = [
-                [0, 4, "Good night"], 
-                [5, 11, "Good morning"],          //Store messages in an array
-                [12, 17, "Good afternoon"],
-                [18, 24, "Good night"]
-            ],
-                hr = new Date().getHours();
+            document.getElementById('username').textContent = "," + this.info.username
+            // var data = [
+            //     [0, 4, "Good night "], 
+            //     [5, 11, "Good morning "],          //Store messages in an array
+            //     [12, 17, "Good afternoon "],
+            //     [18, 24, "Good night "]
+            // ],
+            //     hr = new Date().getHours();
             
-            for(var i = 0; i < data.length; i++){
-                if(hr >= data[i][0] && hr <= data[i][1]){
-                    document.getElementById('curentTime').textContent = data[i][2];
-                    console.log(data[i][2]);
-                }
-            }
+            // for(var i = 0; i < data.length; i++){
+            //     if(hr >= data[i][0] && hr <= data[i][1]){
+            //         document.getElementById('curentTime').textContent = data[i][2];
+            //         console.log(data[i][2]);
+            //     }
+            // }
+            const getTimeOfDay = () => {
+                const hour = new Date().getHours();
+                if (hour < 12) return 'Good morning';
+                if (hour < 18) return 'Good afternoon';
+                return 'Good evening';
+            };
+            document.getElementById('curentTime').textContent = getTimeOfDay();
+    
+            // Update username if needed
+            // const usernameSpan = this.shadowRoot.getElementById('username');
         }
         uuss();
         this.innerHTML = `
