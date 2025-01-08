@@ -1,15 +1,5 @@
 import { render } from './render.js';
 import { menu } from './loby.js';
-import { waitingPage } from './waiting.js';
-import { GameOver } from './gameOver.js'
-import { tournamentPage } from './tournament.js'
-import { matchmakingPage } from './tournament_matchmaking.js';
-import { tournamentlocal } from './localTournament.js';
-import { tournamentBracket } from './bracket.js'
-import { manageLocalTournament } from './manage_local_tour.js';
-// import { matchmakingPage } from './localmatchmaking.js';
-
-import { createWinnerCard } from './winnerCard.js';
 
 import { getCookie } from '../../page/readData.js';
 import { navigateTo } from '../../routing.js';
