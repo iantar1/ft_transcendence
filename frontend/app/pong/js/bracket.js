@@ -18,7 +18,7 @@ export function tournamentBracket(
         .tournament-container {
             font-family: 'Pong War';
             letter-spacing: 3px;
-            padding: 2rem;
+            // padding: 2rem;
             border-radius: 5px;
             color: white;
             width :90%;

@@ -413,6 +413,7 @@ export async function submitTournament(
           return tournaments; // Store globally for filtering
       } catch (error) {
           console.error('Error fetching tournaments:', error);
+
       }
   }
 

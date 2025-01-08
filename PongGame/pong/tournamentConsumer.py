@@ -188,8 +188,11 @@ class LocalMatchmaking(AsyncWebsocketConsumer):
                         "scores": [score["player1"], score["player2"]]
                      }
                 ]
-                player3 = self.passtMatch[1]["player1"] if self.passtMatch[1]["player1"] != winner else self.passtMatch[1]["player2"]
-                player4 = self.passtMatch[0]["player1"] if self.passtMatch[0]["player1"] != winner else self.passtMatch[0]["player2"]
+                match1 = 0 if self.passtMatch[1]["player1"] != self.passtMatch[1]["winner"] else 1
+                match2 = 0 if self.passtMatch[0]["player1"] != self.passtMatch[0]["winner"] else 1
+
+                player3 = self.passtMatch[1]["player1" if match1 == 0 else "player2" ] if self.passtMatch[1]["scores"][match1] > self.passtMatch[0]["scores"][match2] else self.passtMatch[0]["player1" if match2 == 0 else "player2" ]
+                player4 = self.passtMatch[1]["player1" if match1 == 0 else "player2" ] if self.passtMatch[1]["player1" if match1 == 0 else "player2" ] is not player3 else self.passtMatch[0]["player1" if match2 == 0 else "player2" ]
                 ranked = {
                     'player1': winner,
                     'player2': self.passtMatch[0]["winner"] if self.passtMatch[0]["winner"] != winner else self.passtMatch[1]["winner"],

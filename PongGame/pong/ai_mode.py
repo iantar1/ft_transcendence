@@ -24,7 +24,7 @@ class AIState:
 def decide_ai_state(ball):
     if ball["z"] > (TABLE_HIEGHT / 4):  # Ball far away
         return AIState.IDLE
-    elif ball["z"] <= (TABLE_HIEGHT / 4) and ball["dz"] < 0:  # Ball moving toward AI
+    elif ball["z"] <= 0 and ball["dz"] < 0:  # Ball moving toward AI
         return AIState.CHASE
     else:
         return AIState.RECOVER
@@ -160,14 +160,11 @@ class AIConsumer(AsyncWebsocketConsumer):
             player["x"] = (TABLE_WIDTH / 2) - (self.paddle["width"]  / 2) - 1
 
     async def ai_logic(self):
-        # x = 1 
         while self.is_active:
-            # print(x)
-            # x += 1
             if decide_ai_state(self.ball) == AIState.CHASE:
                 self.target_x = self.predict_ball_position()
                 self.target_x = self.add_imperfection(self.target_x)
-                # print(f"GO TO : {target_x} from : ", self.player2["x"])
+
             elif decide_ai_state(self.ball) == AIState.IDLE:
                 self.player2["direction"] = 0
             await asyncio.sleep(1)  # Refresh view every second
@@ -177,9 +174,9 @@ class AIConsumer(AsyncWebsocketConsumer):
         return target_x + error_margin
 
     def simulate_keypress(self, player):
-        if player["x"] + self.paddle["width"] / 2 < self.target_x :
+        if player["x"] < self.target_x :
             player["direction"] = 1  # Simulate "right arrow" keypress
-        elif player["x"] - self.paddle["width"] / 2 > self.target_x:
+        elif player["x"] > self.target_x:
             player["direction"] = -1  # Simulate "left arrow" keypress
         else:
             player["direction"] = 0  # No keypress
@@ -197,7 +194,6 @@ class AIConsumer(AsyncWebsocketConsumer):
         future_z = self.ball["z"]
         dx = self.ball["dx"]
         dz = self.ball["dz"]
-        speed_multiplier = 1.0
         
         # If ball is moving away from AI, return current position
         if dz >= 0:

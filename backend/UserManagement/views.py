@@ -355,7 +355,7 @@ class StatsView(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        stats = Stats.objects.get(user=user)
+        stats = Stats.objects.get_or_create(user=user)
         if stats == None:
             return Response({"error":"stats not found"}, status=404)
         serialer = StatsSerializer(stats)
