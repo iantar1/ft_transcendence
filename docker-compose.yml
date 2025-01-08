@@ -37,5 +37,13 @@ services:
       - "8545:8545" 
     volumes:
       - ./blockchain:/usr/src/app 
-  # tic_tac_toc:
+
+  tictactoe:
+    container_name: tictactoe
+    image: tictactoe
+    build: ./TicTacToe
+    ports:
+      - "4040:4040"
+    volumes:
+      - ./TicTacToe:/app
   

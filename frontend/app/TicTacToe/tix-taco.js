@@ -1,5 +1,6 @@
 import { render } from "../pong/js/render.js";
 import { localTicTacToe } from "./local.js";
+import { RemoteTicTacToe } from "./remote.js";
 
 class GameTictac extends HTMLElement {
 
@@ -24,7 +25,7 @@ class GameTictac extends HTMLElement {
         document.getElementById('toremote').addEventListener('click' , () => {
             console.log('TO GAME PAGE')
             const content = document.getElementById('content')
-            render(localTicTacToe(), content);
+            render(RemoteTicTacToe(), content);
         });
     }
     styleing = `

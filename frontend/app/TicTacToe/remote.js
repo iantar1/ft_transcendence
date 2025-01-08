@@ -1,4 +1,4 @@
-export function localTicTacToe(){
+export function RemoteTicTacToe(){
     const style = document.createElement('style');
     style.textContent = `
     .game-TTT {
@@ -135,7 +135,14 @@ export function localTicTacToe(){
         <button class="reset-btn">Reset Game</button>
     `;
 
+
+
+    // socket
+    const WS_URL = 'wss://'+window.location.host+'/TicTacToe/Remote/';
+    const socket = new WebSocket(WS_URL);
+
     let board = Array(9).fill('');
+    let role = 'X';
     let currentPlayer = 'X';
     let gameActive = true;
     let cells = content.querySelectorAll('.cell');
@@ -154,7 +161,12 @@ export function localTicTacToe(){
     function handleCellClick(cell) {
         const index = cell.getAttribute('data-index');
 
-        if (board[index] === '' && gameActive) {
+        socket.send(JSON.stringify({
+            'position': index,
+        }));
+
+        if (board[index] === '' && gameActive && currentPlayer === role) {
+            
             board[index] = currentPlayer;
             cell.textContent = currentPlayer;
             if(currentPlayer === 'X'){
@@ -183,6 +195,11 @@ export function localTicTacToe(){
 
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
             statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+            
+            socket.send(JSON.stringify({
+                'type': 'update',
+                'position': index,
+            }));
         }
     }
 
@@ -241,6 +258,28 @@ export function localTicTacToe(){
         });
         statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
     }
+
+
+    
+    socket.onopen = () => {
+        console.log("Connected to the WebSocket!");
+        // socket.send(JSON.stringify({
+        // }));
+    };
+    socket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        if(data.type == "start"){
+            role = data.role;
+            board = data.board;
+            currentPlayer = data.currentPlayer;
+        }
+    };
+    socket.onclose = () => {
+        console.log("WebSocket closed!");
+    };
+    socket.onerror = () => {
+        console.log("Connection Error for WebSocket!");
+    };
 
 
     const parent = document.createElement('div');
