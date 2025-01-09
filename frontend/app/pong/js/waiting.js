@@ -161,22 +161,5 @@ export function waitingPage() {
     waiting.appendChild(right_user);
     waiting.appendChild(cancel);
 
-
-    // Periodically update user data
-    const intervalId = setInterval(async () => {
-        console.log("Updates matchmaking    ...");
-        
-        await getData();
-        updateUserCards();
-        if (usr_data && opp_data){
-            midel_info.textContent = 'fight for your life';
-            waiting.remove(cancel);
-            if (intervalId) {
-                clearInterval(intervalId);
-                console.log("Updates stopped.");
-            }
-        }
-    }, 5000); // Update every 5 seconds
-
     return waiting;
 }

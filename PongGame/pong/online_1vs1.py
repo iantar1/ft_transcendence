@@ -52,7 +52,18 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
                 self.group_room,
                 self.channel_name
             )
-        # Should also notify the other player about disconnection
+        #     # Notify opponent about disconnection if they exist
+        #     score = {
+        #         "player1": 0 if self.role == "player1" else 5,
+        #         "player2": 0 if self.role == "player2" else 5
+        #     }
+        #     if self.opponent:
+        #         await self.opponent.send(json.dumps({
+        #             'type': 'opponent_disconnected',
+        #             'winner': 'WIN',
+        #             'score': score
+        #         }))
+        # # Should also notify the other player about disconnection
 
     async def receive(self, text_data):
 

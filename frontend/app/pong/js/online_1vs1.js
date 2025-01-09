@@ -208,6 +208,10 @@ export function online_1vs1()
             gameOver(data.winner, data.score);
             scoreManager.reset();
         }
+        if (data.type === "opponent_disconnected") {
+            gameOver(data.winner, data.score);
+            scoreManager.reset();
+        }
     };
     socket.onclose = () => {
         wsOpen = false;
