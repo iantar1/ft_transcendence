@@ -29,26 +29,26 @@ class GameTictac extends HTMLElement {
         });
     }
     styleing = `
-                <style>
-                    :host {
-                display: flex;
-                height: 100%;
-                width: 100%;
-            }
-            .game-tictac {
-                display: flex;
-                position :relative;
-                font-family: "Pong War", sans-serif;
-                color: var(--white);
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-                width: 100%;
-            }
-        .btn-home {
+    <style>
+        :host {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        .game-tictac {
+            display: flex;
+            position :relative;
+            font-family: "Pong War", sans-serif;
+            color: var(--white);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+        .btn-secondary {
             width: 200px;
             height: 50px;
             background-color: rgba(228, 5, 47, 1);
@@ -63,65 +63,65 @@ class GameTictac extends HTMLElement {
         }
 
         /* Scale effect on hover */
-        .btn-home:hover {
+        .btn-secondary:hover {
+            background-color: rgba(255, 15, 47, 0.5);
             transform: scale(1.1);
         }
-            @media (min-width: 320px) and (max-width: 1024px) {
-                .nav-bar{
-                    width: 100%;
-                    display: flex;
-                    height :8%;
-                    background-color: rgb(0 0 0 / 0.5);
-                    color: #293247;
-                    justify-content: space-evenly;
-                    align-items: center;
-                    flex-direction: row;
-                    border-radius :0px;
-                    position: fixed;
-                    padding-bottom: 5%;
-                    bottom :0;
-                    z-index :1000;
-                }
-                .nav-02{
-                    margin-top:30px;
-                }
-                .nav-02 .fa-right-from-bracket{
-                    display :none;
-                }
-                nav a{
-                    text-decoration: none;
-                    background: none;
+        @media (min-width: 320px) and (max-width: 1024px) {
+            .nav-bar{
+                width: 100%;
+                display: flex;
+                height :8%;
+                background-color: rgb(0 0 0 / 0.5);
+                color: #293247;
+                justify-content: space-evenly;
+                align-items: center;
+                flex-direction: row;
+                border-radius :0px;
+                position: fixed;
+                padding-bottom: 5%;
+                bottom :0;
+                z-index :1000;
+            }
+            .nav-02{
+                margin-top:30px;
+            }
+            .nav-02 .fa-right-from-bracket{
+                display :none;
+            }
+            nav a{
+                text-decoration: none;
+                background: none;
 
-                }
-                .fafa{
-                    display :none;
-                }
-                .img-home{
-                    display :none;
-                }
-                body{
-                    flex-direction: column-reverse;
-                }
-                #content{
-                    position :relative;
-                    width :100%;
-                    height :80%;
-                    border-radius :0px;
-                    display :flex;
-                }
-                }
-                #game{
-                    color :#fff;
-                }
-            </style>
+            }
+            .fafa{
+                display :none;
+            }
+            .img-home{
+                display :none;
+            }
+            body{
+                flex-direction: column-reverse;
+            }
+            #content{
+                position :relative;
+                width :100%;
+                height :80%;
+                border-radius :0px;
+                display :flex;
+            }
+        }
+        #game{
+            color :#fff;
+        }
+    </style>
     `;
     beforGame = `
     <div style="width :100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction: column; gap:10px;" >
         <button id="tolocal" type="button" class="btn-home btn-secondary">Local</button>
         <button id="toremote" type="button" class="btn-home btn-secondary">Remote</button>
-        <button style="background:#787878;" id="toback" type="click" class="btn-home btn-secondary">Back</button>
-    </div>    
-    
+        <button style="background:#000;" id="toback" type="click" class="btn-home btn-secondary">Back</button>
+    </div>
     `
     rander(){
         // const menu = beforGame();

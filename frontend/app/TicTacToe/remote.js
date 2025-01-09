@@ -1,224 +1,322 @@
-export function RemoteTicTacToe(){
+export function RemoteTicTacToe() {
     const style = document.createElement('style');
     style.textContent = `
     .game-TTT {
-        background-color: #000;
-        color: cyan;
-        font-family: 'Arial', sans-serif;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100%;
-        margin: 0;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .game-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        max-width: 500px;
+        width: 100%;
     }
 
     .game-title {
-        font-size: 2.5em;
-        text-shadow: 0 0 10px cyan;
-        margin-bottom: 20px;
-        text-transform: uppercase;
+        font-size: 2.8em;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 30px;
+        background: linear-gradient(45deg, #00f2fe 0%, #4facfe 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
     }
 
     .status {
-        font-size: 1.2em;
+        font-size: 1.3em;
+        text-align: center;
         margin: 20px 0;
-        text-shadow: 0 0 5px cyan;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .status.your-turn {
+        background: rgba(0, 255, 255, 0.1);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    }
+
+    .status.opponent-turn {
+        background: rgba(255, 0, 0, 0.1);
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
     }
 
     .board {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        background: #000;
+        gap: 15px;
+        margin: 30px 0;
         padding: 20px;
-        border: 4px solid cyan;
-        box-shadow: 0 0 20px cyan;
-        border-radius: 5px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(5px);
     }
 
     .cell {
         font-family: 'Arial', sans-serif;
-        width: 100px;
-        height: 100px;
-        background: rgba(4, 28,68,0.5);
-        border: 3px solid #000;
+        aspect-ratio: 1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 3em;
+        font-size: 2.5em;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
 
     .cell:hover {
-        background: rgba(4, 28,68,0.5);
-        box-shadow: 0 0 10px cyan;
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .cell:active {
+        transform: translateY(0);
+    }
+
+    .cell.x-hover:not(:empty) {
+        background: rgba(0, 255, 255, 0.1);
+    }
+
+    .cell.o-hover:not(:empty) {
+        background: rgba(255, 0, 0, 0.1);
+    }
+
+    .cell[data-symbol="X"] {
+        color: #00f2fe;
+        text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+    }
+
+    .cell[data-symbol="O"] {
+        color: #ff4b4b;
+        text-shadow: 0 0 10px rgba(255, 75, 75, 0.5);
     }
 
     .reset-btn {
-        margin-top: 20px;
-        padding: 10px 20px;
-        font-family: 'Courier New', monospace;
-        font-size: 1.2em;
-        background: var(--red);
+        background: linear-gradient(45deg, #00f2fe 0%, #4facfe 100%);
         color: white;
         border: none;
-        border-radius : 5px;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 1.1em;
+        font-weight: 600;
         cursor: pointer;
-        text-transform: uppercase;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
     }
 
     .reset-btn:hover {
-        background: rgba(4, 28,68,0.5);
-        box-shadow: 0 0 10px cyan;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
     }
 
-    @keyframes win-flash-X {
-        0% { 
-            box-shadow: 0 0 10px cyan;
+    .reset-btn:active {
+        transform: translateY(0);
+    }
+
+    .reset-btn:disabled {
+        background: linear-gradient(45deg, #ccc 0%, #999 100%);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    @keyframes win-pulse-x {
+        0% {
             transform: scale(1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
         }
-        50% { 
-            box-shadow: 0 0 30px cyan;
-            transform: scale(1.1);
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
         }
-        100% { 
-            box-shadow: 0 0 10px cyan;
+        100% {
             transform: scale(1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
         }
     }
 
-    @keyframes win-flash-O {
-        0% { 
-            box-shadow: 0 0 10px red;
+    @keyframes win-pulse-o {
+        0% {
             transform: scale(1);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
         }
-        50% { 
-            box-shadow: 0 0 30px red;
-            transform: scale(1.1);
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
         }
-        100% { 
-            box-shadow: 0 0 10px red;
+        100% {
             transform: scale(1);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
         }
     }
 
     .win-X {
-        background: var(--blue);
-        animation: win-flash-X 1s infinite;
+        animation: win-pulse-x 1.5s infinite;
+        background: rgba(0, 255, 255, 0.2);
     }
 
     .win-O {
-        background: var(--blue);
-        animation: win-flash-O 1s infinite;
+        animation: win-pulse-o 1.5s infinite;
+        background: rgba(255, 75, 75, 0.2);
+    }
+
+    .player-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .player-badge {
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+
+    .player-x {
+        background: rgba(0, 242, 254, 0.2);
+        color: #00f2fe;
+    }
+
+    .player-o {
+        background: rgba(255, 75, 75, 0.2);
+        color: #ff4b4b;
+    }
+
+    .waiting-animation {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .waiting-animation::after {
+        content: '...';
+        animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+        0%, 20% { content: '.'; }
+        40% { content: '..'; }
+        60% { content: '...'; }
+        80%, 100% { content: ''; }
+    }
+
+    @media (max-width: 480px) {
+        .game-container {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-size: 2em;
+        }
+
+        .cell {
+            font-size: 2em;
+        }
+
+        .status {
+            font-size: 1.1em;
+        }
     }
     `;
 
     const content = document.createElement('div');
-    content.classList = "game-TTT"
+    content.classList = "game-TTT";
     content.innerHTML = `
-        <h1 class="game-title">Tic Tac Toe</h1>
-        <div class="status">Player X's turn</div>
-        <div class="board">
-            <div class="cell" data-index="0"></div>
-            <div class="cell" data-index="1"></div>
-            <div class="cell" data-index="2"></div>
-            <div class="cell" data-index="3"></div>
-            <div class="cell" data-index="4"></div>
-            <div class="cell" data-index="5"></div>
-            <div class="cell" data-index="6"></div>
-            <div class="cell" data-index="7"></div>
-            <div class="cell" data-index="8"></div>
+        <div class="game-container">
+            <h1 class="game-title">Tic Tac Toe</h1>
+            <div class="player-info">
+                <span class="player-badge player-x">Player X</span>
+                <span class="player-badge player-o">Player O</span>
+            </div>
+            <div class="status">Waiting for opponent<span class="waiting-animation"></span></div>
+            <div class="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            <button class="reset-btn" disabled>New Game</button>
         </div>
-        <button class="reset-btn">Reset Game</button>
     `;
 
-
-
-    // socket
-    const WS_URL = 'wss://'+window.location.host+'/TicTacToe/Remote/';
+    const WS_URL = 'wss://' + window.location.host + '/TicTacToe/Remote/';
     const socket = new WebSocket(WS_URL);
 
     let board = Array(9).fill('');
-    let role = 'X';
+    let role = null;
     let currentPlayer = 'X';
-    let gameActive = true;
+    let gameActive = false;
     let cells = content.querySelectorAll('.cell');
     let statusDisplay = content.querySelector('.status');
     let resetButton = content.querySelector('.reset-btn');
-    
-    initializeGame();
 
     function initializeGame() {
         cells.forEach(cell => {
             cell.addEventListener('click', () => handleCellClick(cell));
         });
-        resetButton.addEventListener('click', () => resetGame());
+        resetButton.addEventListener('click', resetGame);
     }
 
     function handleCellClick(cell) {
         const index = cell.getAttribute('data-index');
 
-        socket.send(JSON.stringify({
-            'position': index,
-        }));
-
+        // Only allow moves if it's the player's turn and the cell is empty
         if (board[index] === '' && gameActive && currentPlayer === role) {
-            
-            board[index] = currentPlayer;
-            cell.textContent = currentPlayer;
-            if(currentPlayer === 'X'){
-
-                cell.style.textShadow = "cyan 1px 0 10px"
-                cell.style.color = "cyan";
-            }
-            else {
-                cell.style.textShadow = "red 1px 0 10px"
-                cell.style.color = "red";
-            }
-
-            
-            if (checkWin()) {
-                statusDisplay.textContent = `Player ${currentPlayer} wins!`;
-                gameActive = false;
-                highlightWinningCells();
-                return;
-            }
-
-            if (checkDraw()) {
-                statusDisplay.textContent = "Game ended in a draw!";
-                gameActive = false;
-                return;
-            }
-
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
-            
             socket.send(JSON.stringify({
-                'type': 'update',
-                'position': index,
+                'index': index
             }));
         }
     }
 
-    function checkWin() {
-        const winningCombinations = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-            [0, 4, 8], [2, 4, 6] // Diagonals
-        ];
+    function updateBoard(newBoard, newCurrentPlayer) {
+        board = newBoard;
+        currentPlayer = newCurrentPlayer;
 
-        return winningCombinations.some(combination => {
-            const [a, b, c] = combination;
-            return board[a] &&
-                    board[a] === board[b] &&
-                    board[a] === board[c];
+        // Update UI
+        cells.forEach((cell, index) => {
+            const value = newBoard[index];
+            if (value) {
+                updateCellAppearance(cell, value);
+            } else {
+                // Clear cell if empty
+                cell.textContent = '';
+                cell.removeAttribute('data-symbol');
+                cell.classList.remove('x-hover', 'o-hover');
+            }
         });
     }
 
-    function highlightWinningCells() {
+    function highlightWinningCells(winnerSymbol) {
         const winningCombinations = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
             [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -227,60 +325,98 @@ export function RemoteTicTacToe(){
 
         for (let combination of winningCombinations) {
             const [a, b, c] = combination;
-            if (board[a] &&
+            if (board[a] === winnerSymbol &&
                 board[a] === board[b] &&
                 board[a] === board[c]) {
-                    let win;
-                    if (currentPlayer === 'X')
-                        win = 'win-X';
-                    else
-                        win = 'win-O';
-                cells[a].classList.add(win);
-                cells[b].classList.add(win);
-                cells[c].classList.add(win);
+                const winClass = `win-${winnerSymbol}`;
+                cells[a].classList.add(winClass);
+                cells[b].classList.add(winClass);
+                cells[c].classList.add(winClass);
                 break;
             }
         }
     }
 
-    function checkDraw() {
-        return !board.includes('');
+    function updateStatus(message, type = '') {
+        statusDisplay.textContent = message;
+        statusDisplay.className = 'status ' + type;
+    }
+
+    function updateCellAppearance(cell, symbol) {
+        cell.textContent = symbol;
+        cell.setAttribute('data-symbol', symbol);
+        
+        // Add hover effects
+        if (symbol === 'X') {
+            cell.classList.add('x-hover');
+            cell.classList.remove('o-hover');
+        } else if (symbol === 'O') {
+            cell.classList.add('o-hover');
+            cell.classList.remove('x-hover');
+        }
     }
 
     function resetGame() {
-        board = Array(9).fill('');
-        currentPlayer = 'X';
-        gameActive = true;
-        cells.forEach(cell => {
-            cell.textContent = '';
-            cell.classList.remove('win-X');
-            cell.classList.remove('win-O');
-        });
-        statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({
+                'type': 'reset'
+            }));
+        }
     }
 
-
-    
-    socket.onopen = () => {
-        console.log("Connected to the WebSocket!");
-        // socket.send(JSON.stringify({
-        // }));
-    };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        if(data.type == "start"){
-            role = data.role;
-            board = data.board;
-            currentPlayer = data.currentPlayer;
+        
+        switch (data.type) {
+            case 'start':
+                role = data.role;
+                gameActive = true;
+                resetButton.disabled = false;
+                updateBoard(data.board, data.currentPlayer);
+                updateStatus(
+                    role === data.currentPlayer ? "Your turn" : "Opponent's turn",
+                    role === data.currentPlayer ? 'your-turn' : 'opponent-turn'
+                );
+                break;
+
+            case 'game_update':
+                updateBoard(data.board, data.currentPlayer);
+                updateCellAppearance
+                updateStatus(
+                    data.currentPlayer === role ? "Your turn" : "Opponent's turn",
+                    data.currentPlayer === role ? 'your-turn' : 'opponent-turn'
+                );
+                break;
+
+            case 'game_over':
+                gameActive = false;
+                if (data.winner) {
+                    updateBoard(data.board, data.currentPlayer);
+                    highlightWinningCells(data.winner);
+                    updateStatus(
+                        data.winner === role ? "🎉 You won! 🎉" : "Game Over - Opponent won",
+                        data.winner === role ? 'your-turn' : 'opponent-turn'
+                    );
+                } else if (data.draw) {
+                    updateBoard(data.board, data.currentPlayer);
+                    updateStatus("Game ended in a draw!", '');
+                }
+                break;
+
+            case 'opponent_disconnected':
+                gameActive = false;
+                updateStatus("Opponent disconnected. Waiting for new opponent...");
+                resetButton.disabled = true;
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.removeAttribute('data-symbol');
+                    cell.classList.remove('win-X', 'win-O', 'x-hover', 'o-hover');
+                });
+                break;
         }
     };
-    socket.onclose = () => {
-        console.log("WebSocket closed!");
-    };
-    socket.onerror = () => {
-        console.log("Connection Error for WebSocket!");
-    };
 
+    initializeGame();
 
     const parent = document.createElement('div');
     parent.style.height = "100%";

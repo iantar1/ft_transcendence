@@ -69,7 +69,7 @@ export function menu() {
     }
 
     button:hover {
-      background: gray;
+      background-color: rgba(255, 15, 47, 0.5);
       transform: scale(1.1);
 
   }`;
