@@ -75,6 +75,23 @@ class RemoteConsumer(AsyncWebsocketConsumer):
             
         data = json.loads(text_data)
         game = active_games[self.game_room]
+
+            # Handle reset request
+        if data.get('type') == 'reset':
+            if self.game_room and self.game_room in active_games:
+                # Reset the game state
+                active_games[self.game_room]['board'] = [''] * 9
+                active_games[self.game_room]['current_turn'] = 'X'
+                
+            # Send initial game state to both players
+            for player in game['players']:
+                await player.send(json.dumps({
+                    'type': 'start',
+                    'role': player.currentPlayer,
+                    'board': active_games[self.game_room]['board'],
+                    'currentPlayer': 'X'
+                }))
+            return
         
         # Verify it's the player's turn
         if game['current_turn'] != self.currentPlayer:

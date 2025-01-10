@@ -265,7 +265,7 @@ export function RemoteTicTacToe() {
                 <div class="cell" data-index="7"></div>
                 <div class="cell" data-index="8"></div>
             </div>
-            <button class="reset-btn" disabled>New Game</button>
+            <button class="reset-btn" disabled>Replay</button>
         </div>
     `;
 
@@ -295,6 +295,8 @@ export function RemoteTicTacToe() {
             socket.send(JSON.stringify({
                 'index': index
             }));
+            board[index] = role;
+            updateCellAppearance(cell, role);
         }
     }
 
@@ -361,17 +363,23 @@ export function RemoteTicTacToe() {
             socket.send(JSON.stringify({
                 'type': 'reset'
             }));
+        } else {
+            console.log(`Cannot reset game. WebSocket state: ${socket.readyState}`);
+            // Maybe show a message to the user that they need to reconnect
+            statusDisplay.textContent = "Connection lost. Please refresh the page.";
         }
     }
 
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
+        console.log(data);
         
         switch (data.type) {
             case 'start':
                 role = data.role;
                 gameActive = true;
-                resetButton.disabled = false;
+                resetButton.disabled = true;
+                clear();
                 updateBoard(data.board, data.currentPlayer);
                 updateStatus(
                     role === data.currentPlayer ? "Your turn" : "Opponent's turn",
@@ -390,6 +398,7 @@ export function RemoteTicTacToe() {
 
             case 'game_over':
                 gameActive = false;
+                resetButton.disabled = false;
                 if (data.winner) {
                     updateBoard(data.board, data.currentPlayer);
                     highlightWinningCells(data.winner);
@@ -415,6 +424,15 @@ export function RemoteTicTacToe() {
                 break;
         }
     };
+
+    function clear(){
+        cells.forEach((cell, index) => {
+            cell.textContent = '';
+            cell.removeAttribute('data-symbol');
+            cell.classList.remove('x-hover', 'o-hover');
+            cell.classList.remove('win-X', 'win-O');
+        });
+    }
 
     initializeGame();
 
