@@ -246,7 +246,7 @@ export function manageLocalTournament(participants, tournamentName) {
 
     function stopPaddle(e)
     {
-        if (e.key === "ArrowLeft" || e.key === "ArrowUp")
+        if (e.key === "ArrowUp" || e.key === "ArrowDown")
             player2Direction = 0;
         if (e.key === "w" || e.key === "s")
             player1Direction = 0;

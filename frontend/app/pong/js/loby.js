@@ -6,6 +6,7 @@ import { online_1vs1 } from './online_1vs1.js';
 import { tournamentlocal } from './localTournament.js';
 
 export function menu() {
+
   let  switchButton = new Audio('../sound/switch.mp3');
   let click = new Audio('../sound/menu-click-89198.mp3');
   // Attach styles

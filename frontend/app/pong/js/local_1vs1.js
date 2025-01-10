@@ -223,7 +223,7 @@ export function local_1vs1()
 
     function stopPaddle(e)
     {
-        if (e.key === "ArrowLeft" || e.key === "ArrowUp")
+        if (e.key === "ArrowDown" || e.key === "ArrowUp")
             player2Direction = 0;
         if (e.key === "w" || e.key === "s")
             player1Direction = 0;
