@@ -265,7 +265,7 @@ export function RemoteTicTacToe() {
                 <div class="cell" data-index="7"></div>
                 <div class="cell" data-index="8"></div>
             </div>
-            <button class="reset-btn" disabled>Replay</button>
+            <button class="reset-btn" disabled>Restart</button>
         </div>
     `;
 

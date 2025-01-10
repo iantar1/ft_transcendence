@@ -1,15 +1,13 @@
-import { waitingPage } from './waiting.js';
+
 import { render } from './render.js';
 import { ai_mode } from './aimode.js';
 import { local_1vs1 } from './local_1vs1.js';
 import { online_1vs1 } from './online_1vs1.js';
-
-
-let  switchButton = new Audio('../sound/switch.mp3');
-let click = new Audio('../sound/menu-click-89198.mp3');
-
+import { tournamentlocal } from './localTournament.js';
 
 export function menu() {
+  let  switchButton = new Audio('../sound/switch.mp3');
+  let click = new Audio('../sound/menu-click-89198.mp3');
   // Attach styles
   const style = document.createElement('style');
   style.textContent = `

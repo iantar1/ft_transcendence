@@ -1,5 +1,4 @@
 
-// import {gamePage} from '/home/chebchoub/Desktop/ping/frontend/app/pong/js/gamePage.js'
 import {fetchUserData , getCookie} from './readData.js';
 
 import { navigateTo } from '../routing.js';
@@ -491,11 +490,11 @@ class gamePage extends HTMLElement {
     
     topong(){
         document.getElementById('topong').addEventListener('click' , e => {
-            const content = document.getElementById('content')
-            content.innerHTML = '<game-page></game-page>';
+            const content = document.getElementById('content');
+            content.innerHTML = '<game-pong></game-pong>';
         });
         document.getElementById('toxo').addEventListener('click' , e => {
-            const content = document.getElementById('content')
+            const content = document.getElementById('content');
             content.innerHTML = '<game-tictac></game-tictac>';
         });
     }
