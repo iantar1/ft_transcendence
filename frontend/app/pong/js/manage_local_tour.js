@@ -1,7 +1,5 @@
 import { render } from "./render.js";
-import { menu } from "./loby.js";
 import { tournamentBracket } from "./bracket.js";
-import { GameOver } from "./gameOver.js";
 
 
 export function manageLocalTournament(participants, tournamentName) {
@@ -35,7 +33,7 @@ export function manageLocalTournament(participants, tournamentName) {
             height: 100%;
         }
     `;
-    const gamePage = document.body.querySelector('game-page');
+    const gamePage = document.body.querySelector('game-pong');
     const countdownElement = createcountdown();
     const canvas = gameCanvas();
 
@@ -50,7 +48,6 @@ export function manageLocalTournament(participants, tournamentName) {
     let ball_config, ball;
     let scoreManager, plane, leftWall, rightWall, table_config, paddle, score, animationId;
     let player2Direction = 0, player1Direction = 0;
-    let player1ScoreMesh, player2ScoreMesh;
     let player1 , player2;
     let renderer, controls;
     
@@ -71,7 +68,7 @@ export function manageLocalTournament(participants, tournamentName) {
     spotLight.shadow.mapSize.height = 2048;
     scene.add(spotLight);
 
-    // render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    // render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
 
     let width = canvas.clientWidth ;
     let height = canvas.clientHeight ;
@@ -166,12 +163,12 @@ export function manageLocalTournament(participants, tournamentName) {
                     data.round,
                     ws,
                 ),
-                gamePage.shadowRoot.querySelector('.game-page'));
+                gamePage.shadowRoot.querySelector('.game-pong'));
         }
 
 
         if (data.type === "start") {
-            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
             resizeCanvas();
             table_config = data.table;
             paddle = data.paddle;
@@ -220,7 +217,7 @@ export function manageLocalTournament(participants, tournamentName) {
                     data.round > 3 ? data.ranked : null,
                     tournamentName
                 ),
-                gamePage.shadowRoot.querySelector('.game-page'));
+                gamePage.shadowRoot.querySelector('.game-pong'));
         }
     }
 

@@ -1,6 +1,5 @@
 import { render } from "./render.js";
 import { menu } from "./loby.js";
-import { createWinnerCard } from "./winnerCard.js";
 import { submitTournament } from "./submitTournament.js"
 
 export function tournamentBracket(
@@ -337,7 +336,7 @@ export function tournamentBracket(
     cancelButton.addEventListener('click', () => {
         ws.send(JSON.stringify({ type: 'cancel' }));
         ws.close();
-        render(menu(), document.body.querySelector('game-page').shadowRoot.querySelector('.game-page'));
+        render(menu(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
     });
 
     content.appendChild(round1);

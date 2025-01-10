@@ -23,7 +23,7 @@ function createcountdown() {
 
 export function online_1vs1()
 {
-    const gamePage = document.body.querySelector('game-page');
+    const gamePage = document.body.querySelector('game-pong');
 
     const style = document.createElement('style');
     style.textContent = `
@@ -97,7 +97,7 @@ export function online_1vs1()
     spotLight.shadow.mapSize.height = 2048;
     scene.add(spotLight);
 
-    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
 
     let width = canvas.clientWidth ;
     let height = canvas.clientHeight ;
@@ -158,14 +158,14 @@ export function online_1vs1()
 			width: width,
 			height: height
 		}));
-        render(matchMaking, gamePage.shadowRoot.querySelector('.game-page'));
+        render(matchMaking, gamePage.shadowRoot.querySelector('.game-pong'));
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         console.table('data', data)
         if (data.type === "start") {
             setTimeout(() => {
-                render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+                render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
                 resizeCanvas();
                 table_config = data.table;
                 paddle = data.paddle;
@@ -239,7 +239,7 @@ export function online_1vs1()
     cancel.addEventListener('click', () => {
         socket.close();
         console.log("canceling the game");
-        render(menu(), gamePage.shadowRoot.querySelector('.game-page'));
+        render(menu(), gamePage.shadowRoot.querySelector('.game-pong'));
     });
 
     function adjustCameraPosition(camera, aspect) {
@@ -854,7 +854,7 @@ export function online_1vs1()
                 cancelAnimationFrame(animationId);
                 socket.close();
                 render(GameOver(winner, score), 
-                    gamePage.shadowRoot.querySelector('.game-page'));
+                    gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }
         

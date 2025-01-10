@@ -51,7 +51,7 @@ export function ai_mode()
         }
     `;
 
-    const gamePage = document.body.querySelector('game-page');
+    const gamePage = document.body.querySelector('game-pong');
 
     const countdownElement = createcountdown();
 
@@ -90,7 +90,7 @@ export function ai_mode()
     spotLight.shadow.mapSize.height = 2048;
     scene.add(spotLight);
 
-    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
 
     let width = canvas.clientWidth ;
     let height = canvas.clientHeight ;
@@ -850,7 +850,7 @@ export function ai_mode()
                 cancelAnimationFrame(animationId);
                 socket.close();
                 render(GameOver(winner, score), 
-                    gamePage.shadowRoot.querySelector('.game-page'));
+                    gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }
         

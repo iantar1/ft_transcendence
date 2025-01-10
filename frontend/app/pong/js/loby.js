@@ -139,7 +139,7 @@ export function menu() {
       case 'Tournament':
         console.log('Tournament');
         section = 1;
-        render(tournamentlocal(), document.body.querySelector('game-page').shadowRoot.querySelector('.game-page'));
+        render(tournamentlocal(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
         break;
       case 'Back':
         if(section == 1)

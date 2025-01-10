@@ -20,7 +20,7 @@ function createcountdown() {
 
 export function local_1vs1()
 {
-    const gamePage = document.body.querySelector('game-page');
+    const gamePage = document.body.querySelector('game-pong');
     const style = document.createElement('style');
     style.textContent = `
         canvas {
@@ -85,7 +85,7 @@ export function local_1vs1()
     spotLight.shadow.mapSize.height = 2048;
     scene.add(spotLight);
 
-    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
     
     let width = canvas.clientWidth ;
     let height = canvas.clientHeight ;
@@ -845,7 +845,7 @@ export function local_1vs1()
                 cancelAnimationFrame(animationId);
                 socket.close();
                 render(GameOver(winner, score), 
-                    gamePage.shadowRoot.querySelector('.game-page'));
+                    gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }
         

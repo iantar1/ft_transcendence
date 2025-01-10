@@ -122,7 +122,7 @@ export function tournamentlocal() {
     });
 
     backButton.addEventListener('click', () => {
-        render(menu(), document.body.querySelector('game-page').shadowRoot.querySelector('.game-page'));
+        render(menu(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
     });
 
     const buttons = document.createElement('div');
