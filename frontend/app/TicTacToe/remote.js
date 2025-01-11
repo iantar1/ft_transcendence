@@ -24,6 +24,12 @@ export function RemoteTicTacToe() {
         width: 100%;
     }
 
+    .btn-container{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .game-title {
         font-size: 2.8em;
         font-weight: 700;
@@ -265,7 +271,10 @@ export function RemoteTicTacToe() {
                 <div class="cell" data-index="7"></div>
                 <div class="cell" data-index="8"></div>
             </div>
-            <button class="reset-btn" disabled>Restart</button>
+            <div class="btn-container" >
+                <button class="reset-btn" id="reset" disabled>Restart</button>
+                <button class="reset-btn" id="new" >New Game</button>
+            </div>
         </div>
     `;
 
@@ -278,13 +287,16 @@ export function RemoteTicTacToe() {
     let gameActive = false;
     let cells = content.querySelectorAll('.cell');
     let statusDisplay = content.querySelector('.status');
-    let resetButton = content.querySelector('.reset-btn');
+    let resetButton = content.querySelector('#reset');
+    let newGame = content.querySelector('#new');
+
 
     function initializeGame() {
         cells.forEach(cell => {
             cell.addEventListener('click', () => handleCellClick(cell));
         });
         resetButton.addEventListener('click', resetGame);
+        newGame.addEventListener('click',  home);
     }
 
     function handleCellClick(cell) {
@@ -379,6 +391,7 @@ export function RemoteTicTacToe() {
                 role = data.role;
                 gameActive = true;
                 resetButton.disabled = true;
+                newGame.disabled = true;
                 clear();
                 updateBoard(data.board, data.currentPlayer);
                 updateStatus(
@@ -399,6 +412,7 @@ export function RemoteTicTacToe() {
             case 'game_over':
                 gameActive = false;
                 resetButton.disabled = false;
+                newGame.disabled = false;
                 if (data.winner) {
                     updateBoard(data.board, data.currentPlayer);
                     highlightWinningCells(data.winner);
@@ -416,6 +430,7 @@ export function RemoteTicTacToe() {
                 gameActive = false;
                 updateStatus("Opponent disconnected. Waiting for new opponent...");
                 resetButton.disabled = true;
+                newGame.disabled = false;
                 cells.forEach(cell => {
                     cell.textContent = '';
                     cell.removeAttribute('data-symbol');
@@ -433,6 +448,13 @@ export function RemoteTicTacToe() {
             cell.classList.remove('win-X', 'win-O');
         });
     }
+
+    function home(){
+        socket.close();
+        const content = document.getElementById('content');
+        content.innerHTML = '<game-tictac></game-tictac>';
+    }
+
 
     initializeGame();
 

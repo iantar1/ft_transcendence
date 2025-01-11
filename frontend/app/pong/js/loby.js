@@ -91,7 +91,7 @@ export function menu() {
   const onlineButton = createButton('Online', 'hidden');
   const localButton = createButton('Local', 'hidden');
   const tournamentButton = createButton('Tournament');
-  const backButton = createButton('Back', 'hidden');
+  const backButton = createButton('Back');
 
   // Append buttons to container
   container.appendChild(aiButton);
@@ -113,7 +113,6 @@ export function menu() {
     button.addEventListener('click', () => handleButtonClick(text));
     
     button.addEventListener("mouseover", () => {
-      console.log("hover button");
       switchButton.play();
     });
     return button;
@@ -130,26 +129,25 @@ export function menu() {
         section = 1;
         break;
       case 'Online':
-        section = 2;
+        section = 0;
         online_1vs1();
         break;
       case 'Local':
-        section = 2;
+        section = 0;
         local_1vs1();
         break;
       case 'Tournament':
         console.log('Tournament');
-        section = 1;
+        section = 0;
         render(tournamentlocal(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
         break;
       case 'Back':
-        if(section == 1)
+        if(section == 1){
           toggleMultiplayerOptions();
-        else if(section == 2)
-        {
-          toggleModes();
-          section = 1;
+          section = 0;
         }
+        else if (section == 0)
+          togameHome();
         break;
     }
     console.log(section);
@@ -157,14 +155,15 @@ export function menu() {
 
   function toggleMultiplayerOptions() {
     container.querySelectorAll('button').forEach((button) => {
-      button.classList.toggle('hidden'); // Toggle multiplayer options
+      button.classList.toggle('hidden');
     });
+    backButton.classList.toggle('hidden');
   }
   
-  function toggleModes() {
-    container.querySelectorAll('button').forEach((button, index) => {
-      if (index == 3 || index == 4 || index == 6) button.classList.toggle('hidden'); // Toggle visibility for modes
-    });
+  function togameHome(){
+      console.log('TO GAME PAGE')
+      const content = document.getElementById('content')
+      content.innerHTML = '<pongxo-page></pongxo-page>';
   }
 
   menu.appendChild(style);

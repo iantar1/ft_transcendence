@@ -8,9 +8,7 @@ active_games = {}
 
 class RemoteConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.gameActive = True
         self.currentPlayer = None
-        self.board = [''] * 9
         self.game_room = None
         self.opponent = None
         
@@ -64,6 +62,10 @@ class RemoteConsumer(AsyncWebsocketConsumer):
             
             # Notify opponent about disconnection if they exist
             if self.opponent:
+                player_queue.append(self.opponent)
+                self.opponent.currentPlayer = None
+                self.opponent.game_room = None
+                self.opponent.opponent = None
                 await self.opponent.send(json.dumps({
                     'type': 'opponent_disconnected',
                     'message': 'Opponent disconnected'
