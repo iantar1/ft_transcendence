@@ -117,7 +117,7 @@ def checkAuthenticationAnsReturnTokens(request):
     refresh_token = request.COOKIES.get('refresh')
     
     if not access_token or not refresh_token:
-        raise AuthenticationFailed('44Unauthenticated')
+        raise AuthenticationFailed('Unauthenticated')
     return {access_token, refresh_token}
 
 def generateNewTokens(response, access_token, refresh_token, playload):
@@ -221,7 +221,6 @@ class ChangePasswordView(APIView):
             raise AuthenticationFailed('Unauthenticated')
         
         user = User.objects.filter(id=playload['id']).first()
-        print(request.data, flush=True)
         crrent_password = request.data['crrent_password']
         new_password1 = request.data['new_password1']
         new_password2 = request.data['new_password2']
@@ -229,8 +228,6 @@ class ChangePasswordView(APIView):
             raise AuthenticationFailed("incorrect password")
         if new_password1 != new_password2:
             return Response("Password1 is different from Password2", status=400)
-        print(f'crrent: {crrent_password}',flush=True)
-        print(f'new: {new_password1}', flush=True)
         user.set_password(new_password1)
         user.save
         return Response({"seccess":"the password changed successfuly"}, status=200)
@@ -251,7 +248,6 @@ class ChangeBioImage(APIView):
         
         user = User.objects.filter(id=playload['id']).first()
         serializer = ImageBioSerializer(user, data=request.data)
-        print(f"data: {request.data}", flush=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -264,12 +260,12 @@ class ChangeBio(APIView):
     
         if not token:
             raise AuthenticationFailed('Unauthenticated')
-        
+
         try:
             playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Unauthenticated')
-        
+
         user = User.objects.filter(id=playload['id']).first()
         serializer = BioSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
