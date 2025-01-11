@@ -422,6 +422,19 @@ export function RemoteTicTacToe() {
                     role === data.currentPlayer ? 'your-turn' : 'opponent-turn'
                 );
                 break;
+            case 'rejoin':
+                role = data.role;
+                gameActive = true;
+                resetButton.disabled = true;
+                newGame.disabled = true;
+                updateUserBadge(data.opp_username);
+                clear();
+                updateBoard(data.board, data.currentPlayer);
+                updateStatus(
+                    role === data.currentPlayer ? "Your turn" : "Opponent's turn",
+                    role === data.currentPlayer ? 'your-turn' : 'opponent-turn'
+                );
+                break;
 
             case 'game_update':
                 updateBoard(data.board, data.currentPlayer);
@@ -440,7 +453,7 @@ export function RemoteTicTacToe() {
                     updateBoard(data.board, data.currentPlayer);
                     highlightWinningCells(data.winner);
                     updateStatus(
-                        data.winner === role ? "🎉 You won! 🎉" : "Game Over - Opponent won",
+                        data.winner === role ? "🎉 You won! 🎉" : "You Lose!",
                         data.winner === role ? 'your-turn' : 'opponent-turn'
                     );
                 } else if (data.draw) {
@@ -448,7 +461,9 @@ export function RemoteTicTacToe() {
                     updateStatus("Game ended in a draw!", '');
                 }
                 break;
-
+            case 'error':
+                updateStatus(data.message, '');
+                break;
             case 'opponent_disconnected':
                 gameActive = false;
                 updateUserBadge(null);
