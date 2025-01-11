@@ -329,7 +329,7 @@ class MatchHistoryView(APIView):
 
         if user2 is None:
             raise ValidationError({'username error': 'This username does not exist'})
-
+        
         if user_score > opponent_score:
             winner = user
             user.stats.wins += 1

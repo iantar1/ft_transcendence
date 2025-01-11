@@ -32,8 +32,32 @@ class GameTictac extends HTMLElement {
     <style>
         :host {
             display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100%;
             width: 100%;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width : 100%;
+        }
+        .game-title {
+            position: absolute;
+            top: 50px;
+            display: flex;
+            font-family: "Pong War", "Freeware";
+            font-weight: bold;
+            font-size: 8vw;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--red);
+            text-shadow: 2px 0 white, -2px 0 white, 0 2px white, 0 -2px white,
+                    1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
+
         }
         .game-tictac {
             display: flex;
@@ -109,6 +133,8 @@ class GameTictac extends HTMLElement {
                 height :80%;
                 border-radius :0px;
                 display :flex;
+                justify-content: center;
+                align-items: center;
             }
         }
         #game{
@@ -117,10 +143,13 @@ class GameTictac extends HTMLElement {
     </style>
     `;
     beforGame = `
-    <div style="width :100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction: column; gap:10px;" >
-        <button id="tolocal" type="button" class="btn-home btn-secondary">Local</button>
-        <button id="toremote" type="button" class="btn-home btn-secondary">Remote</button>
-        <button style="background:#000;" id="toback" type="click" class="btn-home btn-secondary">Back</button>
+    <div class="menu">
+        <div class="game-title" >Tic Tac Toe</div>
+        <div style="width :100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction: column; gap:10px;" >
+            <button id="tolocal" type="button" class="btn-home btn-secondary">Local</button>
+            <button id="toremote" type="button" class="btn-home btn-secondary">Remote</button>
+            <button style="background:#000;" id="toback" type="click" class="btn-home btn-secondary">Back</button>
+        </div>
     </div>
     `
     rander(){

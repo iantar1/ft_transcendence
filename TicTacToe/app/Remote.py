@@ -1,27 +1,77 @@
 import json
 import random
-import asyncio
+import httpx
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 player_queue = []
+active_players = []
 active_games = {}
+BACKEND_URL = "http://backend:8000/user/"
+
 
 class RemoteConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.gameActive = True
         self.currentPlayer = None
-        self.board = [''] * 9
         self.game_room = None
         self.opponent = None
-        
+        self.username = None
+        self.cookies = self.scope.get("cookies", {})
+
+
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(BACKEND_URL, cookies=self.cookies, timeout=5)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.username = data.get("username")
+                    print("get user data")
+                else:
+                    print(f"Failed to get user data: {response.status_code} - {response.text}")
+            except httpx.RequestError as e:
+                print(f"Error get user data: {e}")
+
+
+        # Check if the player is already in a game
+        for room, game in active_games.items():
+            for player in game['players']:
+                if player.username == self.username:
+                    # Player is already in a game, rejoin the game
+                    self.game_room = room
+                    self.currentPlayer = player.currentPlayer
+                    self.opponent = player.opponent
+                    await self.channel_layer.group_add(room, self.channel_name)
+                    await self.accept()
+                    
+                    # Send the current game state to the rejoining player
+                    await self.send(json.dumps({
+                        'type': 'rejoin',
+                        'role': self.currentPlayer,
+                        'board': game['board'],
+                        'currentPlayer': game['current_turn'],
+                        'opp_username': self.opponent.username
+                    }))
+                    print(f"Player {self.username} rejoined game room {room}")
+                    return
+
+
         player_queue.append(self)
         await self.accept()
+
         
         # If we have two players, start a game
         if len(player_queue) >= 2:
             player1 = player_queue.pop(0)
             player2 = player_queue.pop(0)
             
+            # Check if player1 is attempting to play against themselves
+            if player1.username == player2.username:
+                print("Cannot start a game against oneself")
+                await player2.send(json.dumps({'type': 'error', 'message': 'You cannot play against yourself.'}))
+                player_queue.insert(0, player1)
+                return 
+
+
+
             # Create a game room
             game_room = f"room_{random.randint(1, 999999)}"
             
@@ -43,6 +93,7 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                 'current_turn': 'X',
                 'players': [player1, player2]
             }
+
             
             # Send initial game state to both players
             for player in [player1, player2]:
@@ -50,12 +101,15 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                     'type': 'start',
                     'role': player.currentPlayer,
                     'board': active_games[game_room]['board'],
-                    'currentPlayer': 'X'
+                    'currentPlayer': 'X',
+                    'opp_username': player.opponent.username
                 }))
 
     async def disconnect(self, close_code):
+        print("disconnect : ", self.username)
         if self in player_queue:
             player_queue.remove(self)
+
         
         if self.game_room:
             if self.game_room in active_games:
@@ -64,10 +118,23 @@ class RemoteConsumer(AsyncWebsocketConsumer):
             
             # Notify opponent about disconnection if they exist
             if self.opponent:
-                await self.opponent.send(json.dumps({
+                player_queue.append(self.opponent)
+                self.opponent.currentPlayer = None
+                self.opponent.game_room = None
+                self.opponent.opponent = None
+                # Broadcast update to both players
+                message = {
                     'type': 'opponent_disconnected',
                     'message': 'Opponent disconnected'
-                }))
+                }
+                await self.channel_layer.group_send(
+                    self.game_room,
+                    {
+                        'type': 'broadcast_game_state',
+                        'message': message
+                    }
+                )
+
 
     async def receive(self, text_data):
         if not self.game_room or self.game_room not in active_games:
@@ -89,7 +156,8 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                     'type': 'start',
                     'role': player.currentPlayer,
                     'board': active_games[self.game_room]['board'],
-                    'currentPlayer': 'X'
+                    'currentPlayer': 'X',
+                    'opp_username': player.opponent.username
                 }))
             return
         
