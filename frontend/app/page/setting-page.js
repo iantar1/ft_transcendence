@@ -563,7 +563,7 @@ class settingPage extends HTMLElement {
         
             // Log the JSON data
             // console.log('Form Data as JSON:', jsonObject);
-            // console.log("-----------------------------");
+            console.log("-----------------------------" + url);
             postMethode('#myForm',url);
 
         });
@@ -840,7 +840,7 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.passSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.authEdit();
-            this.infoPost("");
+            // this.infoPost("");
 
             });
             this.displayNav();
@@ -855,7 +855,7 @@ class settingPage extends HTMLElement {
             uuss();
             this.imgEffect();
             this.deleteImage();
-            this.infoPost('');
+            // this.infoPost('');
     }
 
     connectedCallback() {

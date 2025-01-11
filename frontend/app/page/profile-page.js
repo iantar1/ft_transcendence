@@ -1161,11 +1161,19 @@ class profilePage extends HTMLElement {
        
                 // Optional: If you need to update duplicate or additional elements, create aliases
                 console.log("stats win : " +  stats.wins);
-                document.getElementById('win').textContent = stats.wins;
-                document.getElementById('winone').textContent = "";
-                document.getElementById('lose').textContent = stats.losses;
-                document.getElementById('loseone').textContent = "";
-                document.getElementById('cycleValue').textContent = stats.total;
+                if (stats){
+                    document.getElementById('win').textContent = stats.wins;
+                    document.getElementById('winone').textContent = "";
+                    document.getElementById('lose').textContent = stats.losses;
+                    document.getElementById('loseone').textContent = "";
+                    document.getElementById('cycleValue').textContent = stats.total;
+                }else{
+                    document.getElementById('win').textContent = "0";
+                    document.getElementById('winone').textContent = "";
+                    document.getElementById('lose').textContent = "0";
+                    document.getElementById('loseone').textContent = "";
+                    document.getElementById('cycleValue').textContent = "0";
+                }
 
             }
             else{

@@ -67,11 +67,11 @@ class homePage extends HTMLElement {
             
         }
         .text-container {
-            width :35%;
+            width :500px;
             height: 30px;
             overflow: hidden;
             display: flex;
-            justify-content: start;
+            justify-content: center;
             align-items: center;
             flex-direction: row;
         }
