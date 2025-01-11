@@ -221,9 +221,10 @@ class ChangePasswordView(APIView):
             raise AuthenticationFailed('Unauthenticated')
         
         user = User.objects.filter(id=playload['id']).first()
+        print(request.data, flush=True)
         crrent_password = request.data['crrent_password']
-        new_password1 = request.data['new_password1']
-        new_password2 = request.data['new_password2']
+        new_password1 = request.data['new_password']
+        new_password2 = request.data['new_password']
         if not user.check_password(crrent_password):
             raise AuthenticationFailed("incorrect password")
         if new_password1 != new_password2:
@@ -355,7 +356,7 @@ class StatsView(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        stats = Stats.objects.get_or_create(user=user)
+        stats = Stats.objects.get(user=user)
         if stats == None:
             return Response({"error":"stats not found"}, status=404)
         serialer = StatsSerializer(stats)
