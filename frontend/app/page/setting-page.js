@@ -351,11 +351,11 @@ class settingPage extends HTMLElement {
         <div class="formProf d-flex flex-column" >
             <form id="myForm" >
                 <label for="fname">Old Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br>
+                <input type="text"  class="editUser" name="crrent_password"><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br>
+                <input type="text"  class="editUser" name="new_password"><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="username"><br>
+                <input type="text"  class="editUser" name="new_password"><br>
                 <div class="saveInfo" >
                         <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
                 </div>
@@ -563,6 +563,7 @@ class settingPage extends HTMLElement {
         
             // Log the JSON data
             // console.log('Form Data as JSON:', jsonObject);
+            // console.log("-----------------------------");
             postMethode('#myForm',url);
 
         });
@@ -854,7 +855,7 @@ class settingPage extends HTMLElement {
             uuss();
             this.imgEffect();
             this.deleteImage();
-            this.infoPost();
+            this.infoPost('');
     }
 
     connectedCallback() {

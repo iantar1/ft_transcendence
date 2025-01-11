@@ -102,6 +102,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://localhost:3000",
+]
+
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',

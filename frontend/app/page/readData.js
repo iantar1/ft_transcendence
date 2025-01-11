@@ -146,12 +146,12 @@ export async function postMethode(alias,redir){
     const fromData = new FormData(form);
     const data = Object.fromEntries(fromData);
     try{
-        const res = await fetch("https://localhost:3000/change_password/", {
+        const res = await fetch("https://localhost:3000/${redir}/", {
             method: 'POST', 
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-
+                'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify(data),
         })
