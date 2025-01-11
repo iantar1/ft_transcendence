@@ -60,7 +60,7 @@ export function online_1vs1()
 
     const countdownElement = createcountdown();
     const canvas = gameCanvas();
-    const matchMaking = waitingPage();
+    const matchMaking = waitingPage(null);
     const cancel = matchMaking.querySelector('button');
 
     const pongCanvas = document.createElement('div');
@@ -164,6 +164,8 @@ export function online_1vs1()
         const data = JSON.parse(e.data);
         console.table('data', data)
         if (data.type === "start") {
+            let new_matchMaking = waitingPage(data.opp_data);
+            render(new_matchMaking, gamePage.shadowRoot.querySelector('.game-pong'));
             setTimeout(() => {
                 render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
                 resizeCanvas();

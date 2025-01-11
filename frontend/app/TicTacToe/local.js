@@ -204,6 +204,8 @@ export function localTicTacToe(){
         border-radius: 20px;
         font-weight: 600;
         font-size: 0.9em;
+        width: 10rem;
+        overflow: hidden;
     }
 
     .player-x {
@@ -260,7 +262,7 @@ export function localTicTacToe(){
             </div>
             <div class="btn-container" >
                 <button class="reset-btn" id="reset" disabled>Restart</button>
-                <button class="reset-btn" id="new" disabled>New Game</button>
+                <button class="reset-btn" id="new" disabled>Back</button>
             </div>
         </div>
     `;

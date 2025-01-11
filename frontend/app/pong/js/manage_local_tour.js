@@ -162,6 +162,8 @@ export function manageLocalTournament(participants, tournamentName) {
                     data.matches,
                     data.round,
                     ws,
+                    null,
+                    tournamentName
                 ),
                 gamePage.shadowRoot.querySelector('.game-pong'));
         }

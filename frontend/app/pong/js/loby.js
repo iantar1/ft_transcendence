@@ -7,7 +7,7 @@ import { tournamentlocal } from './localTournament.js';
 
 export function menu() {
 
-  let  switchButton = new Audio('../sound/switch.mp3');
+  // let  switchButton = new Audio('../sound/switch.mp3');
   let click = new Audio('../sound/menu-click-89198.mp3');
   // Attach styles
   const style = document.createElement('style');
@@ -113,13 +113,13 @@ export function menu() {
     button.addEventListener('click', () => handleButtonClick(text));
     
     button.addEventListener("mouseover", () => {
-      switchButton.play();
+      // switchButton.play();
     });
     return button;
   }
 
   function handleButtonClick(buttonType) {
-    click.play();
+    // click.play();
     switch (buttonType) {
       case 'AI Mode':
         ai_mode();

@@ -1,4 +1,15 @@
+import { fetchUserData } from '../page/readData.js';
+
+
 export function RemoteTicTacToe() {
+
+    let usr_data, oppUsername = null;
+    async function getData() {
+        usr_data = await fetchUserData();
+    } 
+    getData().then(() => updateUserBadge(oppUsername));
+
+
     const style = document.createElement('style');
     style.textContent = `
     .game-TTT {
@@ -202,14 +213,16 @@ export function RemoteTicTacToe() {
         border-radius: 20px;
         font-weight: 600;
         font-size: 0.9em;
+        max-width: 9rem;
+        overflow: hidden;
     }
 
-    .player-x {
+    #player-x {
         background: rgba(0, 242, 254, 0.2);
         color: #00f2fe;
     }
 
-    .player-o {
+    #player-o {
         background: rgba(255, 75, 75, 0.2);
         color: #ff4b4b;
     }
@@ -256,8 +269,8 @@ export function RemoteTicTacToe() {
         <div class="game-container">
             <h1 class="game-title">Tic Tac Toe</h1>
             <div class="player-info">
-                <span class="player-badge player-x">Player X</span>
-                <span class="player-badge player-o">Player O</span>
+                <span class="player-badge" id="player-x">Player X</span>
+                <span class="player-badge" id="player-o">Player O</span>
             </div>
             <div class="status">Waiting for opponent<span class="waiting-animation"></span></div>
             <div class="board">
@@ -273,7 +286,7 @@ export function RemoteTicTacToe() {
             </div>
             <div class="btn-container" >
                 <button class="reset-btn" id="reset" disabled>Restart</button>
-                <button class="reset-btn" id="new" >New Game</button>
+                <button class="reset-btn" id="new" >Back</button>
             </div>
         </div>
     `;
@@ -356,6 +369,15 @@ export function RemoteTicTacToe() {
         statusDisplay.className = 'status ' + type;
     }
 
+
+    function updateUserBadge(opp_username) {
+        let badgeX = content.querySelector('#player-x');
+        let badgeO = content.querySelector('#player-o');
+
+        badgeX.textContent = usr_data.username ? usr_data.username : 'Player X' ;
+        badgeO.textContent = opp_username ? opp_username : 'Player O' ;
+    }
+
     function updateCellAppearance(cell, symbol) {
         cell.textContent = symbol;
         cell.setAttribute('data-symbol', symbol);
@@ -392,6 +414,7 @@ export function RemoteTicTacToe() {
                 gameActive = true;
                 resetButton.disabled = true;
                 newGame.disabled = true;
+                updateUserBadge(data.opp_username);
                 clear();
                 updateBoard(data.board, data.currentPlayer);
                 updateStatus(
@@ -428,6 +451,7 @@ export function RemoteTicTacToe() {
 
             case 'opponent_disconnected':
                 gameActive = false;
+                updateUserBadge(null);
                 updateStatus("Opponent disconnected. Waiting for new opponent...");
                 resetButton.disabled = true;
                 newGame.disabled = false;

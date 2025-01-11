@@ -1,17 +1,34 @@
 import json
 import random
 import asyncio
+import httpx
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 player_queue = []
 active_games = {}
+BACKEND_URL = "http://backend:8000/user/"
+
 
 class RemoteConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.currentPlayer = None
         self.game_room = None
         self.opponent = None
-        
+        self.username = None
+        self.cookies = self.scope.get("cookies", {})
+
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(BACKEND_URL, cookies=self.cookies, timeout=5)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.username = data.get("username")
+                    print("get user data")
+                else:
+                    print(f"Failed to get user data: {response.status_code} - {response.text}")
+            except httpx.RequestError as e:
+                print(f"Error get user data: {e}")
+
         player_queue.append(self)
         await self.accept()
         
@@ -48,7 +65,8 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                     'type': 'start',
                     'role': player.currentPlayer,
                     'board': active_games[game_room]['board'],
-                    'currentPlayer': 'X'
+                    'currentPlayer': 'X',
+                    'opp_username': player.opponent.username
                 }))
 
     async def disconnect(self, close_code):
@@ -91,7 +109,8 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                     'type': 'start',
                     'role': player.currentPlayer,
                     'board': active_games[self.game_room]['board'],
-                    'currentPlayer': 'X'
+                    'currentPlayer': 'X',
+                    'opp_username': player.opponent.username
                 }))
             return
         

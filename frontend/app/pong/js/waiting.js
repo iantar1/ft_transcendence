@@ -4,13 +4,12 @@ import { menu } from "./loby.js";
 import { fetchUserData } from "../../page/readData.js";
 
 
-export function waitingPage() {
+export function waitingPage(opp_data) {
 
-    let usr_data, opp_data = null;
+    let usr_data;
     async function getData() {
         usr_data = await fetchUserData();
-        opp_data = null ;
-    } 
+    }
     // Fetch initial data
     getData().then(() => updateUserCards());
 
@@ -149,6 +148,12 @@ export function waitingPage() {
 
         left_user.appendChild(createUserCard(usr_data));
         right_user.appendChild(createUserCard(opp_data));
+
+        if (usr_data && opp_data)
+        {
+            midel_info.textContent = 'fight for your life';
+            // waiting.remove(cancel);
+        }
     }
 
     midel_info.appendChild(loader);

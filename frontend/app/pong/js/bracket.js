@@ -9,7 +9,7 @@ export function tournamentBracket(
     ],
     currentMatch = 1,
     ws = null,
-    ranekd = null,
+    ranked = null,
     name = null
 ) {
     const style = document.createElement('style');
@@ -22,7 +22,6 @@ export function tournamentBracket(
             color: white;
             width :90%;
             max-width :1000px;
-            height :100%;
         }
 
         .bracket-title {
@@ -78,6 +77,7 @@ export function tournamentBracket(
         .team {
 
             width: 200px;
+            overflow: hidden;
             padding: 1rem;
             background: #1e1e1e;
             border-radius: 5px;
@@ -90,6 +90,7 @@ export function tournamentBracket(
 
         .team.winner {
             background: var(--red);
+            overflow: hidden;
         }
 
         .team span {
@@ -174,6 +175,10 @@ export function tournamentBracket(
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             color: white;
         }
+        .match .pl{
+            max-width: 200px;
+            overflow: hidden;
+        }
 
         .match .vs {
             font-family: 'Pong War', 'Roboto', sans-serif;
@@ -192,6 +197,13 @@ export function tournamentBracket(
             border-radius: 5px;
             cursor: pointer;
             transition: 0.5s ease;
+        }
+
+        button:disabled {
+            background: linear-gradient(45deg, #ccc 0%, #999 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         button:hover {
             background-color: gray;
@@ -251,7 +263,7 @@ export function tournamentBracket(
 
     const title = document.createElement('h2');
     title.className = 'bracket-title';
-    title.textContent = 'Tournament';
+    title.innerHTML = `<span style="color : var(--red)">${name}</span> Tournament`;
 
     const content = document.createElement('div');
     content.className = 'bracket-content';
@@ -281,9 +293,9 @@ export function tournamentBracket(
         CurrentRound.innerHTML = `
             <h3>Round ${currentMatch}</h3>
             <div class="match">
-                <span>${matches[currentMatch - 1].player1}</span>
+                <span class="pl">${matches[currentMatch - 1].player1}</span>
                 <span class="vs">VS</span>
-                <span>${matches[currentMatch - 1].player2}</span>
+                <span class="pl">${matches[currentMatch - 1].player2}</span>
             </div>
         `;
     }
@@ -313,7 +325,7 @@ export function tournamentBracket(
     cancelButton.textContent = 'cancel';
 
     if (currentMatch > 3) {
-        startButton.textContent = 'save';
+        startButton.textContent = 'save to blockchain';
     }
 
     buttons.appendChild(cancelButton);
@@ -323,7 +335,15 @@ export function tournamentBracket(
     // Event listeners
     startButton.addEventListener('click', async () => {
         if (currentMatch > 3) {
-            await submitTournament("submit", ranekd, name);
+            console.log('save tournament');
+            try {
+                const result = await submitTournament("submit", ranked, name);
+                if (result === true) {
+                    startButton.disabled = true;
+                }
+            } catch (error) {
+                console.error('Error saving tournament:', error);
+            }
         }
         else {
             // submitTournament("submit", matches[0].player1, 6);
