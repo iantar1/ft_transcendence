@@ -1,4 +1,3 @@
-version: '3'
 
 services:
   backend:
@@ -11,8 +10,6 @@ services:
       - ./backend:/backend
     env_file:
       - .env
-    # networks:
-    #   - ft_transcendence
 
   ponggame:
     container_name: ponggame
@@ -39,3 +36,13 @@ services:
   #     - "8545:8545" 
   #   volumes:
   #     - ./blockchain:/usr/src/app 
+
+  tictactoe:
+    container_name: tictactoe
+    image: tictactoe
+    build: ./TicTacToe
+    ports:
+      - "4040:4040"
+    volumes:
+      - ./TicTacToe:/app
+  

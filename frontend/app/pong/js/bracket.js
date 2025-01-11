@@ -1,27 +1,27 @@
 import { render } from "./render.js";
 import { menu } from "./loby.js";
-import { createWinnerCard } from "./winnerCard.js";
 import { submitTournament } from "./submitTournament.js"
 
 export function tournamentBracket(
     matches = [
-        { player1: 'T1', player2: 'T2' },	
-        { player1: 'T3', player2: 'T4' },
+        { player1: 'player 1', player2: 'player 2' },	
+        { player1: 'player 3', player2: 'player 4' },
     ],
     currentMatch = 1,
     ws = null,
+    ranked = null,
+    name = null
 ) {
     const style = document.createElement('style');
     style.textContent = `
         .tournament-container {
             font-family: 'Pong War';
             letter-spacing: 3px;
-            padding: 2rem;
+            // padding: 2rem;
             border-radius: 5px;
             color: white;
             width :90%;
             max-width :1000px;
-            height :100%;
         }
 
         .bracket-title {
@@ -33,12 +33,31 @@ export function tournamentBracket(
         }
 
         .bracket-content {
+            padding: 10px;
             width :90%;
             display: flex;
             align-items: center;
             gap: 4rem;
             overflow-x :scroll;
 
+        }
+
+        .bracket-content::-webkit-scrollbar {
+            width: 4px; /* Narrow scrollbar for a mobile-like feel */
+            height: 4px;
+        }
+
+        .bracket-content::-webkit-scrollbar-thumb {
+            background: var(--red); /* Thumb color */
+            border-radius: 5px; /* Rounded thumb for a smooth look */
+        }
+
+        .bracket-content::-webkit-scrollbar-thumb:hover {
+            background: #fff; /* Darker color on hover */
+        }
+
+        .bracket-content::-webkit-scrollbar-track {
+            background: transparent; /* Transparent track for minimalistic style */
         }
 
         .round-bracket {
@@ -58,6 +77,7 @@ export function tournamentBracket(
         .team {
 
             width: 200px;
+            overflow: hidden;
             padding: 1rem;
             background: #1e1e1e;
             border-radius: 5px;
@@ -69,7 +89,8 @@ export function tournamentBracket(
         }
 
         .team.winner {
-            background: var(--orange);
+            background: var(--red);
+            overflow: hidden;
         }
 
         .team span {
@@ -117,7 +138,7 @@ export function tournamentBracket(
         }
 
         .final-winner {
-            background: var(--orange);
+            background: var(--red);
             padding: 1rem;
             border-radius: 5px;
             text-align: center;
@@ -154,6 +175,10 @@ export function tournamentBracket(
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             color: white;
         }
+        .match .pl{
+            max-width: 200px;
+            overflow: hidden;
+        }
 
         .match .vs {
             font-family: 'Pong War', 'Roboto', sans-serif;
@@ -172,6 +197,13 @@ export function tournamentBracket(
             border-radius: 5px;
             cursor: pointer;
             transition: 0.5s ease;
+        }
+
+        button:disabled {
+            background: linear-gradient(45deg, #ccc 0%, #999 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         button:hover {
             background-color: gray;
@@ -195,7 +227,7 @@ export function tournamentBracket(
         const matchContainer = document.createElement('div');
         matchContainer.className = 'match-bracket';
         if (isCurrent) {
-            matchContainer.style.border = '4px solid green';
+            matchContainer.style.boxShadow = '0px 0px 10px 10px green';
         }
         if (!match) {
             const winner1 = createTeam("winner 1");
@@ -231,7 +263,7 @@ export function tournamentBracket(
 
     const title = document.createElement('h2');
     title.className = 'bracket-title';
-    title.textContent = 'Tournament';
+    title.innerHTML = `<span style="color : var(--red)">${name}</span> Tournament`;
 
     const content = document.createElement('div');
     content.className = 'bracket-content';
@@ -261,9 +293,9 @@ export function tournamentBracket(
         CurrentRound.innerHTML = `
             <h3>Round ${currentMatch}</h3>
             <div class="match">
-                <span>${matches[currentMatch - 1].player1}</span>
+                <span class="pl">${matches[currentMatch - 1].player1}</span>
                 <span class="vs">VS</span>
-                <span>${matches[currentMatch - 1].player2}</span>
+                <span class="pl">${matches[currentMatch - 1].player2}</span>
             </div>
         `;
     }
@@ -293,7 +325,7 @@ export function tournamentBracket(
     cancelButton.textContent = 'cancel';
 
     if (currentMatch > 3) {
-        startButton.textContent = 'save';
+        startButton.textContent = 'save to blockchain';
     }
 
     buttons.appendChild(cancelButton);
@@ -301,12 +333,21 @@ export function tournamentBracket(
 
 
     // Event listeners
-    startButton.addEventListener('click', () => {
-
+    startButton.addEventListener('click', async () => {
         if (currentMatch > 3) {
-            submitTournament("submit", matches[0].player1, 6);
+            console.log('save tournament');
+            try {
+                const result = await submitTournament("submit", ranked, name);
+                if (result === true) {
+                    startButton.disabled = true;
+                }
+            } catch (error) {
+                console.error('Error saving tournament:', error);
+            }
         }
         else {
+            // submitTournament("submit", matches[0].player1, 6);
+
             console.log('start match');
             ws.send(JSON.stringify({ type: 'countdown' }));
         }
@@ -315,7 +356,7 @@ export function tournamentBracket(
     cancelButton.addEventListener('click', () => {
         ws.send(JSON.stringify({ type: 'cancel' }));
         ws.close();
-        render(menu(), document.body.querySelector('game-page').shadowRoot.querySelector('.game-page'));
+        render(menu(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
     });
 
     content.appendChild(round1);
@@ -329,9 +370,6 @@ export function tournamentBracket(
         container.appendChild(CurrentRound);
     }
     container.appendChild(buttons);
-    // if (currentMatch > 3) {
-    //     container.appendChild(createWinnerCard(matches[2].winner));
-    // }
 
     return container;
 }

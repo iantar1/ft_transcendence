@@ -53,7 +53,7 @@ class LoginView(APIView):
             raise AuthenticationFailed("incorrect password")
 
          # Generate OTP
-        otp_token = create_access_token(user.id)
+        otp_token = create_otp_token(user.id)
         otp = str(random.randint(100000, 999999))
         user.otp = otp
         user.otp_expiry_time = timezone.now() + timedelta(minutes=5)  # OTP expires in 5 minutes
@@ -85,7 +85,7 @@ class VerifyOTPView(APIView):
         if not otp_token:
             raise AuthenticationFailed('22Unauthenticated')
         try:
-            playload = jwt.decode(otp_token, 'access_secret', algorithms=['HS256'])
+            playload = jwt.decode(otp_token, 'otp_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('33Unauthenticated')
         
@@ -102,12 +102,13 @@ class VerifyOTPView(APIView):
 
         response = Response()
         response.delete_cookie('otp_token')
-        response.set_cookie(key="access", value=access_token, httponly=False)
+        print("access: {}")
+        response.set_cookie(key="access", value=access_token)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
-        response.data = {
-            "access": access_token,
-            "refresh": refresh_token
-        }
+        # response.data = {
+        #     "access": access_token,
+        #     "refresh": refresh_token
+        # }
 
         return response
 
@@ -116,7 +117,7 @@ def checkAuthenticationAnsReturnTokens(request):
     refresh_token = request.COOKIES.get('refresh')
     
     if not access_token or not refresh_token:
-        raise AuthenticationFailed('44Unauthenticated')
+        raise AuthenticationFailed('Unauthenticated')
     return {access_token, refresh_token}
 
 def generateNewTokens(response, access_token, refresh_token, playload):
@@ -132,7 +133,7 @@ class UserView(APIView):
     def get(self, request):
         access_token = request.COOKIES.get('access')
         refresh_token = request.COOKIES.get('refresh')
-        
+        print(f"tokens: {access_token}, refresh: {refresh_token}", flush=True)
         if not access_token or not refresh_token:
             raise AuthenticationFailed('Unauthenticated')
         # access_token, refresh_token = checkAuthenticationAnsReturnTokens(request)
@@ -177,7 +178,6 @@ class LogoutView(APIView):
         token = request.COOKIES.get('access')
         if not token:
             raise AuthenticationFailed('Unauthenticated')
-        print("logout")
         response = Response()
         response.delete_cookie('access')
         response.delete_cookie('refresh')
@@ -228,9 +228,8 @@ class ChangePasswordView(APIView):
             raise AuthenticationFailed("incorrect password")
         if new_password1 != new_password2:
             return Response("Password1 is different from Password2", status=400)
-        print(f'crrent: {crrent_password}')
-        print(f'new: {new_password1}')
         user.set_password(new_password1)
+        user.save
         return Response({"seccess":"the password changed successfuly"}, status=200)
 
 
@@ -261,14 +260,14 @@ class ChangeBio(APIView):
     
         if not token:
             raise AuthenticationFailed('Unauthenticated')
-        
+
         try:
             playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Unauthenticated')
-        
+
         user = User.objects.filter(id=playload['id']).first()
-        serializer = ImageBioSerializer(user, data=request.data)
+        serializer = BioSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -309,7 +308,7 @@ class MatchHistoryView(APIView):
         return Response({"matchHistory": match_history_list})
 
     def post(self, request):
-        print(request)
+        print("POST HISTORY : ", request)
         token = request.COOKIES.get('access')
         user = get_user_by_token(token)
         if user == None:
@@ -326,7 +325,7 @@ class MatchHistoryView(APIView):
 
         if user2 is None:
             raise ValidationError({'username error': 'This username does not exist'})
-
+        
         if user_score > opponent_score:
             winner = user
             user.stats.wins += 1

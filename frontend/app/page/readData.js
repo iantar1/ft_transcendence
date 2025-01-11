@@ -126,7 +126,7 @@ export async function logoutUser(user) {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                // 'X-CSRFToken': getCookie('csrftoken'),
+                'X-CSRFToken': getCookie('csrftoken'),
             },
             // body: JSON.stringify(data),
         })
@@ -141,21 +141,20 @@ export async function logoutUser(user) {
 }
 
 export async function postMethode(alias,redir){
-    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    console.log("post function" + redir);
-    const form = document.querySelector(alias);
-    const fromData = new FormData(form);
-    const data = Object.fromEntries(fromData);
+    // console.log("post function " + redir);
+    // const form = document.querySelector(alias);
+    // const fromData = new FormData(form);
+    const data = alias;
     try{
-        const res = await fetch("https://localhost:3000/change_password/", {
+        const res = await fetch("https://localhost:3000/" + redir + "/", {
             method: 'POST', 
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                // 'X-CSRFToken': csrftoken, // Include the token here
-
+                'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify(data),
+            
         })
         if (res.ok) {
                 console.log('POST METHOD HAS BEEN SUCCESS')
@@ -176,7 +175,7 @@ export async function postInfo(alias,redir){
     const fromData = new FormData(form);
     const data = Object.fromEntries(fromData);
     try{
-        const res = await fetch("https://localhost:3000/api/${redir}", {
+        const res = await fetch(`https://localhost:3000/api/${redir}`, {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',

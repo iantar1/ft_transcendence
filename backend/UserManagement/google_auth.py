@@ -84,6 +84,7 @@ def get_code(request):
     response = requests.post(OUUTH_TOKEN_URI, data=plyload)
 
     access_token = response.json().get('access_token')
+    print(f"access_token: {access_token}", flush=True)
     userInfoJson = getUserInfo(access_token)
 
     user = createUpdateUser(userInfoJson.json())

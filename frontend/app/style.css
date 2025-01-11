@@ -11,7 +11,7 @@
   rgb(4, 28,68, 1) 100%, 
   rgba(56, 75, 112, 0.2) 100%
    );
-  --red: #e3052e;
+  --red: rgb(227, 5, 46);
 
   --bluenes : linear-gradient(-80deg, 
   rgb(4, 28,68, 1) 5%, 
@@ -110,6 +110,7 @@ animation: zoom 16s alternate infinite;
 
 
 #content{
+  width :90%;
   flex-basis: 90%;
   height: 95vh;
   border-radius: 25px;

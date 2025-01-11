@@ -24,7 +24,7 @@ class AIState:
 def decide_ai_state(ball):
     if ball["z"] > (TABLE_HIEGHT / 4):  # Ball far away
         return AIState.IDLE
-    elif ball["z"] <= (TABLE_HIEGHT / 4) and ball["dz"] < 0:  # Ball moving toward AI
+    elif ball["z"] <= 0 and ball["dz"] < 0:  # Ball moving toward AI
         return AIState.CHASE
     else:
         return AIState.RECOVER
@@ -37,7 +37,7 @@ class AIConsumer(AsyncWebsocketConsumer):
         self.target_x = 0
         self.width = 800
         self.height = 400
-        self.speed = 1
+        self.speed = 0.5
         self.paddle = {
             "height": 0.5,
             "width": 5,
@@ -106,7 +106,7 @@ class AIConsumer(AsyncWebsocketConsumer):
             self.move_paddel(self.player2)
             
             ##
-            self.move_ball()
+            await self.move_ball()
             await self.check_goals()
             if self.score["player1"] >= WINNING_SCORE or self.score["player2"] >= WINNING_SCORE:
                 await self.send_game_over()
@@ -140,6 +140,15 @@ class AIConsumer(AsyncWebsocketConsumer):
                 "ball": self.ball,
                 "score": self.score,
             }))
+    async def send_collision(self):
+        await self.send(text_data=json.dumps(
+            {
+                "type": "hit_wall",
+                "player1": self.player1,
+                "player2": self.player2,
+                "ball": self.ball,
+                "score": self.score,
+            }))
 
 
     def move_paddel(self, player):
@@ -151,17 +160,14 @@ class AIConsumer(AsyncWebsocketConsumer):
             player["x"] = (TABLE_WIDTH / 2) - (self.paddle["width"]  / 2) - 1
 
     async def ai_logic(self):
-        # x = 1 
         while self.is_active:
-            # print(x)
-            # x += 1
             if decide_ai_state(self.ball) == AIState.CHASE:
                 self.target_x = self.predict_ball_position()
                 self.target_x = self.add_imperfection(self.target_x)
-                # print(f"GO TO : {target_x} from : ", self.player2["x"])
+
             elif decide_ai_state(self.ball) == AIState.IDLE:
                 self.player2["direction"] = 0
-            await asyncio.sleep(1)  # Refresh view every second
+            await asyncio.sleep(1)
 
     def add_imperfection(self, target_x):
         error_margin = random.uniform(-1, 1)  # Add randomness to prediction
@@ -179,32 +185,53 @@ class AIConsumer(AsyncWebsocketConsumer):
             player["direction"] = 0
 
     def predict_ball_position(self):
-        future_z = self.ball["z"]
+
         future_x = self.ball["x"]
+        future_z = self.ball["z"]
         dx = self.ball["dx"]
         dz = self.ball["dz"]
-
-        while abs(future_z) < TABLE_HIEGHT / 2:
-            # Calculate time to the next wall collision
+        
+        # If ball is moving away from AI, return current position
+        if dz >= 0:
+            return future_x
+            
+        while True:
+            # Check if ball has stopped moving horizontally
+            if dx == 0:
+                return future_x
+                
+            # Calculate time to reach next wall or paddle
             if dx > 0:
+                # Time to reach right wall
                 time_to_wall = (((TABLE_WIDTH / 2) - 1) - (future_x + self.ball["radius"])) / dx
             else:
-                time_to_wall = ((-(TABLE_WIDTH / 2) + 1) - (future_x - self.ball["radius"])) / abs(dx)
-
-            # Predict z position during this time 
-            potential_future_z = future_z + dz * time_to_wall
-
-            # Check if the ball stays within the bounds of the table height
-            if abs(potential_future_z) >= TABLE_HIEGHT / 2:
-                # The ball reaches the end of the table (goal area)
-                break
-  
-            # Update future_x and future_z after wall bounce
+                # Time to reach left wall
+                time_to_wall = ((-(TABLE_WIDTH / 2) + 1) - (future_x - self.ball["radius"])) / dx
+                
+            # Calculate where ball will be when it reaches wall
+            potential_z = future_z + dz * time_to_wall
+            
+            # If ball will reach AI paddle plane before hitting wall
+            if potential_z  <= -(TABLE_HIEGHT / 2) + self.ball["radius"]:
+                # Calculate final x position at AI paddle plane
+                time_to_paddle = (-(TABLE_HIEGHT / 2) - (future_z + self.ball["radius"])) / dz
+                final_x = future_x + dx * time_to_paddle
+                
+                # Ensure prediction stays within table bounds
+                # final_x = max(-(TABLE_WIDTH / 2) + 1, min(final_x, (TABLE_WIDTH / 2) - 1))
+                return final_x
+                
+            # Ball will hit wall first
             future_x += dx * time_to_wall
-            future_z = potential_future_z
-            dx *= -1  # Reverse the direction of dx upon wall collision
+            future_z = potential_z
+            
+            # Bounce off wall (reverse horizontal direction)
+            dx *= -1
+            
+            # Safety check for infinite loops
+            if time_to_wall <= 0:
+                return future_x
 
-        return future_x
 
     
     async def check_goals(self):
@@ -241,7 +268,7 @@ class AIConsumer(AsyncWebsocketConsumer):
         }))
 
 
-    def move_ball(self):
+    async def move_ball(self):
         self.ball["x"] += self.ball["dx"]
         self.ball["z"] += self.ball["dz"]
 
@@ -250,6 +277,7 @@ class AIConsumer(AsyncWebsocketConsumer):
         if self.ball["x"] - self.ball["radius"] <= -(TABLE_WIDTH / 2) + 1 or self.ball["x"] + self.ball["radius"] >= (TABLE_WIDTH / 2) - 1:
             print("hit the wall at : ", self.ball["z"])
             self.ball["dx"] *= -WALL_DAMPENING
+            await self.send_collision()
 
                  # check for paddle and ball collision  PLAYER 1
         if (self.ball["z"] + self.ball["radius"] >= self.player1['z'] - (self.paddle["deep"] / 2)
@@ -263,11 +291,11 @@ class AIConsumer(AsyncWebsocketConsumer):
                 self.ball["dx"] *= -1 if self.ball["dz"] < 0 else  1 #Bounce the ball back
             
             self.ball["dz"] *= -1
-            self.ball["dz"] *= 1.05 # Ball speed increase after hit
-            # velocity.x += (keys.ArrowLeft ? -0.5 : 0) * playerSpeed;
-            # velocity.x += (keys.ArrowRight ? 0.5 : 0) * playerSpeed;
-            self.ball["dx"] += ( 0.5 if self.player1["direction"] == 1 else 0) * self.speed
-            self.ball["dx"] += (-0.5 if self.player1["direction"] == -1 else 0) * self.speed
+            self.ball["dz"] *= 1.05
+            if self.ball["dz"] > 0.4:
+                self.ball["dz"] = 0.4
+            self.ball["dx"] += ( 0.4 if self.player1["direction"] == 1 else 0) * self.speed
+            self.ball["dx"] += (-0.4 if self.player1["direction"] == -1 else 0) * self.speed
 
                  # check for paddle and ball collision  PLAYER 2
         if (self.ball["z"] - self.ball["radius"] <= self.player2['z'] +  (self.paddle["deep"] / 2)
@@ -281,9 +309,11 @@ class AIConsumer(AsyncWebsocketConsumer):
                 self.ball["dx"] *= -1 if self.ball["dz"] < 0 else  1 #Bounce the ball back
             
             self.ball["dz"] *= -1
-            # self.ball["dx"] *= 1.05 # Ball speed increase after hit
-            self.ball["dx"] += ( 0.5 if self.player2["direction"] == 1 else 0) * self.speed
-            self.ball["dx"] += (-0.5 if self.player2["direction"] == -1 else 0) * self.speed
+            self.ball["dz"] *= 1.05
+            if self.ball["dz"] > 0.4:
+                self.ball["dz"] = 0.4
+            self.ball["dx"] += ( 0.4 if self.player2["direction"] == 1 else 0) * self.speed
+            self.ball["dx"] += (-0.4 if self.player2["direction"] == -1 else 0) * self.speed
         
 
 

@@ -23,7 +23,7 @@ function createcountdown() {
 
 export function online_1vs1()
 {
-    const gamePage = document.body.querySelector('game-page');
+    const gamePage = document.body.querySelector('game-pong');
 
     const style = document.createElement('style');
     style.textContent = `
@@ -60,7 +60,7 @@ export function online_1vs1()
 
     const countdownElement = createcountdown();
     const canvas = gameCanvas();
-    const matchMaking = waitingPage();
+    const matchMaking = waitingPage(null);
     const cancel = matchMaking.querySelector('button');
 
     const pongCanvas = document.createElement('div');
@@ -74,9 +74,9 @@ export function online_1vs1()
     const online_URL = 'wss://'+window.location.host+'/ws/online_1vs1/';
     let wsOpen = false;
     const selectedMode = "online_1vs1";
-    let ball_config, ball, player1_config,leftWall, rightWall, player2_config, plane, table_config, paddle, score, animationId, role ;
+    let ball_config, ball;
+    let leftWall, rightWall, plane, table_config, paddle, score, animationId, role,scoreManager ;
     let playerDirection = 0;
-    let player1ScoreMesh, player2ScoreMesh;
     let player1 , player2;
     let renderer, controls;
     
@@ -97,7 +97,7 @@ export function online_1vs1()
     spotLight.shadow.mapSize.height = 2048;
     scene.add(spotLight);
 
-    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
 
     let width = canvas.clientWidth ;
     let height = canvas.clientHeight ;
@@ -116,19 +116,17 @@ export function online_1vs1()
     pongCanvas.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-    resizeCanvas();
     
 
-    // Particle system for background
     function createStarfield() {
         const geometry = new THREE.BufferGeometry();
         const vertices = [];
         
         for (let i = 0; i < 5000; i++) {
             vertices.push(
-                Math.random() * 2000 - 1000,
-                Math.random() * 2000 - 1000,
-                Math.random() * 2000 - 1000
+                Math.random() * 500 - 250,
+                Math.random() * 500 - 250,
+                Math.random() * 500 - 250
             );
         }
         
@@ -140,13 +138,12 @@ export function online_1vs1()
             depthWrite: false,
             alphaMap : new THREE.TextureLoader().load('/app/pong/assets/kenney_particle-pack/PNG (Transparent)/star_06.png'),
         });
-        
+
         return new THREE.Points(geometry, material);
     }
     
     const starfield = createStarfield();
     scene.add(starfield);
-    
 
 
 
@@ -161,34 +158,36 @@ export function online_1vs1()
 			width: width,
 			height: height
 		}));
-        render(matchMaking, gamePage.shadowRoot.querySelector('.game-page'));
+        render(matchMaking, gamePage.shadowRoot.querySelector('.game-pong'));
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         console.table('data', data)
         if (data.type === "start") {
-            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+            let new_matchMaking = waitingPage(data.opp_data);
+            render(new_matchMaking, gamePage.shadowRoot.querySelector('.game-pong'));
+            setTimeout(() => {
+                render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
+                resizeCanvas();
+                table_config = data.table;
+                paddle = data.paddle;
+                ball_config = data.ball;
+                score = data.score;
+                role = data.role;
+                updateCameraPosition(role);
+                table();
+                ballCreation();
+                playerCreation();
+                scoreManager = new ScoreManager(scene);
 
-            table_config = data.table;
-            paddle = data.paddle;
-            player1_config = data.player1;
-            player2_config = data.player2;
-            ball_config = data.ball;
-            score = data.score;
-            role = data.role;
-            updateCameraPosition(role);
-            table();
-            ballCreation();
-            playerCreation();
-            createScore();
-
-            startCountdown(3, () => {
-                animate();
-                socket.send(JSON.stringify({ 
-                    type: "start_game",
-                }));
-                console.log("sending start_game");
-            });
+                startCountdown(3, () => {
+                    animate();
+                    socket.send(JSON.stringify({ 
+                        type: "start_game",
+                    }));
+                    console.log("sending start_game");
+                });
+            }, 3000);
         }
         if (data.type === "update") {
 
@@ -205,10 +204,15 @@ export function online_1vs1()
             ball.position.z = data.ball.z;
             score = data.score;
             shakeCamera();
-            updateScore();
+            scoreManager.addPoint(score);
         }
         if (data.type === "game_over") {
             gameOver(data.winner, data.score);
+            scoreManager.reset();
+        }
+        if (data.type === "opponent_disconnected") {
+            gameOver(data.winner, data.score);
+            scoreManager.reset();
         }
     };
     socket.onclose = () => {
@@ -237,18 +241,54 @@ export function online_1vs1()
     cancel.addEventListener('click', () => {
         socket.close();
         console.log("canceling the game");
-        render(menu(), gamePage.shadowRoot.querySelector('.game-page'));
+        render(menu(), gamePage.shadowRoot.querySelector('.game-pong'));
     });
+
+    function adjustCameraPosition(camera, aspect) {
+        let targetZ = (aspect < 1) ? 35 * (1 / aspect) : 35;
+        let targetY = (aspect < 1) ? 15 * (1 / aspect) : 15;
+        camera.position.z = Math.max(35, Math.min(targetZ, 50)); // Clamped to prevent extreme zooms
+        camera.position.y = Math.max(15, Math.min(targetY, 30)); // Clamped to prevent extreme zooms
+    }
+    
+
+    function adjustFOV(camera, aspect) {
+        // Define base FOV for a standard aspect ratio (e.g., 16:9)
+        const baseFOV = 75; // Adjust this base FOV to your preference
+        const aspectRatioThreshold = 1.5; // A typical threshold to distinguish large from small screens
+    
+        if (aspect > aspectRatioThreshold) {
+            // For larger screens (wider aspect ratios), decrease the FOV to zoom in
+            camera.fov = baseFOV - (aspect - aspectRatioThreshold) * 5;
+        } else {
+            // For smaller screens, increase the FOV to widen the view
+            camera.fov = baseFOV + (aspectRatioThreshold - aspect) * 5;
+        }
+    
+        // Ensure the FOV remains within a reasonable range
+        camera.fov = Math.max(75, Math.min(camera.fov, 80)); // Clamping FOV between 45 and 75
+    
+        // Update the projection matrix with the new FOV
+        camera.updateProjectionMatrix();
+    }
 
     function resizeCanvas() {
         width = pongCanvas.clientWidth ;
         height = pongCanvas.clientHeight ;
+        const aspect = (width / height);
 
-        console.log("sizes : ", pongCanvas.clientWidth / pongCanvas.clientHeight);
-        camera.fov = Math.min(95, Math.max(75, 60 * (height / width)));
-        camera.aspect = width / height;
+        adjustFOV(camera, aspect);
+        adjustCameraPosition(camera, aspect);
+
+        camera.aspect = aspect;
         camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(width , height);
+
+        console.log("camera on z: ", camera.position.z);
+        console.log("camera on y: ", camera.position.y);
+        console.log("camera fov : ", camera.fov);
+        
     }
 
     window.addEventListener("resize", resizeCanvas);
@@ -520,42 +560,126 @@ export function online_1vs1()
     }
 
 
-    function createScore() {
-        FontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
-            const player1Score = new THREE.TextGeometry(`${score.player1}`, {
-                font: font,
-                size: 10,
-                height: 0.01
-            });
-            player1ScoreMesh = new THREE.Mesh(player1Score, new THREE.MeshBasicMaterial({color: "white"}));
-            player1ScoreMesh.position.set(-3.5, -0.4, 14);
-            player1ScoreMesh.rotation.x = -Math.PI / 2;
-            scene.add(player1ScoreMesh);
+    class ScoreManager {
+        constructor(scene) {
+            this.scene = scene;
+            this.scores = {
+                player1: 0,
+                player2: 0,
+                maxScore: 5
+            };
+            this.scoreMeshes = {
+                player1: null,
+                player2: null
+            };
 
-            const player2Score = new THREE.TextGeometry(`${score.player2}`, {
-                font: font,
-                size: 10,
-                height: 0.01
+            // Initialize score displays
+            this.loadFont();
+        }
+    
+        loadFont() {
+            FontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+                this.font = font;
+                this.createScoreDisplays();
             });
-            player2ScoreMesh = new THREE.Mesh(player2Score, new THREE.MeshBasicMaterial({color: "white"}));
-            player2ScoreMesh.position.set(3.5, -0.4, -14);
-            player2ScoreMesh.rotation.y = Math.PI;
-            player2ScoreMesh.rotation.x = Math.PI / 2;
-            scene.add(player2ScoreMesh);
-        });
-    }
-
-    function updateScore() {
-        scene.remove(player1ScoreMesh);
-        scene.remove(player2ScoreMesh);
-        createScore();
+        }
+    
+        createScoreDisplays() {
+            // Player 1 Score
+            const player1Score = new THREE.TextGeometry(`${this.scores.player1}`, {
+                font: this.font,
+                size: 10,
+                height: 0.1,
+                bevelEnabled: true,
+                bevelThickness: 0.1,
+                bevelSize: 0.1,
+                bevelSegments: 3
+            });
+    
+            this.scoreMeshes.player1 = new THREE.Mesh(
+                player1Score,
+                new THREE.MeshPhongMaterial({
+                    color: 0xffffff,
+                    metalness: 0.5,
+                    roughness: 0.5,
+                    emissive: 0x444444
+                })
+            );
+            this.scoreMeshes.player1.position.set(-3.5, -0.2, 14);
+            this.scoreMeshes.player1.rotation.x = -Math.PI / 2;
+            this.scene.add(this.scoreMeshes.player1);
+    
+            // Player 2 Score
+            const player2Score = new THREE.TextGeometry(`${this.scores.player2}`, {
+                font: this.font,
+                size: 10,
+                height: 0.1,
+                bevelEnabled: true,
+                bevelThickness: 0.1,
+                bevelSize: 0.1,
+                bevelSegments: 3
+            });
+    
+            this.scoreMeshes.player2 = new THREE.Mesh(
+                player2Score,
+                new THREE.MeshPhongMaterial({
+                    color: 0xffffff,
+                    metalness: 0.5,
+                    roughness: 0.5,
+                    emissive: 0x444444
+                })
+            );
+            this.scoreMeshes.player2.position.set(3.5, -0.2, -14);
+            this.scoreMeshes.player2.rotation.y = Math.PI;
+            this.scoreMeshes.player2.rotation.x = Math.PI / 2;
+            this.scene.add(this.scoreMeshes.player2);
+        }
+    
+        addPoint(score) {
+            this.scores = score;
+            for (const player in this.scoreMeshes) {
+                if (this.scoreMeshes[player]) {
+                    this.scene.remove(this.scoreMeshes[player]);
+                }
+            }
+            this.createScoreDisplays();
+        }
+        reset() {
+            this.scores.player1 = 0;
+            this.scores.player2 = 0;
+            this.updateScore();
+        }
+    
+        updateScore() {
+            for (const player in this.scoreMeshes) {
+                if (this.scoreMeshes[player]) {
+                    this.scene.remove(this.scoreMeshes[player]);
+                }
+            }
+            this.createScoreDisplays();
+        }
     }
 
     function updateCameraPosition(role) {
         if (role === "player1")
             camera.position.set(0, 15, 35);
-        if (role === "player2")
+        else if (role === "player2")
             camera.position.set(0, 15, -35);
+    }
+
+    function updateCamera() {
+        if (role === "player1"){
+            camera.position.lerp(
+                new THREE.Vector3(player1.position.x * 0.5, camera.position.y, camera.position.z),
+                0.05
+            );
+        }
+        else if (role === "player2"){
+            camera.position.lerp(
+                new THREE.Vector3(player2.position.x * 0.5, camera.position.y, camera.position.z),
+                0.05
+            );
+        }
     }
 
 
@@ -563,8 +687,10 @@ export function online_1vs1()
     {
         animationId = requestAnimationFrame(animate);
 
+        updateCamera();
+
         // Update starfield
-        starfield.rotation.y += 0.0001;
+        starfield.rotation.y += 0.0009;
 
         // Update paddle energy fields
         player1.children[1].material.uniforms.time.value = time * 0.001;
@@ -730,7 +856,7 @@ export function online_1vs1()
                 cancelAnimationFrame(animationId);
                 socket.close();
                 render(GameOver(winner, score), 
-                    gamePage.shadowRoot.querySelector('.game-page'));
+                    gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }
         

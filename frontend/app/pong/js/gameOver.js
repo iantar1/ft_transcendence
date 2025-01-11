@@ -10,7 +10,7 @@ let context = {
 
 
 export function GameOver(winnerContent = "WIN", scoreContent = context) {
-    const gamePage = document.body.querySelector('game-page')
+    const gamePage = document.body.querySelector('game-pong')
     const style = document.createElement('style');
     style.textContent = `
         .game-over {
@@ -82,7 +82,7 @@ export function GameOver(winnerContent = "WIN", scoreContent = context) {
     playAgainButton.onclick = () => {
         console.log("play again");
         console.log(gamePage);
-        render(menu(), gamePage.shadowRoot.querySelector('.game-page'));
+        render(menu(), gamePage.shadowRoot.querySelector('.game-pong'));
     };
 
     homeButton.onclick = () => {
