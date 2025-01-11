@@ -64,11 +64,9 @@ class loginPage extends HTMLElement {
                     <label>Password</label>
                 </div>
                 <span class="otp-error" ></span>
-
                     <input id="formLogin2" class="form-btn" type="submit" value="Log in"  />
                 </form>
                 `;
-                // <button id='loginForm' class="form-btn"  type="submit"  data-link >Log in</button>
     formA = `
                 <div id="login-register" >
                         <div class="hover-btn" ></div>
@@ -99,10 +97,10 @@ class loginPage extends HTMLElement {
     opt = `
         <div class="otp-content" >
             <form id="otp-code" action="">
-                    <h2>Authenticate Your Account</h2>
-                    <h5>Authorization code sent to your email</h5>
+                    <h1 style="font-size :20px;" >OTP verification</h1>
+                    <p style="color:gray; font-family: Arial, Helvetica, sans-serif; font-style: italic;" >enter the code from the email</p>
                 <br>
-                    <div class="group">      
+                    <div class="group" style="dispaly :flex; aling-items :center; justify-content :center;" >      
                         <input name="otp"  type="text" required>
                         <span class="highlight"></span>
                         <span class="bar"></span>
@@ -111,7 +109,7 @@ class loginPage extends HTMLElement {
                     <span class="otp-error" ></span>
                 <br>
                 <br>
-                <p>It may take a minute to receive your code.</p>
+                <p style="color:gray; font-family: Arial, Helvetica, sans-serif; font-style: italic;" >It may take a minute to receive your code.</p>
                 <br>
                 <input id="otp-btn"  class="form-btn" type="submit" value="Submite"  />
             </form>
@@ -416,9 +414,11 @@ class loginPage extends HTMLElement {
                         method: 'POST', 
                         headers: {
                             'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken'),
                         },
                         body: JSON.stringify(data),
-                        agent: new https.Agent({ rejectUnauthorized: false })
+
+                        // agent: new https.Agent({ rejectUnauthorized: false })
                     })
                     if (res.ok) {
                             
@@ -453,10 +453,12 @@ class loginPage extends HTMLElement {
                             method: 'POST', 
                             headers: {
                                 'Content-Type': 'application/json',
+                                'X-CSRFToken': getCookie('csrftoken'),
+
                             },
                             credentials: 'include',
                             body: JSON.stringify(data),
-                            agent: new https.Agent({ rejectUnauthorized: false })
+                            // agent: new https.Agent({ rejectUnauthorized: false })
 
                         })
                     if (res.ok) {
@@ -467,10 +469,11 @@ class loginPage extends HTMLElement {
                                 method: 'GET', 
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken'),
                                     
                                 },
                                 credentials: 'include',
-                                agent: new https.Agent({ rejectUnauthorized: false })
+                                // agent: new https.Agent({ rejectUnauthorized: false })
 
                             })
                             console.log(`res : ${res}`)
@@ -481,16 +484,17 @@ class loginPage extends HTMLElement {
                                     const data = await res.json();
                                     // randerPage(userData);
                                     // console.log("----here is res");
-                                    console.log(data.access);
+                                    // console.log(data.access);
                                     
-                                    document.cookie = `access=${data.access}`;
-                                    console.log(data);
+                                    // document.cookie = `access=${data.access}`;
+                                    // console.log(data);
                                     // setData(data);
                                     readData.setData(data);
                                     // document.cookie = data["access"];
                                     // window.location.href = '/home'; 
                                     // e.target.href = '/home';
-                                    rander('/home');
+                                    // rander('/home');
+                                    navigateTo('/home')
     
                                 } else {
                                     console.log('--- USER VERIFICATION FAILED ---');
@@ -526,17 +530,15 @@ class loginPage extends HTMLElement {
                     const data = Object.fromEntries(fromData);
                     const arr = ['ahe','ceb',1337];
                     readData.setData(arr);
-                    // rander('/home');
                     try{
                         const response = await fetch("https://localhost:3000/api/login/", {
                                 method: 'POST', 
                                 headers: {
-                                    
                                     'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken'),
                                 },
                                 credentials: 'include',
                                 body: JSON.stringify(data),
-                                agent: new https.Agent({ rejectUnauthorized: false })
                             })
                             if (response.ok){ 
            
@@ -552,7 +554,6 @@ class loginPage extends HTMLElement {
                                         
                                     }
                                     else{
-                                    console.log("THIS IS NOT SECC");
                                     const errorCode = document.querySelector('.otp-error');
                                     errorCode.textContent = "Username or password not corect!!.";
                                     errorCode.style.color = "#D9D9D9";
@@ -581,9 +582,9 @@ class loginPage extends HTMLElement {
             });
         }
         rand(){
-            if (getCookie('access')){
-                navigateTo('/home');
-            }
+            // if (getCookie('access')){
+            //     navigateTo('/home');
+            // }
             this.innerHTML = `
             <style>
             ${this.style}

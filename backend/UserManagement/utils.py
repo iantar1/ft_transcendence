@@ -25,6 +25,16 @@ def create_access_token(id):
     token = jwt.encode(playlod, 'access_secret', algorithm='HS256')
     return token
 
+def create_otp_token(id):
+    playlod = {
+        'id': id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=100),#it will despire after one minute
+        'iat': datetime.datetime.utcnow(),#date which the token is created
+    }
+    token = jwt.encode(playlod, 'otp_secret', algorithm='HS256')
+    return token
+
+
 
 def create_refresh_token(id):
     playlod = {

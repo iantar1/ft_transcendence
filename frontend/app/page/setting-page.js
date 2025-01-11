@@ -161,12 +161,11 @@ class settingPage extends HTMLElement {
     .btn-home{
             width :200px;
             height:50px;
-            background-color: rgba(228, 5, 47, 1);
+            background : var(--red);
             border-radius:5px;
             border :none;
             font-size:100%;
             z-index :2000;
-            font-weight: ;
         }
     </style>
     `;
@@ -329,36 +328,29 @@ class settingPage extends HTMLElement {
     }
     profEdit(){
         return `
-        <div class="formProf d-flex flex-column" >
-            <form id="myForm" >
-                <label for="fname">Username</label><br><br>
-                <input type="text"  class="editUser" name="username"><br><br>
-                <label for="lname">Bio</label>
-                <textarea rows="10" 
-                name="blog">
-                Share your knowledge by writing your own blog! 
-                </textarea>
-                <div class="saveInfo" >
-                        <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
-                </div>
-            </form>
+        <div class="formProf d-flex flex-column">
+                 <form>
+                    <label for="fname">Username</label><br><br>
+                    <input type="text" class="editUser" name="username" required><br><br>
+                    <label for="lname">Bio</label><br>
+                    <textarea rows="10" class="baio" name="blog" ></textarea><br><br>
+                    <input type="submit" value="Submit" id="postData" class="btn-home filter btn btn-secondary" style="background: var(--red);">
+                <form>
             </div>
-            <br>
+            <br>"
         `;
     }
     passEdit(){
         return `
         <div class="formProf d-flex flex-column" >
-            <form id="myForm" >
+            <form >
                 <label for="fname">Old Password</label><br><br>
-                <input type="text"  class="editUser" name="crrent_password"><br>
+                <input type="text"  class="pass1" name="crrent_password1" required><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="new_password"><br>
+                <input type="text"  class="pass2" name="new_password1" required ><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="editUser" name="new_password"><br>
-                <div class="saveInfo" >
-                        <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
-                </div>
+                <input type="text"  class="pass3" name="new_password" required><br><br>
+                <input style="background : var(--red);" type="submit" value="Submit" id="postData" class="btn-home fiter btn btn-secondary" >
             </form>
             </div>
         
@@ -435,9 +427,8 @@ class settingPage extends HTMLElement {
                 <span class="slider round"></span>
             </label>
             </div>
-            <div class="saveInfo" >
-                <button type="submit" id="postData" class="btn-home fiter btn btn-secondary " >Save</button>
-           </div>
+            <input style="background : var(--red); margin-top :5px;" type="submit" value="Submit" id="postData" class="btn-home fiter btn btn-secondary" >
+
         `;
     }
     displayNav(){
@@ -517,17 +508,6 @@ class settingPage extends HTMLElement {
             // Simulate upload (replace with actual upload logic)
             alert('Image ready to upload! (In a real app, this would send to a server)');
             const file = imageUpload.files[0];
-            
-            // Here you would typically:
-            // 1. Create FormData
-            // const formData = new FormData();
-            // formData.append('image', file);
-            
-            // 2. Send to server with fetch or XMLHttpRequest
-            // fetch('/upload', {
-            //     method: 'POST',
-            //     body: formData
-            // })
         });
 
         // Event listeners to open and close the popup
@@ -544,31 +524,32 @@ class settingPage extends HTMLElement {
         });
     }
     infoPost(url){
-        // console.log('HERE WE CAN POST YOUR DATA')
-        // const buttons = document.querySelector('#postData');
-        //     buttons.addEventListener('click', () => {
-        //         alert('Button clicked!');
-        //     });
-        document.querySelector('#myForm').addEventListener('submit', async function (event) {
-            event.preventDefault(); // Prevent form submission and page reload
-        
-            // const form = event.target; // Reference to the form
-            // const formData = new FormData(form); // Collect form data
-        
-            // // Convert FormData to a JSON object
-            // const jsonObject = {};
-            // formData.forEach((value, key) => {
-            //     jsonObject[key] = value;
-            // });
-        
-            // Log the JSON data
-            // console.log('Form Data as JSON:', jsonObject);
-            console.log("-----------------------------" + url);
-            postMethode('#myForm',url);
-
+            console.log('HERE HERE DELETE IMAGE');
+            document.querySelector('#postData').addEventListener('click', async function (event) {
+                event.preventDefault(); // Prevent form submission and page reload
+                console.log("HERE HERE");
+                const name = document.querySelector('.editUser').value;
+                const bio = document.querySelector('.baio').value;
+                const formData = new FormData();
+                formData.append('username', name);
+                formData.append('bio', bio);
+                await postMethode(formData , 'bio_image'); 
         });
-        
     }
+    passPost(){
+        document.querySelector('#postData').addEventListener('click', async function (event) {
+            event.preventDefault(); // Prevent form submission and page reload
+            console.log("HERE HERE");
+            const pass1 = document.querySelector('.pass1').value;
+            const pass2 = document.querySelector('.pass2').value;
+            const pass3 = document.querySelector('.pass3').value;
+            const formData = new FormData();
+            formData.append('crrent_password1', pass1);
+            formData.append('crrent_password2', pass2);
+            formData.append('crrent_password2', pass3);
+            await postMethode(formData , 'change_password'); 
+    });
+}
     render() {
         this.innerHTML = `
             <style>
@@ -808,8 +789,10 @@ class settingPage extends HTMLElement {
             hoverProf.style.borderRight = ' 10px solid rgba(56, 75, 112, 1)';
             const editInfo = document.querySelector('.editInfo');
             editInfo.innerHTML = this.profEdit();
+            this.infoPost('bio_image');
             // const hoverProf = document.querySelector('.profSetting');
             hoverProf.addEventListener('click' , (e) => {
+                e.preventDefault();
                 const hoverProf = document.querySelector('.profSetting');
                 hoverProf.style.background = "rgba(56, 75, 112, 0.2)";
                 hoverProf.style.borderRight = ' 10px solid rgba(56, 75, 112, 1)';
@@ -817,23 +800,22 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.profEdit();
-            this.infoPost('bio_image');
-
-
+                this.infoPost('bio_image');
             });
             const passEdit = document.querySelector('.passSetting');
             passEdit.addEventListener('click' , (e) => {
+                e.preventDefault()
                 passEdit.style.background = "rgba(56, 75, 112, 0.2)";
                 passEdit.style.borderRight = ' 10px solid rgba(56, 75, 112, 1)';
                 this.hiddeHover('.profSetting');
                 this.hiddeHover('.authSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.passEdit();
-            this.infoPost('change_password');
-
+                this.passPost('change_password');
             });
             const authEdit = document.querySelector('.authSetting');
             authEdit.addEventListener('click' , (e) => {
+                e.preventDefault()
                 authEdit.style.background = "rgba(56, 75, 112, 0.2)";
                 authEdit.style.borderRight = ' 10px solid rgba(56, 75, 112, 1)';
                 this.hiddeHover('.profSetting');
@@ -855,7 +837,7 @@ class settingPage extends HTMLElement {
             uuss();
             this.imgEffect();
             this.deleteImage();
-            // this.infoPost('');
+            // this.infoPost(1);
     }
 
     connectedCallback() {
