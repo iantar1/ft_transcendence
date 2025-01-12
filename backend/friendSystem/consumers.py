@@ -49,7 +49,8 @@ class Notifications(WebsocketConsumer):
 
         cookies = self.scope.get("cookies", {})
         access_token = cookies.get("access")
-        headers = {"Authorization": f"Bearer {access_token}"}
+        access_token = cookies.get("access")
+        headers = {"cookies": {{"access":access_token}, {"refresh":refresh}} }
         url = "http://localhost:8000/friendship/"  # Replace with your endpoint
         response = requests.post(url, json=data, headers=headers)
         return response
