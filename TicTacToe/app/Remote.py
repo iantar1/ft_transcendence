@@ -93,7 +93,7 @@ class RemoteConsumer(AsyncWebsocketConsumer):
 
 
             # Create a game room
-            game_room = f"room_{random.randint(1, 999999)}"
+            game_room = f"tictactoe_room_{random.randint(1, 999999)}"
             
             # Set up players
             player1.game_room = game_room

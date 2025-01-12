@@ -43,6 +43,7 @@ class MatchHistory(models.Model):
     played_at = models.DateField(auto_now=True)
     game_type = models.CharField(null=True, max_length=10)
     is_draw = models.BooleanField(default=0)
+    game_id = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return f"{self.user1.username} vs {self.user2.username}" 

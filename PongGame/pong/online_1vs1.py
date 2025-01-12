@@ -79,7 +79,7 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
                 return
 
 
-            group_room = f"room_{uuid.uuid4().hex[:6]}"
+            group_room = f"pong_room_{uuid.uuid4().hex[:6]}"
             player1.group_room = group_room
             player2.group_room = group_room
             player1.opponent = player2
