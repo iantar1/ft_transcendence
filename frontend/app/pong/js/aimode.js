@@ -55,6 +55,7 @@ export function ai_mode()
 
 
 
+
         .controls-container {
             position: fixed;
             bottom: 8%;
@@ -67,8 +68,8 @@ export function ai_mode()
         }
 
         .control-btn {
-            width: 110px;
-            height: 110px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             border: 3px solid #00f7ff;
             background: linear-gradient(135deg, #2b0150, #000428);
@@ -270,7 +271,6 @@ export function ai_mode()
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        // console.table('data', data)
         if (data.type === "start") {
 
             table_config = data.table;
@@ -462,7 +462,6 @@ export function ai_mode()
                 clearcoatRoughness: 0.25,
                 color: new THREE.Color(0xffffff),
                 ior: 1.2,
-                thickness: 10.0
             } )
         );
         plane.receiveShadow = true;
@@ -753,8 +752,6 @@ export function ai_mode()
                 player1Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -777,8 +774,6 @@ export function ai_mode()
                 player2Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -880,6 +875,7 @@ export function ai_mode()
 
 
     function startCountdown(duration, onComplete) {
+        resizeCanvas();
         countdownElement.style.display = 'flex'; // Hide the countdown element
 
         let timeLeft = duration;
