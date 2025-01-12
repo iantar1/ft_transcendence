@@ -37,8 +37,6 @@ class RemoteConsumer(AsyncWebsocketConsumer):
             for i, player in enumerate(game['players']):
                 if player.username == self.username:
 
-
-
                     # Player is already in a game, rejoin the game
                     self.game_room = room
                     self.role = player.role
@@ -212,7 +210,7 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                         "opponent_username": self.opponent.username,
                         "opponent_score": 1 if self.opponent.role == winner else 0,
                         "user_score": 1 if self.opponent.role != winner else 0,
-                        "game": 1,
+                        "game": "tictactoe",
                         "draw": False,
                         "game_id": self.game_room
                     }
@@ -240,7 +238,7 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                         "opponent_username": self.opponent.username,
                         "opponent_score": 0,
                         "user_score": 0,
-                        "game": 1,
+                        "game": "tictactoe",
                         "draw": True,
                         "game_id": self.game_room
                     }

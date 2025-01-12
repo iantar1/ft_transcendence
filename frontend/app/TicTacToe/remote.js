@@ -22,6 +22,8 @@ export function RemoteTicTacToe() {
         padding: 20px;
         position: relative;
         overflow: hidden;
+        max-width: 500px;
+        width: 100%;
     }
 
     .game-container {
@@ -31,8 +33,8 @@ export function RemoteTicTacToe() {
         padding: 30px;
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        max-width: 500px;
-        width: 100%;
+        width:100%;
+        height:100%;
     }
 
     .btn-container{
@@ -41,7 +43,7 @@ export function RemoteTicTacToe() {
         align-items: center;
     }
 
-    .game-title {
+    .game-title-tictac {
         font-size: 2.8em;
         font-weight: 700;
         text-align: center;
@@ -249,7 +251,7 @@ export function RemoteTicTacToe() {
             padding: 15px;
         }
 
-        .game-title {
+        .game-title-tictac {
             font-size: 2em;
         }
 
@@ -267,7 +269,7 @@ export function RemoteTicTacToe() {
     content.classList = "game-TTT";
     content.innerHTML = `
         <div class="game-container">
-            <h1 class="game-title">Tic Tac Toe</h1>
+            <h1 class="game-title-tictac">Tic Tac Toe</h1>
             <div class="player-info">
                 <span class="player-badge" id="player-x">Player X</span>
                 <span class="player-badge" id="player-o">Player O</span>
@@ -501,14 +503,18 @@ export function RemoteTicTacToe() {
     function home(){
         socket.close();
         const content = document.getElementById('content');
-        content.innerHTML = '<game-tictac></game-tictac>';
+        content.innerHTML = '<game-tictac width="100%" height="100%"></game-tictac>';
     }
 
 
     initializeGame();
 
     const parent = document.createElement('div');
+    parent.style.display = "flex";
+    parent.style.justifyContent = "center";
+    parent.style.alignItems = "center";
     parent.style.height = "100%";
+    parent.style.width = "100%";
     parent.appendChild(style);
     parent.appendChild(content);
 

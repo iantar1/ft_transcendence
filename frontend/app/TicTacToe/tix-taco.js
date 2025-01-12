@@ -6,25 +6,37 @@ class GameTictac extends HTMLElement {
 
     constructor() {
         super();
+        
+    }
+
+    // Observe the attributes 'width' and 'height'
+    static get observedAttributes() {
+        return ['width', 'height'];
+    }
+
+    // Update styles when attributes change
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'width') {
+            this.style.setProperty('width', newValue);
+        } else if (name === 'height') {
+            this.style.setProperty('height', newValue);
+        }
     }
     togameHome(){
         document.getElementById('toback').addEventListener('click' , () => {
-            console.log('TO GAME PAGE')
             const content = document.getElementById('content')
             content.innerHTML = '<pongxo-page></pongxo-page>';
         });
     }
     togameLocal(){
         document.getElementById('tolocal').addEventListener('click' , () => {
-            console.log('TO GAME PAGE')
-            const content = document.getElementById('content')
+            const content = document.getElementById('tictactoe_id')
             render(localTicTacToe(), content);
         });
     }
     togameRemote(){
         document.getElementById('toremote').addEventListener('click' , () => {
-            console.log('TO GAME PAGE')
-            const content = document.getElementById('content')
+            const content = document.getElementById('tictactoe_id')
             render(RemoteTicTacToe(), content);
         });
     }
@@ -34,8 +46,8 @@ class GameTictac extends HTMLElement {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
-            width: 100%;
+            height: var(--custom-height, 100%);
+            width: var(--custom-width, 100%);
         }
 
         .menu {
@@ -60,18 +72,18 @@ class GameTictac extends HTMLElement {
 
         }
         .game-tictac {
-            display: flex;
-            position :relative;
-            font-family: "Pong War", sans-serif;
-            color: var(--white);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            position :relative;
+            font-family: "Pong War", sans-serif;
+            color: var(--white);
             height: 100%;
             width: 100%;
         }
+        
         .btn-secondary {
             width: 200px;
             height: 50px;
@@ -143,7 +155,7 @@ class GameTictac extends HTMLElement {
     </style>
     `;
     beforGame = `
-    <div class="menu">
+    <div class="menu" id="tictactoe_id">
         <div class="game-title" >Tic Tac Toe</div>
         <div style="width :100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction: column; gap:10px;" >
             <button id="tolocal" type="button" class="btn-home btn-secondary">Local</button>
