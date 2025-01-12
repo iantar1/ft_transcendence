@@ -7,7 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed
 import jwt
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-
+import requests
 
 
 user_channels = {}
@@ -45,6 +45,14 @@ class Notifications(WebsocketConsumer):
                 del user_channels[username]
             print(f"Removed channel for user {username}")
 
+    def forward_to_view(self, data):
+
+        cookies = self.scope.get("cookies", {})
+        access_token = cookies.get("access")
+        headers = {"Authorization": f"Bearer {access_token}"}
+        url = "http://localhost:8000/friendship/"  # Replace with your endpoint
+        response = requests.post(url, json=data, headers=headers)
+        return response
 
 
     def receive(self, text_data=None, bytes_data=None):
