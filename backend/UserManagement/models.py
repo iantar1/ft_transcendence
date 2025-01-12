@@ -31,6 +31,9 @@ class Stats(models.Model):
  
     def __str__(self):
         return f"{self.user.username} stats"
+    
+
+
 class MatchHistory(models.Model):
     user1 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_user1')
     user2 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_user2')
@@ -38,6 +41,8 @@ class MatchHistory(models.Model):
     user2_score = models.PositiveIntegerField(null=True)
     winner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_winner')
     played_at = models.DateField(auto_now=True)
+    game_type = models.CharField(null=True, max_length=10)
+    is_draw = models.BooleanField(default=0)
 
     def __str__(self):
         return f"{self.user1.username} vs {self.user2.username}" 

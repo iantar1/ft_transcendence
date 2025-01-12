@@ -153,11 +153,6 @@ export function online_1vs1()
     socket.onopen = () => {
         wsOpen = true;
         console.log("Connected to the WebSocket!");
-        socket.send(JSON.stringify({
-			type: "join_room",
-			width: width,
-			height: height
-		}));
         render(matchMaking, gamePage.shadowRoot.querySelector('.game-pong'));
     };
     socket.onmessage = (e) => {
@@ -213,6 +208,9 @@ export function online_1vs1()
         if (data.type === "opponent_disconnected") {
             gameOver(data.winner, data.score);
             scoreManager.reset();
+        }
+        if (data.type === "error") {
+            console.log(data.message);
         }
     };
     socket.onclose = () => {

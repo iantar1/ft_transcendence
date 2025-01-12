@@ -315,9 +315,13 @@ class MatchHistoryView(APIView):
             raise AuthenticationFailed('00Unauthenticated')
         #opponenet username
         try:
+            game_id = request.data['game_id']
+            if MatchHistory.objects.filter(game_id=game_id).exists():
+                return Response("The match history stored successfully", status=200)
             opponent_username = request.data['opponent_username']
             opponent_score = request.data['opponent_score']
             user_score = request.data['user_score']
+            game_type = request.data['game_type']
 
         except:
             raise ValidationError({'field error': 'you missed some fields'})
@@ -339,7 +343,9 @@ class MatchHistoryView(APIView):
             user2=user2,
             user1_score=user_score,
             user2_score=opponent_score,
-            winner=winner
+            winner=winner,
+            game_type=game_type,
+            game_id=game_id
         )
         history.save()
         user.score += user_score

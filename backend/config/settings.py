@@ -78,7 +78,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8080',
     'http://localhost:8000',  # Add the port where your frontend is running if different
     'https://localhost:3000',
-    'http://ponggame:5050',
+    'http://localhost:4040',
     'http://localhost:5050',
 ]
 
