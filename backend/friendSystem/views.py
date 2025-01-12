@@ -41,7 +41,7 @@ class FriendShipView(APIView):
         from_user = get_user_by_token(token)
         if from_user is None:
             raise AuthenticationFailed('Unauthenticated')
-
+    
         to_user_name = request.data.get('to_user')
         if not to_user_name:
             raise ValidationError({'field error': 'You missed the "to_user" field.'})

@@ -27,11 +27,12 @@
         // Replace 'ws://localhost:8000/ws/ticwinlose/' with your WebSocket server URL
 
         let data = {
+            "from_user":"",
             "to_user":"",
-            "status":"",
-            "action":""
+            "action":"",
+            "status":""
         };
-    
+
         function sendData(action)
         {
             const usrname = document.getElementById("imputUsername").value;

@@ -46,13 +46,14 @@ class Notifications(WebsocketConsumer):
             print(f"Removed channel for user {username}")
 
     def forward_to_view(self, data):
-
         cookies = self.scope.get("cookies", {})
         access_token = cookies.get("access")
-        access_token = cookies.get("access")
-        headers = {"cookies": {{"access":access_token}, {"refresh":refresh}} }
+        refresh_token = cookies.get("refresh")
+        print(f'access: {access_token}, refresh: {refresh_token}')
+        
+        # Use cookies parameter instead of adding them to headers
         url = "http://localhost:8000/friendship/"  # Replace with your endpoint
-        response = requests.post(url, json=data, headers=headers)
+        response = requests.post(url, json=data, cookies={"access": access_token, "refresh": refresh_token})
         return response
 
 
@@ -70,6 +71,7 @@ class Notifications(WebsocketConsumer):
             #save friendSy state in database 
             self.send_notif(data)
             self.send_to_user(to_user, data)
+            self.forward_to_view(data)
 
         except json.JSONDecodeError as e:
             print(f"Invalid JSON: {e}")
