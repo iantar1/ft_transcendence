@@ -12,9 +12,16 @@ class User(AbstractUser):
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     score = models.PositiveBigIntegerField(default=0)
-    # logged_in =   models.BooleanField(default = False)
-    #a one to one relationship 
-    
+
+    def delete_image(self):
+        if self.image:
+            try:
+                os.remove(self.image.path)
+            except FileNotFoundError:
+                pass
+
+        self.image = '/images/default.png'
+        self.save()
 
 # def save_post_user(sender, instance, **kwargs):
 #     print("a user has been saved")
