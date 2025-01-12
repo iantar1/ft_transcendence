@@ -144,7 +144,8 @@ export async function postMethode(alias,redir){
     // console.log("post function " + redir);
     // const form = document.querySelector(alias);
     // const fromData = new FormData(form);
-    const data = alias;
+    // const data = alias;
+    console.table(redir);
     try{
         const res = await fetch("https://localhost:3000/" + redir + "/", {
             method: 'POST', 
@@ -153,7 +154,7 @@ export async function postMethode(alias,redir){
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(alias),
             
         })
         if (res.ok) {
