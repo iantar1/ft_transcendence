@@ -464,6 +464,12 @@ export function RemoteTicTacToe() {
             case 'error':
                 updateStatus(data.message, '');
                 break;
+            case 'disconnect.message':
+                updateStatus(data.message, '');
+                setTimeout(() => {
+                    home();
+                }, 3000);
+                break;
             case 'opponent_disconnected':
                 gameActive = false;
                 updateUserBadge(null);
@@ -477,6 +483,10 @@ export function RemoteTicTacToe() {
                 });
                 break;
         }
+    };
+    socket.onclose = (e) => {
+        console.log("disconnected ... ", e);
+        newGame.disabled = false;
     };
 
     function clear(){

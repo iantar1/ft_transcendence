@@ -1,10 +1,10 @@
 import json
 import random
 import httpx
+import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 player_queue = []
-active_players = []
 active_games = {}
 BACKEND_URL = "http://backend:8000/user/"
 
@@ -33,12 +33,31 @@ class RemoteConsumer(AsyncWebsocketConsumer):
 
         # Check if the player is already in a game
         for room, game in active_games.items():
-            for player in game['players']:
+            for i, player in enumerate(game['players']):
                 if player.username == self.username:
+
+
+
                     # Player is already in a game, rejoin the game
                     self.game_room = room
                     self.currentPlayer = player.currentPlayer
                     self.opponent = player.opponent
+
+
+                    # Disconnect the old channel if it's different
+                    player.game_room = None
+                    player.currentPlayer = None
+                    player.opponent = None
+
+                    if player.channel_name != self.channel_name:
+                        await self.channel_layer.group_discard(room, player.channel_name)
+                        await asyncio.sleep(0.1)
+                        await player.send(json.dumps({
+                            'type': 'disconnect.message',
+                            'message': 'You have been disconnected due to a new login from another location.'
+                        }))
+
+                    game['players'][i] = self
                     await self.channel_layer.group_add(room, self.channel_name)
                     await self.accept()
                     
@@ -134,7 +153,7 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                         'message': message
                     }
                 )
-
+        await self.close()
 
     async def receive(self, text_data):
         if not self.game_room or self.game_room not in active_games:
@@ -221,3 +240,4 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                 board[line[0]] == board[line[2]]):
                 return board[line[0]]
         return None
+    
