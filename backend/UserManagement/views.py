@@ -228,8 +228,9 @@ class ChangePasswordView(APIView):
             raise AuthenticationFailed("incorrect password")
         if new_password1 != new_password2:
             return Response("Password1 is different from Password2", status=400)
+        
         user.set_password(new_password1)
-        user.save
+        user.save()
         return Response({"seccess":"the password changed successfuly"}, status=200)
 
 
@@ -251,6 +252,43 @@ class ChangeBioImage(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class ChangeImage(APIView):
+
+    def post(self, request):
+        token = request.COOKIES.get('access')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        try:
+            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
+
+        print(f"data: ", request.data, flush=True)
+        serializer = ImageSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request):
+        token = request.COOKIES.get('access')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        try:
+            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
+        user.delete_image()
+
 
 
 class ChangeBio(APIView):

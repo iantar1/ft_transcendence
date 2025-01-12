@@ -139,16 +139,40 @@ export async function logoutUser(user) {
         console.log("POST ERROR :", error);
     }
 }
-
-export async function postMethode(alias,redir){
+export async function postImage(alias,redir){
     // console.log("post function " + redir);
     // const form = document.querySelector(alias);
     // const fromData = new FormData(form);
     // const data = alias;
-    console.table(redir);
+    // for (let [key, value] of alias.entries()) {
+    //     console.log(key, value);
+    // }
+    console.log(JSON.stringify(alias))
     try{
         const res = await fetch("https://localhost:3000/" + redir + "/", {
             method: 'POST', 
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: alias,
+            
+        })
+        if (res.ok) {
+                console.log('POST METHOD HAS BEEN SUCCESS')
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
+
+}
+
+export async function postMethode(alias,redir, method){
+    try{
+        const res = await fetch("https://localhost:3000/" + redir + "/", {
+            method: method, 
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',

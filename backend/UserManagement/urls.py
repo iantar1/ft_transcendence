@@ -23,6 +23,7 @@ urlpatterns = [
     path('intra/', intra_auth.auth),#change the rediract uri
     path('accounts/google/login/callback/', google_auth.get_code),
     path('users_ranking/', UsersRanking.as_view()),
+    path('change_image/', ChangeImage.as_view()),
 
 
 
