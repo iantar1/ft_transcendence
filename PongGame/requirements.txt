@@ -6,3 +6,4 @@ channels
 redis
 daphne
 whitenoise
+httpx

@@ -1155,7 +1155,8 @@ class profilePage extends HTMLElement {
                 }
                 document.getElementById('username').textContent = this.info.username
                 document.getElementById('img_intra').src = this.info.image
-                document.getElementById('BIO').textContent = 'ash dak temchi lzine'
+                document.getElementById('BIO').textContent = this.info.bio
+                
                 const stats = await fetchStatsData(); // Fetch the stats data
 
        
