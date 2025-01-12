@@ -537,7 +537,26 @@ class profilePage extends HTMLElement {
     winorLoseStyle = `
         <style>
             .winorlose{
+                position: relative;
                 overflow-y: auto;
+            }
+
+            .winorlose::-webkit-scrollbar {
+                width: 4px; /* Narrow scrollbar for a mobile-like feel */
+                height: 4px;
+            }
+
+            .winorlose::-webkit-scrollbar-thumb {
+                background: var(--red); /* Thumb color */
+                border-radius: 5px; /* Rounded thumb for a smooth look */
+            }
+
+            .winorlose::-webkit-scrollbar-thumb:hover {
+                background: #fff; /* Darker color on hover */
+            }
+
+            .winorlose::-webkit-scrollbar-track {
+                background: transparent; /* Transparent track for minimalistic style */
             }
             .userleft{
                 width :100%;
@@ -1193,6 +1212,8 @@ class profilePage extends HTMLElement {
             <style>
             ${this.navar}
                 .editTabel{
+                    position: absolute;
+                    top: 0;
                     height :95%;
                 }
                 table.table tbody tr:nth-child(odd) { 
@@ -1203,6 +1224,10 @@ class profilePage extends HTMLElement {
                     background-color: var(--blue); 
                 }
 
+                .table>thead {
+                    position: sticky;
+                    top:0;
+                }
             
                 table.table td, table.table th {
                     padding: 2%;

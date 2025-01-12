@@ -56,7 +56,120 @@ export function online_1vs1()
             justify-content: center;
             align-items: center;
         }
+
+
+
+
+        .controls-container {
+            position: fixed;
+            bottom: 8%;
+            left: 0;
+            right: 0;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            z-index: 1000;
+        }
+
+        .control-btn {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid #00f7ff;
+            background: linear-gradient(135deg, #2b0150, #000428);
+            box-shadow: 0 0 20px #00f7ff,
+                        inset 0 0 15px rgba(0, 247, 255, 0.5);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 247, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-btn:active::before {
+            opacity: 1;
+        }
+        .control-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 30px #00f7ff,
+                        inset 0 0 20px rgba(0, 247, 255, 0.7);
+        }   
+
+        .arrow {
+            color: #00f7ff;
+            font-size: 3rem;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            user-select: none;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 5px #00f7ff);
+        }
+
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+      
+        .controls-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: -1;
+        }
     `;
+
+    const controlButtons = document.createElement('div');
+    controlButtons.className = 'controls-container';
+    controlButtons.innerHTML = `
+        <button class="control-btn left">
+            <div class="arrow">←</div>
+        </button>
+        <button class="control-btn right">
+            <div class="arrow">→</div>
+        </button>
+    `;
+    const leftBtn = controlButtons.querySelector('.control-btn.left');
+    const rightBtn = controlButtons.querySelector('.control-btn.right');
+
+
+
+
+
+    // Mouse events
+    leftBtn.addEventListener('mousedown', () => handleMoveStart('left'));
+    rightBtn.addEventListener('mousedown', () => handleMoveStart('right')); 
+
+    document.addEventListener('touchend', handleMoveEnd);
+    document.addEventListener('mouseup', handleMoveEnd);
+
+
+
 
     const countdownElement = createcountdown();
     const canvas = gameCanvas();
@@ -69,6 +182,7 @@ export function online_1vs1()
     pongCanvas.appendChild(style);
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
+    pongCanvas.appendChild(controlButtons);
 
 
     const online_URL = 'wss://'+window.location.host+'/ws/online_1vs1/';
@@ -115,6 +229,7 @@ export function online_1vs1()
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     pongCanvas.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls( camera, renderer.domElement );
+    resizeCanvas();
 
     
 
@@ -163,7 +278,6 @@ export function online_1vs1()
             render(new_matchMaking, gamePage.shadowRoot.querySelector('.game-pong'));
             setTimeout(() => {
                 render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
-                resizeCanvas();
                 table_config = data.table;
                 paddle = data.paddle;
                 ball_config = data.ball;
@@ -174,7 +288,8 @@ export function online_1vs1()
                 ballCreation();
                 playerCreation();
                 scoreManager = new ScoreManager(scene);
-
+                
+                resizeCanvas();
                 startCountdown(3, () => {
                     animate();
                     socket.send(JSON.stringify({ 
@@ -242,11 +357,48 @@ export function online_1vs1()
         render(menu(), gamePage.shadowRoot.querySelector('.game-pong'));
     });
 
+
+
+
+    // Touch events
+    leftBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('left');
+    });
+  
+    rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('right');
+    });
+
+    function handleMoveStart(dir) {
+        if(dir === 'left')
+            playerDirection = -1;
+        if(dir === 'right')
+            playerDirection = 1;
+    }
+  
+    function handleMoveEnd() {
+        playerDirection = 0;
+        console.log('Stopped moving');
+    }
+
+
+
+
     function adjustCameraPosition(camera, aspect) {
-        let targetZ = (aspect < 1) ? 35 * (1 / aspect) : 35;
-        let targetY = (aspect < 1) ? 15 * (1 / aspect) : 15;
-        camera.position.z = Math.max(35, Math.min(targetZ, 50)); // Clamped to prevent extreme zooms
-        camera.position.y = Math.max(15, Math.min(targetY, 30)); // Clamped to prevent extreme zooms
+        if (role === "player1"){
+            let targetZ = (aspect < 1) ? 35 * (1 / aspect) : 35;
+            let targetY = (aspect < 1) ? 15 * (1 / aspect) : 15;
+            camera.position.z = Math.max(35, Math.min(targetZ, 50)); // Clamped to prevent extreme zooms
+            camera.position.y = Math.max(15, Math.min(targetY, 30)); // Clamped to prevent extreme zooms
+        }
+        else {
+            let targetZ = (aspect < 1) ? -(35 * (1 / aspect)) : -35;
+            let targetY = (aspect < 1) ? 15 * (1 / aspect) : 15;
+            camera.position.z = Math.max(-50, Math.min(targetZ, -35)); // Clamped to prevent extreme zooms
+            camera.position.y = Math.max(15, Math.min(targetY, 30)); // Clamped to prevent extreme zooms
+        }
     }
     
 
@@ -275,6 +427,11 @@ export function online_1vs1()
         height = pongCanvas.clientHeight ;
         const aspect = (width / height);
 
+        if(width <= 720)
+            controlButtons.style.display = 'flex';
+        else
+            controlButtons.style.display = 'none';
+
         adjustFOV(camera, aspect);
         adjustCameraPosition(camera, aspect);
 
@@ -282,11 +439,6 @@ export function online_1vs1()
         camera.updateProjectionMatrix();
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(width , height);
-
-        console.log("camera on z: ", camera.position.z);
-        console.log("camera on y: ", camera.position.y);
-        console.log("camera fov : ", camera.fov);
-        
     }
 
     window.addEventListener("resize", resizeCanvas);

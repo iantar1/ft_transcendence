@@ -57,53 +57,91 @@ export function ai_mode()
 
         .controls-container {
             position: fixed;
-            bottom: 20px;
+            bottom: 8%;
             left: 0;
             right: 0;
             justify-content: space-between;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
+            padding: 20px 40px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            z-index: 1000;
         }
 
         .control-btn {
-            width: 96px;
-            height: 96px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            border: 4px solid #22d3ee;
-            background: linear-gradient(135deg, #7c3aed, #312e81);
-            box-shadow: 0 0 15px rgba(34, 211, 238, 0.5);
+            border: 3px solid #00f7ff;
+            background: linear-gradient(135deg, #2b0150, #000428);
+            box-shadow: 0 0 20px #00f7ff,
+                        inset 0 0 15px rgba(0, 247, 255, 0.5);
             cursor: pointer;
-            display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
             -webkit-tap-highlight-color: transparent;
         }
 
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 247, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-btn:active::before {
+            opacity: 1;
+        }
         .control-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
-        }
-
-        .control-btn.left .arrow {
-            transform: rotate(-45deg);
-        }
-
-        .control-btn.right .arrow {
-            transform: rotate(45deg);
-        }
+            transform: scale(0.92);
+            box-shadow: 0 0 30px #00f7ff,
+                        inset 0 0 20px rgba(0, 247, 255, 0.7);
+        }   
 
         .arrow {
-            color: #22d3ee;
-            font-size: 2.5rem;
+            color: #00f7ff;
+            font-size: 3rem;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
             user-select: none;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 5px #00f7ff);
+        }
+
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+      
+        .controls-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: -1;
         }
     `;
 
-    const main = document.createElement('div');
-    main.className = 'controls-container';
-    main.display = "none";
-    main.innerHTML = `
+    const controlButtons = document.createElement('div');
+    controlButtons.className = 'controls-container';
+    controlButtons.innerHTML = `
         <button class="control-btn left">
             <div class="arrow">←</div>
         </button>
@@ -111,8 +149,8 @@ export function ai_mode()
             <div class="arrow">→</div>
         </button>
     `;
-    const leftBtn = main.querySelector('.control-btn.left');
-    const rightBtn = main.querySelector('.control-btn.right');
+    const leftBtn = controlButtons.querySelector('.control-btn.left');
+    const rightBtn = controlButtons.querySelector('.control-btn.right');
 
 
 
@@ -137,6 +175,7 @@ export function ai_mode()
     pongCanvas.appendChild(style);
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
+    pongCanvas.appendChild(controlButtons)
     
     const ai_URL = 'wss://'+window.location.host+'/ws/ai/';
     let wsOpen = false;
@@ -356,7 +395,7 @@ export function ai_mode()
             camera.fov = baseFOV + (aspectRatioThreshold - aspect) * 5;
         }
     
-        // Ensure the FOV remains within a reasonable range
+        // Ensure the FOV recontrolButtonss within a reasonable range
         camera.fov = Math.max(75, Math.min(camera.fov, 80)); // Clamping FOV between 45 and 75
     
         // Update the projection matrix with the new FOV
@@ -367,8 +406,14 @@ export function ai_mode()
         width = pongCanvas.clientWidth ;
         height = pongCanvas.clientHeight ;
         const aspect = (width / height);
+
+        console.log("width :: ", width)
+        
         if(width <= 720)
-            main.display = "flex";
+            controlButtons.style.display = 'flex';
+        else
+            controlButtons.style.display = 'none';
+
 
         adjustFOV(camera, aspect);
         adjustCameraPosition(camera, aspect);
