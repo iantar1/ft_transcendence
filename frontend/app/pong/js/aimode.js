@@ -17,6 +17,8 @@ function createcountdown() {
     return countdown;
 }
 
+
+
 export function ai_mode()
 {
 
@@ -49,7 +51,80 @@ export function ai_mode()
             width: 100%;
             height: 100%;
         }
+
+
+
+
+        .controls-container {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            justify-content: space-between;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .control-btn {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 4px solid #22d3ee;
+            background: linear-gradient(135deg, #7c3aed, #312e81);
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+        }
+
+        .control-btn.left .arrow {
+            transform: rotate(-45deg);
+        }
+
+        .control-btn.right .arrow {
+            transform: rotate(45deg);
+        }
+
+        .arrow {
+            color: #22d3ee;
+            font-size: 2.5rem;
+            user-select: none;
+        }
     `;
+
+    const main = document.createElement('div');
+    main.className = 'controls-container';
+    main.display = "none";
+    main.innerHTML = `
+        <button class="control-btn left">
+            <div class="arrow">←</div>
+        </button>
+        <button class="control-btn right">
+            <div class="arrow">→</div>
+        </button>
+    `;
+    const leftBtn = main.querySelector('.control-btn.left');
+    const rightBtn = main.querySelector('.control-btn.right');
+
+
+
+
+
+    // Mouse events
+    leftBtn.addEventListener('mousedown', () => handleMoveStart('left'));
+    rightBtn.addEventListener('mousedown', () => handleMoveStart('right')); 
+
+    document.addEventListener('touchend', handleMoveEnd);
+    document.addEventListener('mouseup', handleMoveEnd);
+
 
     const gamePage = document.body.querySelector('game-pong');
 
@@ -209,6 +284,8 @@ export function ai_mode()
         console.log("Connection Error for WebSocket!");
     }
 
+
+
     document.addEventListener("keydown", movePaddle);
     document.addEventListener("keyup", stopPaddle);
     function movePaddle(e)
@@ -224,9 +301,28 @@ export function ai_mode()
     }
 
 
+    // Touch events
+    leftBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('left');
+    });
+  
+    rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('right');
+    });
 
-
-
+    function handleMoveStart(dir) {
+        if(dir === 'left')
+            playerDirection = -1;
+        if(dir === 'right')
+            playerDirection = 1;
+    }
+  
+    function handleMoveEnd() {
+        playerDirection = 0;
+        console.log('Stopped moving');
+    }
 
 
 
@@ -271,6 +367,8 @@ export function ai_mode()
         width = pongCanvas.clientWidth ;
         height = pongCanvas.clientHeight ;
         const aspect = (width / height);
+        if(width <= 720)
+            main.display = "flex";
 
         adjustFOV(camera, aspect);
         adjustCameraPosition(camera, aspect);
