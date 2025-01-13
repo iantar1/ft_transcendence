@@ -36,7 +36,7 @@ def home(request):
 def createUpdateUser(data_json)-> User:
 
     image_link = data_json.get("image", {}).get("link")
-
+    print(image_link, flush=True)
     response = requests.get(image_link)
     if response.status_code == 200:
         img_temp = NamedTemporaryFile()#IF the temporary file will be deleted once it's closed
@@ -87,7 +87,7 @@ def auth(request):
     print(f"here: {r.json()}")
 
     intra_access_token = r.json().get('access_token')#['access_token']
-
+    print("acceeessss : ", intra_access_token, flush=True)
     user = getData(intra_access_token)
 
 

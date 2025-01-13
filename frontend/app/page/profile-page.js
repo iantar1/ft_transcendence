@@ -1,6 +1,6 @@
 
 
-import {fetchUserData , fetchMatchData, getCookie ,logout, fetchStatsData} from './readData.js';
+import {fetchUserData , fetchFriendsData,fetchMatchData, getCookie ,logout, fetchStatsData} from './readData.js';
 
 // import {fetchMatchData} from './readData.js';
 
@@ -1219,26 +1219,21 @@ class profilePage extends HTMLElement {
         });
     }
     
-    stockFriends() {
+    async stockFriends() {
         //add your friend here
-        this.statsHistory = [
-            { player: "ahbajaou", img: "/images/ah.png", status: "green" },
-            { player: "arahmoun", img: "/images/ara.png", status: "red" },
-            { player: "iantar", img: "/images/iantar.jpeg", status: "green" },
-            { player: "ahbajaou", img: "/images/ah.png", status: "green" },
-            { player: "arahmoun", img: "/images/ara.png", status: "red" },
-            { player: "iantar", img: "/images/iantar.jpeg", status: "green" }
-        ];
+        const myfriend = await fetchFriendsData()
+        console.table(myfriend);
+        this.statsHistory = myfriend.friends
         const main = document.querySelector('.scrollable-div');
         let prof = '';
        let  index = 0;
        this.statsHistory.forEach((info) => {
            // index++;
-           prof += `
+           const status = info.status === true ? "green" : "red";           prof += `
            <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
            <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%;" src="${info.img}">
            <span id="" data-name="${info.player}" data-img="${info.img}" class="forsddProf" style=""></span>
-           <span class="sign" style="background: ${info.status};"></span> 
+           <span class="sign" style="background: ${status};"></span> 
                 </span>
             `;
         });

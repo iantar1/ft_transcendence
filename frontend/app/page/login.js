@@ -409,7 +409,7 @@ class loginPage extends HTMLElement {
                 const fromData = new FormData(form);
                 const data = Object.fromEntries(fromData);
                 try{
-                    const res = await fetch("https://localhost:3000/api/register/", {
+                    const res = await fetch("https://"+window.location.host + "/api/register/", {
                         method: 'POST', 
                         headers: {
                             'Content-Type': 'application/json',
@@ -450,7 +450,7 @@ class loginPage extends HTMLElement {
                 // Make the fetch call to verify OTP
                 try {
                     console.log(data);
-                    const res =  await fetch("https://localhost:3000/api/verify_otp/", {
+                    const res =  await fetch("https://"+window.location.host+"/api/verify_otp/", {
                             method: 'POST', 
                             headers: {
                                 'Content-Type': 'application/json',
@@ -466,7 +466,7 @@ class loginPage extends HTMLElement {
                         console.log('--- OTP VERIFIED SUCCESSFULLY ---');
 
                         try{
-                            const res = await fetch("https://localhost:3000/api/user/", {
+                            const res = await fetch("https://"+window.location.host+"/api/user/", {
                                 method: 'GET', 
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -521,7 +521,7 @@ class loginPage extends HTMLElement {
                     const arr = ['ahe','ceb',1337];
                     readData.setData(arr);
                     try{
-                        const response = await fetch("https://localhost:3000/api/login/", {
+                        const response = await fetch("https://"+window.location.host+"/api/login/", {
                                 method: 'POST', 
                                 headers: {
                                     'Content-Type': 'application/json',

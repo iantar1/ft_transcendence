@@ -51,7 +51,7 @@ export const readData = (function() {
 export async function fetchUserData() {
     try {
 
-        const res = await fetch("https://localhost:3000/user/", {
+        const res = await fetch("https://"+window.location.host+"/user/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,7 +79,33 @@ export async function fetchUserData() {
 export async function fetchMatchData() {
     try {
 
-        const res = await fetch("https://localhost:3000/match_history/", {
+        const res = await fetch(+"/match_history/", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Sends cookies along with the request
+        });
+
+        // Check if the response is successfuurl
+        if (!res.ok) {
+            throw new Error(`Error fetching data: ${res.statusText}`);
+        }
+
+        // Parse the response JSON to an array
+        const data = await res.json();
+
+        // Return the fetched data (which will be an array)
+        return data;
+    } catch (error) {
+        console.error("Error in fetchUserData:", error);
+        return []; // Return an empty array in case of an error
+    }
+}
+export async function fetchFriendsData() {
+    try {
+
+        const res = await fetch("https://"+window.location.host+"/friend_ship/userFreinds/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +132,7 @@ export async function fetchMatchData() {
 export async function fetchRankData() {
     try {
 
-        const res = await fetch("https://localhost:3000/users_ranking/", {
+        const res = await fetch("https://"+window.location.host+"/users_ranking/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -133,7 +159,7 @@ export async function fetchRankData() {
 export async function fetchStatsData() {
     try {
 
-        const res = await fetch("https://localhost:3000/stats/", {
+        const res = await fetch("https://"+window.location.host+"/stats/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -161,7 +187,7 @@ export async function logoutUser(user) {
     
     const data = { username: user };
     try{
-        const res = await fetch("https://localhost:3000/logout/", {
+        const res = await fetch("https://"+window.location.host+"/logout/", {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -184,7 +210,7 @@ export async function postImage(alias,redir,met){
     console.log(met)
     console.log(JSON.stringify(alias))
     try{
-        const res = await fetch("https://localhost:3000/" + redir + "/", {
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
             method: met, 
             credentials: 'include',
             headers: {
@@ -206,7 +232,7 @@ export async function postImage(alias,redir,met){
 
 export async function postMethode(alias,redir){
     try{
-        const res = await fetch("https://localhost:3000/" + redir + "/", {
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
             method: 'POST', 
             credentials: 'include',
             headers: {
@@ -235,7 +261,7 @@ export async function postInfo(alias,redir){
     const fromData = new FormData(form);
     const data = Object.fromEntries(fromData);
     try{
-        const res = await fetch(`https://localhost:3000/api/${redir}`, {
+        const res = await fetch("https://"+window.location.host+`/api/${redir}`, {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',
