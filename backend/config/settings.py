@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,7 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django_otp.middleware.OTPMiddleware',
     'UserManagement.middleware.new_middleware',
 ]
@@ -77,19 +77,22 @@ CSRF_COOKIE_SAMESITE = 'None'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
-    'http://127.0.0.1:8080',
     'http://localhost:8000',  # Add the port where your frontend is running if different
-    'https://localhost:3000',
-    'https://10.14.4.4:3000',
+    "https://localhost:3000",
+    "http://localhost:3000",
     'http://localhost:4040',
     'http://localhost:5050',
+    'http://127.0.0.1:8080',
+    "https://10.14.4.4:3000",
+    "http://10.14.4.4:3000",
+    "http://10.14.4.4:8000",
 ]
 
 
 CORS_ALLOW_CREDENTIALS = True # make sure this is set to True 
 
 
-SESSION_COOKIE_SAMESITE = None
+# SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = True  # For local development
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
@@ -99,6 +102,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = [
     "https://localhost:3000",
     "https://10.14.4.4:3000",
+    "http://10.14.4.4:8000",
+    "http://10.14.4.4:3000",
 ]
 
 CORS_ALLOW_METHODS = [
