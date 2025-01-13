@@ -856,11 +856,11 @@ class settingPage extends HTMLElement {
             this.displayNav();
             const uuss = async () => {
                 this.info = await fetchUserData();
-                if (!this.info.image){
-                    this.info.image = "/images/default.jpeg"
+                if (this.info.image){
+                    document.getElementById('img_intra').src = this.info.image
+                }else{
+                    document.getElementById('img_intra').src = "/images/default.jpeg";
                 }
-                document.getElementById('imgSetting').src = this.info.image
-            
             }
             uuss();
             this.imgEffect();
@@ -870,9 +870,9 @@ class settingPage extends HTMLElement {
 
     connectedCallback() {
         // console.log('HERE IS THE SETTING PAGE')
-        if (!getCookie('access')){
-            navigateTo('/login');
-        }
+        // if (!getCookie('access')){
+        //     navigateTo('/login');
+        // }
         this.render();
     }
 }

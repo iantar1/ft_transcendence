@@ -167,18 +167,13 @@ export async function logoutUser(user) {
         console.log("POST ERROR :", error);
     }
 }
-export async function postImage(alias,redir){
-    // console.log("post function " + redir);
-    // const form = document.querySelector(alias);
-    // const fromData = new FormData(form);
-    // const data = alias;
-    // for (let [key, value] of alias.entries()) {
-    //     console.log(key, value);
-    // }
+export async function postImage(alias,redir,met){
+
+    console.log(met)
     console.log(JSON.stringify(alias))
     try{
         const res = await fetch("https://localhost:3000/" + redir + "/", {
-            method: 'POST', 
+            method: met, 
             credentials: 'include',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -197,10 +192,10 @@ export async function postImage(alias,redir){
 
 }
 
-export async function postMethode(alias,redir, method){
+export async function postMethode(alias,redir){
     try{
         const res = await fetch("https://localhost:3000/" + redir + "/", {
-            method: method, 
+            method: 'POST', 
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',

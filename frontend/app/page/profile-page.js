@@ -487,10 +487,6 @@ class profilePage extends HTMLElement {
                         height :50px;
                         
                     }
-                    .sign{
-                        top:-10px;
-                        left:15px;
-                    }
                     .scrollable-div{
                         display :flex;
                         justify-content: center;
@@ -1131,7 +1127,7 @@ class profilePage extends HTMLElement {
     }
     
     stockFriends() {
-
+        //add your friend here
         this.statsHistory = [
             { player: "ahbajaou", img: "/images/ah.png", status: "green" },
             { player: "arahmoun", img: "/images/ara.png", status: "red" },
@@ -1169,11 +1165,12 @@ class profilePage extends HTMLElement {
                 if (!this.info.username){
                     this.info.username = "ASTRO"
                 }
-                if (!this.info.image){
-                    this.info.image = "/images/default.jpeg"
+                if (this.info.image){
+                    document.getElementById('img_intra').src = this.info.image
+                }else{
+                    document.getElementById('img_intra').src = "/images/default.jpeg";
                 }
                 document.getElementById('username').textContent = this.info.username
-                document.getElementById('img_intra').src = this.info.image
                 document.getElementById('BIO').textContent = this.info.bio
                 
                 const stats = await fetchStatsData(); // Fetch the stats data
