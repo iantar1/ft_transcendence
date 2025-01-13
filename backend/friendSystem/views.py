@@ -7,6 +7,7 @@ from UserManagement.models import User
 import jwt
 from rest_framework.exceptions import ValidationError
 from .serializers import FriendsProfileSerializer
+from UserManagement.serializers import UserSerializer
 
 
 
@@ -150,4 +151,15 @@ class   UserFriends(APIView):
         
         serializer = FriendsProfileSerializer(friends_profile)
         return Response(serializer.data, status=200)
-        # return Response({"friends": friends}, status=200)
+    
+class   NotUserFriends(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        friends_profile = FriendsProfile.objects.get(user=user)
+        friends = friends_profile.friends.all()
+        not_friends = User.objects.exclude(id=user.id).exclude(id__in=friends.values_list('id', flat=True))
+        user_serializer = UserSerializer(not_friends, many=True)
+        return Response(user_serializer.data, status=200)

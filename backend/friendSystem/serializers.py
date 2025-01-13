@@ -16,3 +16,4 @@ class   FriendsProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendsProfile
         fields = ['user', 'friends']
+
