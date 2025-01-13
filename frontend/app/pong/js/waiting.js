@@ -4,16 +4,12 @@ import { menu } from "./loby.js";
 import { fetchUserData } from "../../page/readData.js";
 
 
+export function waitingPage(opp_data) {
 
-
-
-export function waitingPage() {
-
-    let usr_data, opp_data = null;
+    let usr_data;
     async function getData() {
         usr_data = await fetchUserData();
-        opp_data = null ;
-    } 
+    }
     // Fetch initial data
     getData().then(() => updateUserCards());
 
@@ -152,6 +148,12 @@ export function waitingPage() {
 
         left_user.appendChild(createUserCard(usr_data));
         right_user.appendChild(createUserCard(opp_data));
+
+        if (usr_data && opp_data)
+        {
+            midel_info.textContent = 'fight for your life';
+            // waiting.remove(cancel);
+        }
     }
 
     midel_info.appendChild(loader);
@@ -163,23 +165,6 @@ export function waitingPage() {
     waiting.appendChild(midel_info);
     waiting.appendChild(right_user);
     waiting.appendChild(cancel);
-
-
-    // Periodically update user data
-    const intervalId = setInterval(async () => {
-        console.log("Updates matchmaking    ...");
-        
-        await getData();
-        updateUserCards();
-        if (usr_data && opp_data){
-            midel_info.textContent = 'fight for your life';
-            waiting.remove(cancel);
-            if (intervalId) {
-                clearInterval(intervalId);
-                console.log("Updates stopped.");
-            }
-        }
-    }, 5000); // Update every 5 seconds
 
     return waiting;
 }

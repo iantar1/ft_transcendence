@@ -27,10 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-LOGIN_URL = '/login/'
-
-
-X_FRAME_OPTIONS = 'ALLOW-FROM http://10.32.129.124:8000/'
 
 # Application definition
 

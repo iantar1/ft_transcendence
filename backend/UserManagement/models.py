@@ -12,9 +12,16 @@ class User(AbstractUser):
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     score = models.PositiveBigIntegerField(default=0)
-    # logged_in =   models.BooleanField(default = False)
-    #a one to one relationship 
-    
+
+    def delete_image(self):
+        if self.image:
+            try:
+                os.remove(self.image.path)
+            except FileNotFoundError:
+                pass
+
+        self.image = '/images/default.png'
+        self.save()
 
 # def save_post_user(sender, instance, **kwargs):
 #     print("a user has been saved")
@@ -29,6 +36,10 @@ class Stats(models.Model):
     losses = models.PositiveIntegerField(default=0)
     total = models.IntegerField(default=0)# wins - losses (for the game rank, it can be negative) 
  
+    def __str__(self):
+        return f"{self.user.username} stats"
+    
+
 
 class MatchHistory(models.Model):
     user1 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_user1')
@@ -37,6 +48,12 @@ class MatchHistory(models.Model):
     user2_score = models.PositiveIntegerField(null=True)
     winner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='matches_as_winner')
     played_at = models.DateField(auto_now=True)
+    game_type = models.CharField(null=True, max_length=10)
+    is_draw = models.BooleanField(default=0)
+    game_id = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return f"{self.user1.username} vs {self.user2.username}" 
 
 #on_delete=models.CASCADE: if a User object is deleted, all related MatchHistory objects will also be deleted.
     # 1v1 games, dates, and relevant details

@@ -537,7 +537,26 @@ class profilePage extends HTMLElement {
     winorLoseStyle = `
         <style>
             .winorlose{
+                position: relative;
                 overflow-y: auto;
+            }
+
+            .winorlose::-webkit-scrollbar {
+                width: 4px; /* Narrow scrollbar for a mobile-like feel */
+                height: 4px;
+            }
+
+            .winorlose::-webkit-scrollbar-thumb {
+                background: var(--red); /* Thumb color */
+                border-radius: 5px; /* Rounded thumb for a smooth look */
+            }
+
+            .winorlose::-webkit-scrollbar-thumb:hover {
+                background: #fff; /* Darker color on hover */
+            }
+
+            .winorlose::-webkit-scrollbar-track {
+                background: transparent; /* Transparent track for minimalistic style */
             }
             .userleft{
                 width :100%;
@@ -1155,17 +1174,26 @@ class profilePage extends HTMLElement {
                 }
                 document.getElementById('username').textContent = this.info.username
                 document.getElementById('img_intra').src = this.info.image
-                document.getElementById('BIO').textContent = 'ash dak temchi lzine'
+                document.getElementById('BIO').textContent = this.info.bio
+                
                 const stats = await fetchStatsData(); // Fetch the stats data
 
        
                 // Optional: If you need to update duplicate or additional elements, create aliases
                 console.log("stats win : " +  stats.wins);
-                document.getElementById('win').textContent = stats.wins;
-                document.getElementById('winone').textContent = "";
-                document.getElementById('lose').textContent = stats.losses;
-                document.getElementById('loseone').textContent = "";
-                document.getElementById('cycleValue').textContent = stats.total;
+                if (stats){
+                    document.getElementById('win').textContent = stats.wins;
+                    document.getElementById('winone').textContent = "";
+                    document.getElementById('lose').textContent = stats.losses;
+                    document.getElementById('loseone').textContent = "";
+                    document.getElementById('cycleValue').textContent = stats.total;
+                }else{
+                    document.getElementById('win').textContent = "0";
+                    document.getElementById('winone').textContent = "";
+                    document.getElementById('lose').textContent = "0";
+                    document.getElementById('loseone').textContent = "";
+                    document.getElementById('cycleValue').textContent = "0";
+                }
 
             }
             else{
@@ -1184,6 +1212,8 @@ class profilePage extends HTMLElement {
             <style>
             ${this.navar}
                 .editTabel{
+                    position: absolute;
+                    top: 0;
                     height :95%;
                 }
                 table.table tbody tr:nth-child(odd) { 
@@ -1194,6 +1224,10 @@ class profilePage extends HTMLElement {
                     background-color: var(--blue); 
                 }
 
+                .table>thead {
+                    position: sticky;
+                    top:0;
+                }
             
                 table.table td, table.table th {
                     padding: 2%;

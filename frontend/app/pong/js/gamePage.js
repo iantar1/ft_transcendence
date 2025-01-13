@@ -1,36 +1,19 @@
 import { render } from './render.js';
 import { menu } from './loby.js';
-import { waitingPage } from './waiting.js';
-import { GameOver } from './gameOver.js'
-import { tournamentPage } from './tournament.js'
-import { matchmakingPage } from './tournament_matchmaking.js';
-import { tournamentlocal } from './localTournament.js';
-import { tournamentBracket } from './bracket.js'
-import { manageLocalTournament } from './manage_local_tour.js';
-// import { matchmakingPage } from './localmatchmaking.js';
-
-import { createWinnerCard } from './winnerCard.js';
-
-import { getCookie } from '../../page/readData.js';
-import { navigateTo } from '../../routing.js';
 
 
 class GamePage extends HTMLElement {
 
     constructor() {
         super();
-        console.log("token is : " + getCookie('access'));
 
-        if (!getCookie('access')) {
-            navigateTo('/login');
-        }
         // Create Shadow DOM
         const shadow = this.attachShadow({ mode: 'open' });
 
 
         // Create container div
         const main = document.createElement('div');
-        main.classList.add('game-page');
+        main.classList.add('game-pong');
 
         // create style
 
@@ -41,11 +24,11 @@ class GamePage extends HTMLElement {
                 height: 100%;
                 width: 100%;
             }
-            .game-page {
+            .game-pong {
                 display: flex;
                 position :relative;
                 font-family: "Pong War", sans-serif;
-                color: var(--white);
+                color: #fff;
                 margin: 0;
                 padding: 0;
                 display: flex;
@@ -58,6 +41,7 @@ class GamePage extends HTMLElement {
         `;
         shadow.appendChild(style);
         shadow.appendChild(main);
+        console.log("render menu pong");
         render(menu(), main);
     }
 
@@ -104,17 +88,17 @@ class GamePage extends HTMLElement {
                 #content{
                     position :relative;
                     width :100%;
-                    height :80%;
+                    height :100%;
                     border-radius :0px;
                     display :flex;
                 }
-                }
-                #game{
-                    color :#fff;
-                }
+            }
+            #game{
+                color :#fff;
+            }
             </style>
         `
     }
 }
 
-customElements.define('game-page', GamePage);
+customElements.define('game-pong', GamePage);

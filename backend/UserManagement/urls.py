@@ -16,13 +16,14 @@ urlpatterns = [
     path('verify_otp/', VerifyOTPView.as_view()),
     path('change_password/', ChangePasswordView.as_view()),
     path('bio_image/', ChangeBioImage.as_view()),
-    path('bio/', ChangeBioImage.as_view()),
+    path('bio/', ChangeBio.as_view()),
     path('redintra/', intra_auth.home),
     path('match_history/', MatchHistoryView.as_view()),
     path('stats/', StatsView.as_view()),
     path('intra/', intra_auth.auth),#change the rediract uri
     path('accounts/google/login/callback/', google_auth.get_code),
     path('users_ranking/', UsersRanking.as_view()),
+    path('change_image/', ChangeImage.as_view()),
 
 
 

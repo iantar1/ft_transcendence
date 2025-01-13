@@ -20,7 +20,7 @@ function createcountdown() {
 
 export function local_1vs1()
 {
-    const gamePage = document.body.querySelector('game-page');
+    const gamePage = document.body.querySelector('game-pong');
     const style = document.createElement('style');
     style.textContent = `
         canvas {
@@ -49,7 +49,116 @@ export function local_1vs1()
             justify-content: center;
             align-items: center;
         }
+
+
+
+        .controls-container.player1-buttons {
+            position: fixed;
+            bottom: 8%;
+            left: 0;
+            right: 0;
+        }
+        
+        .controls-container.player2-buttons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .controls-container {
+
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            z-index: 1000;
+        }
+
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #00f7ff;
+            background: linear-gradient(135deg, #2b0150, #000428);
+            box-shadow: 0 0 20px #00f7ff,
+                        inset 0 0 15px rgba(0, 247, 255, 0.5);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 247, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-btn:active::before {
+            opacity: 1;
+        }
+        .control-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 30px #00f7ff,
+                        inset 0 0 20px rgba(0, 247, 255, 0.7);
+        }   
+
+        .arrow {
+            color: #00f7ff;
+            font-size: 3rem;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            user-select: none;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 5px #00f7ff);
+        }
+
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
     `;
+
+
+
+    const controlButtons = document.createElement('div');
+    controlButtons.className = 'controls-container player1-buttons';
+    controlButtons.innerHTML = `
+        <button class="control-btn left">
+            <div class="arrow">←</div>
+        </button>
+        <button class="control-btn right">
+            <div class="arrow">→</div>
+        </button>
+    `;
+    const leftBtn = controlButtons.querySelector('.control-btn.left');
+    const rightBtn = controlButtons.querySelector('.control-btn.right');
+
+    const controlButtons2 = document.createElement('div');
+    controlButtons2.className = 'controls-container player2-buttons';
+    controlButtons2.innerHTML = `
+        <button class="control-btn left">
+            <div class="arrow">←</div>
+        </button>
+        <button class="control-btn right">
+            <div class="arrow">→</div>
+        </button>
+    `;
+    const leftBtn2 = controlButtons2.querySelector('.control-btn.left');
+    const rightBtn2 = controlButtons2.querySelector('.control-btn.right');
+
     const countdownElement = createcountdown();
     const canvas = gameCanvas();
 
@@ -59,6 +168,9 @@ export function local_1vs1()
     pongCanvas.appendChild(style);
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
+    pongCanvas.appendChild(controlButtons);
+    pongCanvas.appendChild(controlButtons2);
+
 
     const local_URL = 'wss://'+window.location.host+'/ws/local_1vs1/';
     let wsOpen = false;
@@ -85,20 +197,15 @@ export function local_1vs1()
     spotLight.shadow.mapSize.height = 2048;
     scene.add(spotLight);
 
-    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
     
     let width = canvas.clientWidth ;
     let height = canvas.clientHeight ;
 
-    console.log("sizes : ", width, height);
-
     
     const camera = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
-    // const camera2 = new THREE.PerspectiveCamera(75, (width / 2) / height, 0.1, 2000);
     
     camera.position.set(15, 35, 0);
-    // camera2.position.set(0, 15, -35);
-    // camera2.lookAt(0, 0, 0);
     scene.add(camera);
     
     
@@ -157,7 +264,6 @@ export function local_1vs1()
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        // console.table('data', data)
         if (data.type === "start") {
             table_config = data.table;
             paddle = data.paddle;
@@ -191,7 +297,7 @@ export function local_1vs1()
             ball.position.x = data.ball.x;
             ball.position.z = data.ball.z;
             score = data.score;
-            shakeCamera(camera);
+            // shakeCamera(camera);
             // shakeCamera(camera2);
             scoreManager.addPoint(score);
         }
@@ -223,12 +329,62 @@ export function local_1vs1()
 
     function stopPaddle(e)
     {
-        if (e.key === "ArrowLeft" || e.key === "ArrowUp")
+        if (e.key === "ArrowDown" || e.key === "ArrowUp")
             player2Direction = 0;
         if (e.key === "w" || e.key === "s")
             player1Direction = 0;
     }
 
+
+
+
+
+    // Touch events
+    leftBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('left');
+    });
+  
+    rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('right');
+    });
+
+    leftBtn2.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('left2');
+    });
+  
+    rightBtn2.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('right2');
+    });
+
+    function handleMoveStart(dir) {
+        if(dir === 'left')
+            player1Direction = -1;
+        else if(dir === 'left2')
+            player2Direction = 1;
+        
+        if(dir === 'right')
+            player1Direction = 1;
+        else if(dir === 'right2')
+            player2Direction = -1;
+    }
+  
+    function handleMoveEnd() {
+        player1Direction = 0;
+        player2Direction = 0;
+    }
+
+    // Mouse events
+    leftBtn.addEventListener('mousedown', () => handleMoveStart('left'));
+    rightBtn.addEventListener('mousedown', () => handleMoveStart('right')); 
+    leftBtn2.addEventListener('mousedown', () => handleMoveStart('left2'));
+    rightBtn2.addEventListener('mousedown', () => handleMoveStart('right2')); 
+
+    document.addEventListener('touchend', handleMoveEnd);
+    document.addEventListener('mouseup', handleMoveEnd);
 
     function adjustFOV(camera, aspect) {
         // Define base FOV for a standard aspect ratio (e.g., 16:9)
@@ -261,8 +417,19 @@ export function local_1vs1()
         height = pongCanvas.clientHeight ;
         const aspect = (width / height);
 
-        adjustFOV(camera, aspect);
-        adjustCameraPosition(camera, aspect);
+        if (width <= 720){
+            camera.position.set(0, 45, 0);
+            controlButtons.style.display = "flex";
+            controlButtons2.style.display = "flex";
+        }
+        else{
+            camera.position.set(15, 35, 0);
+            controlButtons.style.display = "none";
+            controlButtons2.style.display = "none";
+            adjustFOV(camera, aspect);
+            adjustCameraPosition(camera, aspect);
+        }
+
 
         camera.aspect = aspect;
         camera.updateProjectionMatrix();
@@ -286,7 +453,6 @@ export function local_1vs1()
                 clearcoatRoughness: 0.25,
                 color: new THREE.Color(0xffffff),
                 ior: 1.2,
-                thickness: 10.0
             } )
         );
         plane.receiveShadow = true;
@@ -579,8 +745,6 @@ export function local_1vs1()
                 player1Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -603,8 +767,6 @@ export function local_1vs1()
                 player2Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -651,7 +813,7 @@ export function local_1vs1()
     {
         animationId = requestAnimationFrame(animate);
 
-        updateCamera();
+        // updateCamera();
 
         // Update starfield
         starfield.rotation.y += 0.0009;
@@ -845,7 +1007,7 @@ export function local_1vs1()
                 cancelAnimationFrame(animationId);
                 socket.close();
                 render(GameOver(winner, score), 
-                    gamePage.shadowRoot.querySelector('.game-page'));
+                    gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }
         

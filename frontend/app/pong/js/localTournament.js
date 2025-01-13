@@ -103,7 +103,6 @@ export function tournamentlocal() {
 
     // Event listeners
     startButton.addEventListener('click', (event) => {
-        console.log('start tournament');
         event.preventDefault(); 
         const tournamentName = tournamentNameInput.value.trim();
         const participants = participantInputs.map(input => input.value.trim());
@@ -112,17 +111,19 @@ export function tournamentlocal() {
             alert('Please fill out all participant names.');
             return;
         }
-
-        console.log({
-            tournamentName,
-            participants,
-        });
+        
+        // Check for duplicate participant names
+        const duplicates = participants.filter((item, index) => participants.indexOf(item) !== index);
+        if (duplicates.length > 0) {
+            alert(`Duplicate names found: ${[...new Set(duplicates)].join(', ')}. Please ensure all names are unique.`);
+            return;
+        }
 
         manageLocalTournament(participants, tournamentName);
     });
 
     backButton.addEventListener('click', () => {
-        render(menu(), document.body.querySelector('game-page').shadowRoot.querySelector('.game-page'));
+        render(menu(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
     });
 
     const buttons = document.createElement('div');

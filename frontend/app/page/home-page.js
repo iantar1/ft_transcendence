@@ -3,7 +3,7 @@
 
 import {readData , getCookie} from './readData.js';
 
-import {fetchUserData} from './readData.js';
+import {fetchUserData ,fetchRankData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
 import { navigateTo } from '../routing.js';
 
@@ -38,8 +38,11 @@ class homePage extends HTMLElement {
     <div class="content-home " >
     <div class="cart-home" >
             <img  class="img-home" src="/images/astro4.png">
-            <h3 class="title-home" ><span style="color :#fff;" id="curentTime" ></span>, <span id="username" ></span></h3>
-            <h1>Stars of War</h1>
+            <div class="text-container">
+                <h3 id="curentTime" class="scroll-text smooth" ></h3>
+                <h3 id="username" class="scroll-text" style="color:var(--red);" > </h3>
+            </div>
+            <h1 class="" >Stars of War</h1>
             <p>Zero-gravity PingPong tournament decides the galaxy's fate.
                 Outplay opponents, uncover secrets, win peace.</p>
             <button id="togame" class="btn-home btn btn-secondary " >let's play</button>
@@ -62,6 +65,40 @@ class homePage extends HTMLElement {
         .content-home{
             gap :10px;
             
+        }
+        .text-container {
+            width :500px;
+            height: 30px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+        }
+        .scroll-text {
+            margin: 0;
+            line-height: 30px;
+            animation: scrollUp 5s linear infinite;
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased;
+        }
+        .smooth {
+            animation: scrollUpSmooth 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes scrollUpSmooth {
+            0% {
+                transform: translateY(100%);
+            }
+            15% {
+                transform: translateY(0);
+            }
+            85% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100%);
+            }
         }
         .cart-home{
             height :39vh;
@@ -330,23 +367,35 @@ class homePage extends HTMLElement {
         </div>
     </div>
             </div>
-<div class="static-home">
-    <table class="nav-static">
-        <thead>
-            <tr>
-                <th>Player</th>
-                <th>Level</th>
-                <th>Game</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody class="table-content"></tbody>
-    </table>
-</div>
-
-<style>
-
-</style>
+    <div class="static-home" style="overflow-y:auto; height:90%;" >
+        <table class="nav-static">
+            <thead style="position: sticky; top: 0; background:var(--dark);" >
+                <tr>
+                    <th>Player</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody class="table-content"></tbody>
+        </table>
+    </div>
+        <style>
+            .static-home::-webkit-scrollbar {
+                width: 6px; /* Narrow scrollbar for a mobile-like feel */
+            }
+    
+            .static-home::-webkit-scrollbar-thumb {
+                background: var(--red); /* Thumb color */
+                border-radius: 10px; /* Rounded thumb for a smooth look */
+            }
+    
+            .static-home::-webkit-scrollbar-thumb:hover {
+                background: #fff; /* Darker color on hover */
+            }
+    
+            .static-home::-webkit-scrollbar-track {
+                background: transparent; /* Transparent track for minimalistic style */
+            }
+        </style>
 
             `;
         navBar = `
@@ -414,21 +463,31 @@ class homePage extends HTMLElement {
             // if(!this.info.id){
             //     navigateTo('/login');
             // }
-            document.getElementById('username').textContent = this.info.username
-            var data = [
-                [0, 4, "Good night"], 
-                [5, 11, "Good morning"],          //Store messages in an array
-                [12, 17, "Good afternoon"],
-                [18, 24, "Good night"]
-            ],
-                hr = new Date().getHours();
+            document.getElementById('username').textContent = "," + this.info.username
+            // var data = [
+            //     [0, 4, "Good night "], 
+            //     [5, 11, "Good morning "],          //Store messages in an array
+            //     [12, 17, "Good afternoon "],
+            //     [18, 24, "Good night "]
+            // ],
+            //     hr = new Date().getHours();
             
-            for(var i = 0; i < data.length; i++){
-                if(hr >= data[i][0] && hr <= data[i][1]){
-                    document.getElementById('curentTime').textContent = data[i][2];
-                    console.log(data[i][2]);
-                }
-            }
+            // for(var i = 0; i < data.length; i++){
+            //     if(hr >= data[i][0] && hr <= data[i][1]){
+            //         document.getElementById('curentTime').textContent = data[i][2];
+            //         console.log(data[i][2]);
+            //     }
+            // }
+            const getTimeOfDay = () => {
+                const hour = new Date().getHours();
+                if (hour < 12) return 'Good morning';
+                if (hour < 18) return 'Good afternoon';
+                return 'Good evening';
+            };
+            document.getElementById('curentTime').textContent = getTimeOfDay();
+    
+            // Update username if needed
+            // const usernameSpan = this.shadowRoot.getElementById('username');
         }
         uuss();
         this.innerHTML = `
@@ -442,33 +501,25 @@ class homePage extends HTMLElement {
                 ${this.templateHome}
             `;
     }
-    staticHome(){
-         this.matchHistory = [
-            { player: "Jam Josh", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Justina Kap", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Chris Colt", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"}
-          ];
-          const cartHome = document.querySelector('.table-content');
-          let cart = '';
+    async staticHome() {
+        this.matchHistory = await fetchRankData();
+        console.table(this.matchHistory)
+        const cartHome = document.querySelector('.table-content');
+        let cart = '';
         this.matchHistory.forEach(element => {
             cart += `
                 <tr>
                     <td>
-                        <img class="Player-img" src=${element.img}>
-                        ${element.player}
+                        <img class="Player-img" src="${element.image}" >
+                        ${element.username}
                     </td>
-                    <td>${element.lvl}</td>
-                    <td>${element.Exp}</td>
                     <td>${element.score}</td>
                 </tr>
             `;
-            });
+        });
         cartHome.innerHTML = cart;
     }
+    
     async getData(){
         // const data = fetchUserMatchHistory();
         // const data = fetchUserData('match_history');

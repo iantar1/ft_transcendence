@@ -1,6 +1,5 @@
 import { render } from "./render.js";
 import { menu } from "./loby.js";
-import { createWinnerCard } from "./winnerCard.js";
 import { submitTournament } from "./submitTournament.js"
 
 export function tournamentBracket(
@@ -10,7 +9,7 @@ export function tournamentBracket(
     ],
     currentMatch = 1,
     ws = null,
-    ranekd = null,
+    ranked = null,
     name = null
 ) {
     const style = document.createElement('style');
@@ -18,12 +17,11 @@ export function tournamentBracket(
         .tournament-container {
             font-family: 'Pong War';
             letter-spacing: 3px;
-            padding: 2rem;
+            // padding: 2rem;
             border-radius: 5px;
             color: white;
             width :90%;
             max-width :1000px;
-            height :100%;
         }
 
         .bracket-title {
@@ -79,6 +77,7 @@ export function tournamentBracket(
         .team {
 
             width: 200px;
+            overflow: hidden;
             padding: 1rem;
             background: #1e1e1e;
             border-radius: 5px;
@@ -91,6 +90,7 @@ export function tournamentBracket(
 
         .team.winner {
             background: var(--red);
+            overflow: hidden;
         }
 
         .team span {
@@ -175,6 +175,10 @@ export function tournamentBracket(
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             color: white;
         }
+        .match .pl{
+            max-width: 200px;
+            overflow: hidden;
+        }
 
         .match .vs {
             font-family: 'Pong War', 'Roboto', sans-serif;
@@ -194,6 +198,13 @@ export function tournamentBracket(
             cursor: pointer;
             transition: 0.5s ease;
         }
+
+        button:disabled {
+            background: linear-gradient(45deg, #ccc 0%, #999 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
         button:hover {
             background-color: gray;
         }
@@ -208,7 +219,7 @@ export function tournamentBracket(
     function createTeam(name, score = null, isWinner = false) {
         const team = document.createElement('div');
         team.className = `team ${isWinner ? 'winner' : ''}`;
-        team.innerHTML = `${name} ${score !== null ? `<span>Score: ${score}</span>` : ''}`;
+        team.innerHTML = `${shortenText(name, 10)} ${score !== null ? `<span>Score: ${score}</span>` : ''}`;
         return team;
     }
 
@@ -252,7 +263,7 @@ export function tournamentBracket(
 
     const title = document.createElement('h2');
     title.className = 'bracket-title';
-    title.textContent = 'Tournament';
+    title.innerHTML = `<span style="color : var(--red);">${shortenText(name, 10)}</span> Tournament`;
 
     const content = document.createElement('div');
     content.className = 'bracket-content';
@@ -282,9 +293,9 @@ export function tournamentBracket(
         CurrentRound.innerHTML = `
             <h3>Round ${currentMatch}</h3>
             <div class="match">
-                <span>${matches[currentMatch - 1].player1}</span>
+                <span class="pl">${shortenText(matches[currentMatch - 1].player1, 10)}</span>
                 <span class="vs">VS</span>
-                <span>${matches[currentMatch - 1].player2}</span>
+                <span class="pl">${shortenText(matches[currentMatch - 1].player2, 10)}</span>
             </div>
         `;
     }
@@ -297,7 +308,7 @@ export function tournamentBracket(
         round1.appendChild(createMatch(matches[0], 'up', currentMatch === 1));
         round1.appendChild(createMatch(matches[1], 'down', currentMatch === 2));
         round2.appendChild(createMatch(matches[2], 'final', currentMatch === 3));
-        winner.textContent = matches[2].winner ? matches[2].winner : 'Winner';
+        winner.textContent = shortenText((matches[2].winner ? matches[2].winner : 'Winner'), 10);
         console.log(matches[2].winner);
     }
 
@@ -314,7 +325,7 @@ export function tournamentBracket(
     cancelButton.textContent = 'cancel';
 
     if (currentMatch > 3) {
-        startButton.textContent = 'save';
+        startButton.textContent = 'save to blockchain';
     }
 
     buttons.appendChild(cancelButton);
@@ -324,7 +335,15 @@ export function tournamentBracket(
     // Event listeners
     startButton.addEventListener('click', async () => {
         if (currentMatch > 3) {
-            await submitTournament("submit", ranekd, name);
+            console.log('save tournament');
+            try {
+                const result = await submitTournament("submit", ranked, name);
+                if (result === true) {
+                    startButton.disabled = true;
+                }
+            } catch (error) {
+                console.error('Error saving tournament:', error);
+            }
         }
         else {
             // submitTournament("submit", matches[0].player1, 6);
@@ -337,8 +356,16 @@ export function tournamentBracket(
     cancelButton.addEventListener('click', () => {
         ws.send(JSON.stringify({ type: 'cancel' }));
         ws.close();
-        render(menu(), document.body.querySelector('game-page').shadowRoot.querySelector('.game-page'));
+        render(menu(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
     });
+
+    function shortenText(text, maxLength) {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength) + '...';
+        } else {
+            return text;
+        }
+    }
 
     content.appendChild(round1);
     content.appendChild(round2);

@@ -59,6 +59,7 @@ def createUpdateUser(data_json)-> User:
     )
     
     user.save()
+    Stats.objects.get_or_create(user=user)
     return user
     
 

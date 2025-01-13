@@ -3,8 +3,11 @@ import random
 import asyncio
 import uuid
 import requests
+import httpx
 from channels.generic.websocket import AsyncWebsocketConsumer # type: ignore
-BACKEND_URL = "http://backend:8000/match_history/"
+BACKEND_URL_MATCH = "http://backend:8000/match_history/"
+BACKEND_URL_USER = "http://backend:8000/user/"
+
 player_queue = []
 
 # class GameSettings:
@@ -17,10 +20,10 @@ TABLE_HIEGHT = 45
 TABLE_WIDTH = 28
 BALL_SPEED = 0.2
 
+
 class Remote1vs1Consumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        player_queue.append(self)
         self.is_active = True
         self.width = 800
         self.height = 400
@@ -33,16 +36,78 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
         self.group_room = None
         self.role = None
         self.opponent = None
-        self.ball = {}  
+        self.ball = {}
         self.player1 = {}
         self.player2 = {}
         self.score = {}
         self.table = {}
         self.cookies = self.scope.get("cookies", {})
-        print(self.cookies)
-        self.username = self.scope["user"]
+        self.username = None
+        self.Userdata = None
 
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(BACKEND_URL_USER, cookies=self.cookies, timeout=5)
+                if response.status_code == 200:
+                    self.Userdata = response.json()
+                    self.username = self.Userdata.get("username")
+                    print("get user data")
+                else:
+                    print(f"Failed to get user data: {response.status_code} - {response.text}")
+            except httpx.RequestError as e:
+                print(f"Error get user data: {e}")
+
+        print(self.username, " are connected")
+        player_queue.append(self)
         await self.accept()
+
+
+        await self.restart_game()
+
+
+        # If we have two players, start a game
+        if len(player_queue) >= 2 :
+
+            player1 = player_queue.pop(0)
+            player2 = player_queue.pop(0)
+
+            # Check if player1 is attempting to play against themselves
+            if player1.username == player2.username:
+                print("Cannot start a game against oneself")
+                await player2.send(json.dumps({'type': 'error', 'message': 'You cannot play against yourself.'}))
+                player_queue.insert(0, player1)
+                return
+
+
+            group_room = f"pong_room_{uuid.uuid4().hex[:6]}"
+            player1.group_room = group_room
+            player2.group_room = group_room
+            player1.opponent = player2
+            player2.opponent = player1
+            player2.role = "player2"
+            player1.role = "player1"
+
+            # add the players to the same group
+            await self.channel_layer.group_add(
+                group_room,
+                player1.channel_name
+            )
+            await self.channel_layer.group_add(
+                group_room,
+                player2.channel_name
+            )
+
+            dx = 1 if random.randint(0,1) > 0.5 else -1
+            dz = 1 if random.randint(0,1) > 0.5 else -1
+
+            await self.channel_layer.group_send(
+                self.group_room,
+                {
+                    "type": "start",
+                    "dx" : dx,
+                    "dz" : dz,
+                }
+            )
 
     async def disconnect(self, close_code):
         if self in player_queue:
@@ -52,57 +117,28 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
                 self.group_room,
                 self.channel_name
             )
-        # Should also notify the other player about disconnection
+            # self.score = {
+                
+            # }
+            # message = {
+            #     'type': 'opponent_disconnected',
+            #     'message': 'Opponent disconnected',
+            #     'score': {"player1": 0, "player2": 0},
+            #     'winner': "WIN" if self.score[self.role] >= WINNING_SCORE else "LOSE"
+            # }
+            # await self.channel_layer.group_send(
+            #     self.group_room,
+            #     {
+            #         'type': 'broadcast_game_state',
+            #         'message': message
+            #     }
+            # )
+        await self.close()
+
 
     async def receive(self, text_data):
-
         data = json.loads(text_data)
-        if data["type"] == "join_room":
-            self.width = data["width"]
-            self.height = data["height"]
-            print(self.username, " are connected")
-            print("scope :  " , self.scope)
-            await self.restart_game()
-            if len(player_queue) >= 2 :
-                if player_queue[0] == self:
-                    self.opponent = player_queue[1]
-                else:
-                    self.opponent = player_queue[0]
-                player_queue.remove(self)
-                player_queue.remove(self.opponent)
-                self.group_room = f"room_{uuid.uuid4().hex[:6]}"
-                self.opponent.group_room = self.group_room
 
-                self.opponent.role = "player2"
-                self.role = "player1"
-
-                # add the players to the same group
-                await self.channel_layer.group_add(
-                    self.group_room,
-                    self.channel_name
-                )
-                await self.opponent.channel_layer.group_add(
-                    self.opponent.group_room,
-                    self.opponent.channel_name
-                )
-
-                dx = 1 if random.randint(0,1) > 0.5 else -1
-                dz = 1 if random.randint(0,1) > 0.5 else -1
-
-                await self.channel_layer.group_send(
-                    self.group_room,
-                    {
-                        "type": "start",
-                        "player1": self.player1,
-                        "player2": self.player2,
-                        "dx" : dx,
-                        "dz" : dz,
-                        "ball": self.ball,
-                        "score": self.score,
-                        "paddle": self.paddle,
-                    }
-                )
-                
         if data["type"] == "update_paddle":
             if self.role == "player1":
                 self.player1["direction"] = data["direction"]
@@ -125,6 +161,7 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
         self.ball["dx"] =  BALL_SPEED * event["dx"]
         self.ball["dz"] =  BALL_SPEED * event["dz"]
         
+        opp_data = self.opponent.Userdata
 
         await self.send(text_data=json.dumps({
             "type": "start",
@@ -134,9 +171,10 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
             "score": self.score,
             "paddle": self.paddle,
             "table" : self.table_config,
-            "role": self.role
+            "role": self.role,
+            "opp_data": opp_data
         }))
-        print(self.scope["user"], ": sending game stats")
+        print(self.Userdata.get("username"), ": sending game stats")
 
 
     async def start_game(self):
@@ -168,9 +206,11 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
 
             # Prepare data for match history
             match_data = {
-                "opponent_username": "iantar",
+                "opponent_username": self.opponent.username,
                 "opponent_score": self.score["player2"],
                 "user_score": self.score["player1"],
+                "game_type": "pong",
+                "game_id": self.group_room
             }
             access = self.cookies["access"]
             refresh = self.cookies["refresh"]
@@ -181,7 +221,7 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
 
             # Send the match history to backend
             try:
-                response = requests.post(BACKEND_URL, json=match_data, cookies=cookies, timeout=5)
+                response = requests.post(BACKEND_URL_MATCH, json=match_data, cookies=cookies, timeout=5)
                 if response.status_code == 200:
                     print("Match history successfully sent to backend 1")
                 else:
@@ -297,7 +337,8 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
             self.ball["dx"] += ( 0.5 if self.player2["direction"] == 1 else 0) * self.speed
             self.ball["dx"] += (-0.5 if self.player2["direction"] == -1 else 0) * self.speed
         
-
+    async def broadcast_game_state(self, event):
+        await self.send(json.dumps(event['message']))
 
 
     async def restart_game(self):

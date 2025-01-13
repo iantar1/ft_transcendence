@@ -1,7 +1,5 @@
 import { render } from "./render.js";
-import { menu } from "./loby.js";
 import { tournamentBracket } from "./bracket.js";
-import { GameOver } from "./gameOver.js";
 
 
 export function manageLocalTournament(participants, tournamentName) {
@@ -34,8 +32,118 @@ export function manageLocalTournament(participants, tournamentName) {
             width: 100%;
             height: 100%;
         }
+
+
+
+
+        .controls-container.player1-buttons {
+            position: fixed;
+            bottom: 8%;
+            left: 0;
+            right: 0;
+        }
+        
+        .controls-container.player2-buttons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .controls-container {
+
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            z-index: 1000;
+        }
+
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #00f7ff;
+            background: linear-gradient(135deg, #2b0150, #000428);
+            box-shadow: 0 0 20px #00f7ff,
+                        inset 0 0 15px rgba(0, 247, 255, 0.5);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 247, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-btn:active::before {
+            opacity: 1;
+        }
+        .control-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 30px #00f7ff,
+                        inset 0 0 20px rgba(0, 247, 255, 0.7);
+        }   
+
+        .arrow {
+            color: #00f7ff;
+            font-size: 3rem;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            user-select: none;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 5px #00f7ff);
+        }
+
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
     `;
-    const gamePage = document.body.querySelector('game-page');
+
+
+
+    const controlButtons = document.createElement('div');
+    controlButtons.className = 'controls-container player1-buttons';
+    controlButtons.innerHTML = `
+        <button class="control-btn left">
+            <div class="arrow">←</div>
+        </button>
+        <button class="control-btn right">
+            <div class="arrow">→</div>
+        </button>
+    `;
+    const leftBtn = controlButtons.querySelector('.control-btn.left');
+    const rightBtn = controlButtons.querySelector('.control-btn.right');
+
+    const controlButtons2 = document.createElement('div');
+    controlButtons2.className = 'controls-container player2-buttons';
+    controlButtons2.innerHTML = `
+        <button class="control-btn left">
+            <div class="arrow">←</div>
+        </button>
+        <button class="control-btn right">
+            <div class="arrow">→</div>
+        </button>
+    `;
+    const leftBtn2 = controlButtons2.querySelector('.control-btn.left');
+    const rightBtn2 = controlButtons2.querySelector('.control-btn.right');
+
+
+    const gamePage = document.body.querySelector('game-pong');
     const countdownElement = createcountdown();
     const canvas = gameCanvas();
 
@@ -50,7 +158,6 @@ export function manageLocalTournament(participants, tournamentName) {
     let ball_config, ball;
     let scoreManager, plane, leftWall, rightWall, table_config, paddle, score, animationId;
     let player2Direction = 0, player1Direction = 0;
-    let player1ScoreMesh, player2ScoreMesh;
     let player1 , player2;
     let renderer, controls;
     
@@ -71,7 +178,7 @@ export function manageLocalTournament(participants, tournamentName) {
     spotLight.shadow.mapSize.height = 2048;
     scene.add(spotLight);
 
-    // render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+    // render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
 
     let width = canvas.clientWidth ;
     let height = canvas.clientHeight ;
@@ -147,7 +254,6 @@ export function manageLocalTournament(participants, tournamentName) {
 
     ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        console.table(data);
         if (data.type === 'joined') {
             table_config = data.table;
             paddle = data.paddle;
@@ -165,13 +271,15 @@ export function manageLocalTournament(participants, tournamentName) {
                     data.matches,
                     data.round,
                     ws,
+                    null,
+                    tournamentName
                 ),
-                gamePage.shadowRoot.querySelector('.game-page'));
+                gamePage.shadowRoot.querySelector('.game-pong'));
         }
 
 
         if (data.type === "start") {
-            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-page'));
+            render(pongCanvas, gamePage.shadowRoot.querySelector('.game-pong'));
             resizeCanvas();
             table_config = data.table;
             paddle = data.paddle;
@@ -220,7 +328,7 @@ export function manageLocalTournament(participants, tournamentName) {
                     data.round > 3 ? data.ranked : null,
                     tournamentName
                 ),
-                gamePage.shadowRoot.querySelector('.game-page'));
+                gamePage.shadowRoot.querySelector('.game-pong'));
         }
     }
 
@@ -249,11 +357,65 @@ export function manageLocalTournament(participants, tournamentName) {
 
     function stopPaddle(e)
     {
-        if (e.key === "ArrowLeft" || e.key === "ArrowUp")
+        if (e.key === "ArrowUp" || e.key === "ArrowDown")
             player2Direction = 0;
         if (e.key === "w" || e.key === "s")
             player1Direction = 0;
     }
+
+
+
+
+
+        // Touch events
+        leftBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleMoveStart('left');
+        });
+      
+        rightBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleMoveStart('right');
+        });
+
+        leftBtn2.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleMoveStart('left2');
+        });
+      
+        rightBtn2.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleMoveStart('right2');
+        });
+    
+        function handleMoveStart(dir) {
+            if(dir === 'left')
+                player1Direction = -1;
+            else if(dir === 'left2')
+                player2Direction = 1;
+            
+            if(dir === 'right')
+                player1Direction = 1;
+            else if(dir === 'right2')
+                player2Direction = -1;
+        }
+      
+        function handleMoveEnd() {
+            player1Direction = 0;
+            player2Direction = 0;
+        }
+    
+        // Mouse events
+        leftBtn.addEventListener('mousedown', () => handleMoveStart('left'));
+        rightBtn.addEventListener('mousedown', () => handleMoveStart('right')); 
+        leftBtn2.addEventListener('mousedown', () => handleMoveStart('left2'));
+        rightBtn2.addEventListener('mousedown', () => handleMoveStart('right2')); 
+    
+        document.addEventListener('touchend', handleMoveEnd);
+        document.addEventListener('mouseup', handleMoveEnd);
+
+
+
 
     function adjustFOV(camera, aspect) {
         // Define base FOV for a standard aspect ratio (e.g., 16:9)
@@ -286,8 +448,18 @@ export function manageLocalTournament(participants, tournamentName) {
         height = pongCanvas.clientHeight ;
         const aspect = (width / height);
 
-        adjustFOV(camera, aspect);
-        adjustCameraPosition(camera, aspect);
+        if (width <= 720){
+            camera.position.set(0, 45, 0);
+            controlButtons.style.display = "flex";
+            controlButtons2.style.display = "flex";
+        }
+        else{
+            camera.position.set(15, 35, 0);
+            controlButtons.style.display = "none";
+            controlButtons2.style.display = "none";
+            adjustFOV(camera, aspect);
+            adjustCameraPosition(camera, aspect);
+        }
 
         camera.aspect = aspect;
         camera.updateProjectionMatrix();
@@ -312,7 +484,6 @@ export function manageLocalTournament(participants, tournamentName) {
                 clearcoatRoughness: 0.25,
                 color: new THREE.Color(0xffffff),
                 ior: 1.2,
-                thickness: 10.0
             } )
         );
         plane.receiveShadow = true;
@@ -605,8 +776,6 @@ export function manageLocalTournament(participants, tournamentName) {
                 player1Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -629,8 +798,6 @@ export function manageLocalTournament(participants, tournamentName) {
                 player2Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -676,8 +843,6 @@ export function manageLocalTournament(participants, tournamentName) {
     function animate (time)
     {
         animationId = requestAnimationFrame(animate);
-
-
 
         // Update starfield
         starfield.rotation.y += 0.0009;

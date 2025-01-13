@@ -42,15 +42,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'friendSystem',
-    # 'rest_framework_simplejwt',
-    # 'django_otp',
-    # 'django_otp.plugins.otp_static',
-    # 'django_otp.plugins.otp_totp',
-    # 'django_otp.plugins.otp_email',  # <- if you want email capability.
-    # 'two_factor',
-    # 'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
-    # 'two_factor.plugins.email',  # <- if you want email capability.
-    # 'two_factor.plugins.yubikey',  # <- for yubikey capability.
 ]
 
 
@@ -87,7 +78,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8080',
     'http://localhost:8000',  # Add the port where your frontend is running if different
     'https://localhost:3000',
-    'http://ponggame:5050',
+    'http://localhost:4040',
     'http://localhost:5050',
 ]
 
@@ -101,6 +92,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://localhost:3000",
+]
 
 CORS_ALLOW_METHODS = [
     'DELETE',

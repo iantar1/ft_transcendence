@@ -1,4 +1,3 @@
-version: '3'
 
 services:
   backend:
@@ -31,11 +30,19 @@ services:
       - ./frontend:/usr/share/nginx/html
       - ./backend/media/images:/usr/share/nginx/html/media/images
 
-  blockchain:
-    build: ./blockchain
+  # blockchain:
+  #   build: ./blockchain
+  #   ports:
+  #     - "8545:8545" 
+  #   volumes:
+  #     - ./blockchain:/usr/src/app 
+
+  tictactoe:
+    container_name: tictactoe
+    image: tictactoe
+    build: ./TicTacToe
     ports:
-      - "8545:8545" 
+      - "4040:4040"
     volumes:
-      - ./blockchain:/usr/src/app 
-  # tic_tac_toc:
+      - ./TicTacToe:/app
   
