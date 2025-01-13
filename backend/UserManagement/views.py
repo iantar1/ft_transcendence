@@ -6,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .models import *
 import jwt, datetime
 from .utils import *
+import os
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 

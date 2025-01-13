@@ -81,12 +81,14 @@ function serachBar(){
         <div style="width :100%; height :100%;" >
             <input type="text" id="search-bar" placeholder="Search here..." />
             <div id="results"></div>
-            <button type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
+            <button style="background :gray;" type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
         </div>
     </div>
     `;
 }
-function profSection(name, img) {
+function profSection(name, img , bool) {
+    var type;
+    type = 'add friend';
     return `
     <style>
         /* Add your custom styles here if needed */
@@ -96,14 +98,33 @@ function profSection(name, img) {
             <img style="position: static; width: 80px; height: 80px; border-radius: 50%;" src="${img}" alt="${name}'s profile picture">
             <span>${name}</span>
         </div>
-        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
-            <button type="click" id="addfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary">Add Friend</button>
-            <button type="click" id="backtosearch" class="btn-home btn btn-secondary">Back</button>
+        <div class="newfriend" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+            <button type="click" id="addnewfriend" style="background : var(--red);" class="btn-home btn btn-secondary">${type}</button>
+            <button style="background :gray;" type="click" id="backtosearch" class="btn-home btn btn-secondary">Back</button>
         </div>
     </div>
     `;
 }
 
+function addnewFriend(){
+    
+    console.log("BEFOR ADD FRIEND");
+    const newfriend = document.getElementById('addnewfriend')
+    if (newfriend){
+        newfriend.addEventListener('click' , (e) => {
+            console.log("HANDEL ADD NEW FRIEND HERE");
+        });
+    }
+}
+
+function deleteFriend(){
+    const newfriend = document.getElementById('deletefriend')
+    if (newfriend){
+        newfriend.addEventListener('click' , (e) => {
+            console.log("HANDEL DELETE FRIEND HERE");
+        });
+    }
+}
 function slidProf(info){
     // const searchBarr = serachBar();
     // const prof = profSection();
@@ -157,8 +178,8 @@ function slidProf(info){
                     <span>${name}</span>
                 </div>
                 <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;" >
-                    <button type="click" id="addfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary " >Add Friend</button>
-                    <button type="click" id="toprof" class="btn-home btn btn-secondary " >Back</button>
+                    <button type="click" id="deletefriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary " >delete</button>
+                    <button style="background :gray;" type="click" id="toprof" class="btn-home btn btn-secondary " >Back</button>
                 </div>
             </div>
             </div>
@@ -168,7 +189,7 @@ function slidProf(info){
 }
 function slidFriend(){
     const searchBarr = serachBar();
-    const prof = profSection();
+    // const prof = profSection();
     return `
         <style>
         .logout-popup {
@@ -219,9 +240,9 @@ function slidFriend(){
 const addFriends = () => {
     const elem = document.getElementsByClassName('.img-profile')
     const popuping = slidFriend();
-    const data = [
-        {img :"/images/ah.png", status : true ,name :"ahbajaou",}
-    ]
+    // const data = [
+    //     {img :"/images/ah.png", status : true ,name :"ahbajaou",}
+    // ]
     return     elem.innerHTML = `
 
     <div  class="addfriend d-flex justify-content-center align-items-center" style="gap :10px; background:var(--dark); border-radius :5px;" >
@@ -236,6 +257,48 @@ const addFriends = () => {
     `;
 }
 
+function handleNotification(){
+    const notificationIcon = document.getElementById("notificationIcon");
+    const html = profSection();
+    notificationIcon.style.animation = "none";
+    notificationIcon.style.color = "#fff"
+    document.querySelector('.notif').addEventListener('click' , (e) => {
+            notificationIcon.style.animation = "scaleNotification 1s ease-in-out infinite";
+            notificationIcon.style.color = "var(--red)"
+
+            const allnotif = ['ahbajao' ,'ayoub' , 'hamza' , 'omry']
+            const fillnoti =  document.querySelector('#seenotification');
+            let  data = '';
+            allnotif.forEach(elem => {
+                data += `
+                     <li><a style="display:flex; justify-content:space-between;" class="dropdown-item">
+                     ${elem}
+                     <div>
+                     <i id="addhim" data-name=${elem} class="fa-regular fa-circle-check"></i>
+                     <i id="refusehim" data-name=${elem} class="fa-regular fa-circle-xmark"></i>
+                     </div>
+                     </a>
+                     </li>
+                 `;
+            })
+        fillnoti.innerHTML = data;
+        const addhim = document.querySelectorAll('#addhim')
+        addhim.forEach(elem =>{
+            elem.addEventListener('click' , (e) =>{
+                console.log("ADD HIME HERE " + elem.dataset.name);
+                
+            })
+        })
+        const refusehim = document.querySelectorAll('#refusehim')
+        refusehim.forEach(elem =>{
+            elem.addEventListener('click' , (e) =>{
+                console.log("refusehim HERE " + elem.dataset.name);
+                
+            })
+        })
+ 
+    });
+}
 class profilePage extends HTMLElement {
     statsHistory = [];
     frienSection = addFriends();
@@ -244,9 +307,12 @@ class profilePage extends HTMLElement {
         <div class="content-profile ">
                 <div class="cart-profile ">
                 <div class="info-profile" >
-                        <div style="width :8%; height :90%;display:flex; align-items: start; justify-content: center;" >
-                            <div  style="height :30px; width :30px; border-radius:50%; background:var(--red); display:flex; align-items: center; justify-content: center;" >
-                                <i style="color :#fff;margin: 0; padding: 0; position: static; vertical-align: middle;" class="fa-solid fa-bell"></i>
+                        <div style="width :30px; height :200px;display:flex; align-items: start; justify-content: center;" >
+                            <div class="dropdown notif" style="height :30px; width :30px; border-radius:50%; background:var(--dark); display:flex; align-items: center; justify-content: center; " >
+                                <i id="notificationIcon" style="color :; margin: 0; padding: 0; position: static; vertical-align: middle;" data-bs-toggle="dropdown" class=" fa-solid fa-bell"></i>
+                                <ul id="seenotification" style="overflow-y:auto; height :200px; width:200px; z-index:3000; background:var(--dark);" class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+                                    
+                                </ul>
                             </div>
                         </div>
                         <div style="height :100%; width :100%; display:flex; align-items: center; justify-content: center; flex-direction: column;" >
@@ -277,6 +343,27 @@ class profilePage extends HTMLElement {
     `;
     templatStyle = `
         <style>
+                @keyframes scaleNotification {
+                    0% {
+                        transform: scale(1); /* Initial size */
+                    }
+                    50% {
+                        transform: scale(1.2); /* Enlarged */
+                    }
+                    100% {
+                        transform: scale(1); /* Back to normal */
+                    }
+                }
+
+                #notificationIcon {
+                    animation: scaleNotification 0.5s ease-in-out infinite;
+                    color :var(--red);
+                }
+                
+                #notificationIcon.animate {
+                    animation: none;
+                    color :#fff;
+                }
             .nav-bar{
                 display :flex;
 
@@ -448,6 +535,7 @@ class profilePage extends HTMLElement {
                 height :10px;
                 border-radius :50%;
                 z-index :3000;
+                border :1px solid ;
             }
             .profsign{
                 height :32%;
@@ -484,8 +572,11 @@ class profilePage extends HTMLElement {
                         height :50px;
                     }
                     .profsign{
-                        height :50px;
+                        height :70px;
                         
+                    }
+                    .sign{
+                        left:30%;
                     }
                     .scrollable-div{
                         display :flex;
@@ -1035,7 +1126,7 @@ class profilePage extends HTMLElement {
         const popup = document.getElementById('popup');
         const popupText = document.getElementById('popup-text');
         const overlay = document.getElementById('overlay');
-    
+        //here where we add the search for no friend
         const sampleData = this.statsHistory.map(item => ({
             name: item.player,
             img: item.img
@@ -1077,7 +1168,7 @@ class profilePage extends HTMLElement {
                     const content = document.querySelector('.logout-popup-content');
                     if (content) {
                         content.innerHTML = '';
-                        content.innerHTML = profSection(name, img);
+                        content.innerHTML = profSection(name, img,false);
                     }
     
                     // Add functionality to buttons
@@ -1085,6 +1176,7 @@ class profilePage extends HTMLElement {
                         document.querySelector('.forAdd').innerHTML = slidFriend();
                         this.bindSearchBarEvents();
                     });
+                    addnewFriend();
                 }
             });
         }
@@ -1122,6 +1214,7 @@ class profilePage extends HTMLElement {
                 backToSearch.addEventListener('click', () => {
                     document.querySelector('#logoutPopup').remove(); // Close the popup
                 });
+                deleteFriend();
             });
         });
     }
@@ -1139,22 +1232,20 @@ class profilePage extends HTMLElement {
         const main = document.querySelector('.scrollable-div');
         let prof = '';
        let  index = 0;
-        this.statsHistory.forEach((info) => {
-            // index++;
-            prof += `
-                <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
-                    <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%; border: 1px solid;" src="${info.img}">
-                    <span class="sign" style="background: ${info.status};"></span>
-                    <span id="" data-name="${info.player}" data-img="${info.img}" class="forsddProf" style=""></span>
+       this.statsHistory.forEach((info) => {
+           // index++;
+           prof += `
+           <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
+           <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%;" src="${info.img}">
+           <span id="" data-name="${info.player}" data-img="${info.img}" class="forsddProf" style=""></span>
+           <span class="sign" style="background: ${info.status};"></span> 
                 </span>
             `;
-            console.log('openprof-' + index)
         });
         main.innerHTML = prof;
     }
     
     render() {
-        console.log("RANDER FUNCTION IS HERE AT THE PROFILE PAGE");
         const uuss = async () => {
             if (!getCookie('access')){
                 navigateTo('/login');
@@ -1264,6 +1355,8 @@ class profilePage extends HTMLElement {
         this.stockFriends();
         this.openProfile();
         logout();
+        handleNotification();
+        // deleteFriend();
 
     }
 }

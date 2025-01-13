@@ -84,17 +84,35 @@ def get_code(request):
     response = requests.post(OUUTH_TOKEN_URI, data=plyload)
 
     access_token = response.json().get('access_token')
-    print(f"access_token: {access_token}", flush=True)
+    print(f"access_token hhhhshshshhs : {access_token}", flush=True)
     userInfoJson = getUserInfo(access_token)
 
     user = createUpdateUser(userInfoJson.json())
 
-    access_token = create_access_token(user.id)
-    refresh_token = create_refresh_token(user.id)
+
+    access = create_access_token(user.id)
+    refresh = create_refresh_token(user.id)
 
     response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
-    response.set_cookie(key="access", value=access_token, httponly=False)
-    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+    # response.set_cookie(key="access", value=access_token, httponly=False)
+    # response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+
+    response.set_cookie(
+        key="access", 
+        value=access, 
+        httponly=False, 
+        secure=True,  # Requires HTTPS
+        samesite="None"  # Allows cross-site requests
+    )
+    response.set_cookie(
+        key="refresh", 
+        value=refresh, 
+        httponly=True, 
+        secure=True, 
+        samesite="None"
+    )
+
+
     return response
 
 

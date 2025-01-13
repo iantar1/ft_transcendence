@@ -44,9 +44,8 @@ class loginPage extends HTMLElement {
                         <span class="bar"></span>
                         <label>Password</label>
                     </div>
-                    <span class="otp-error" ></span>
-       
-                    <button id="register" class="form-btn"  type="click" data-link >Register</button>
+                    <span style="color:var(--red); font-family: serif; font-size:16px;" class="regi-error" ></span>
+                    <button id="register" class="form-btn"  type="button" >Register</button>
                 </form>
             `;
     login = `
@@ -421,12 +420,14 @@ class loginPage extends HTMLElement {
                         // agent: new https.Agent({ rejectUnauthorized: false })
                     })
                     if (res.ok) {
-                            
+                            navigateTo('/login')
                     } else {
-                                        
+                        console.log(document.querySelector('.regi-error'))
+                        document.querySelector('.regi-error').textContent = 'You have somthing wrong please check again';
                     }
                 } catch(error) {
-                    console.log("Error verifying OTP:", error);
+           
+                    console.log("Error register:", error);
                 }
             })
 
@@ -482,18 +483,7 @@ class loginPage extends HTMLElement {
                                     console.log('--- USER DATA VERIFIED SUCCESSFULLY ---');
                                     // // Add success logic, like redirecting to home page
                                     const data = await res.json();
-                                    // randerPage(userData);
-                                    // console.log("----here is res");
-                                    // console.log(data.access);
-                                    
-                                    // document.cookie = `access=${data.access}`;
-                                    // console.log(data);
-                                    // setData(data);
                                     readData.setData(data);
-                                    // document.cookie = data["access"];
-                                    // window.location.href = '/home'; 
-                                    // e.target.href = '/home';
-                                    // rander('/home');
                                     navigateTo('/home')
     
                                 } else {
