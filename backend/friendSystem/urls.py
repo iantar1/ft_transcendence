@@ -6,6 +6,10 @@ from .views import *
 
 urlpatterns = [
     path('', FriendShipView.as_view()),
+    path('userFreinds/', UserFriends.as_view()),
+    path('notFreinds/', NotUserFriends.as_view()),
+    
+    
 ]
 
 

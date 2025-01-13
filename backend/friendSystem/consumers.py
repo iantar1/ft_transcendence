@@ -1,6 +1,6 @@
 from channels.generic.websocket import WebsocketConsumer
 import json
-from UserManagement.views import friendRequestHandling
+# from UserManagement.views import friendRequestHandling
 from UserManagement.models import User
 from UserManagement.serializers import UserSerializer
 from rest_framework.exceptions import AuthenticationFailed
@@ -8,6 +8,7 @@ import jwt
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import requests
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 
 user_channels = {}
@@ -104,6 +105,25 @@ class Notifications(WebsocketConsumer):
 # a user receives a friend request 
 # 
 
+class Notifications(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+        print('connect', flush=True)
+
+
+    async def disconnect(self, code):
+        print("disconnect")
+    
+    async def receive(self, text_data=None, bytes_data=None):
+        print(f"Message received: {text_data}")
+        await self.send()
+
+    async def send(self, text_data=None, bytes_data=None, close=False):
+        print("send")
+        # text_data = json.dumps("hello from backend")
+        text_data = "hello from backend"
+        text_data = {"":"", "":"", "":""}
+        return super().send(text_data, bytes_data, close)
 
 
 # Redis is used as a storage layer

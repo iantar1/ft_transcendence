@@ -6,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .models import *
 import jwt, datetime
 from .utils import *
+import os
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
@@ -168,8 +169,9 @@ class UserView(APIView):
         if user:
             user.delete()
             return Response({"detail": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-        
+    
         raise AuthenticationFailed('User not found')
+    
     
     
 class LogoutView(APIView):
@@ -228,8 +230,9 @@ class ChangePasswordView(APIView):
             raise AuthenticationFailed("incorrect password")
         if new_password1 != new_password2:
             return Response("Password1 is different from Password2", status=400)
+        
         user.set_password(new_password1)
-        user.save
+        user.save()
         return Response({"seccess":"the password changed successfuly"}, status=200)
 
 
@@ -251,6 +254,43 @@ class ChangeBioImage(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class ChangeImage(APIView):
+
+    def post(self, request):
+        token = request.COOKIES.get('access')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        try:
+            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
+
+        print(f"data: ", request.data, flush=True)
+        serializer = ImageSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request):
+        token = request.COOKIES.get('access')
+    
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        try:
+            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated')
+        
+        user = User.objects.filter(id=playload['id']).first()
+        user.delete_image()
+
 
 
 class ChangeBio(APIView):
@@ -315,9 +355,13 @@ class MatchHistoryView(APIView):
             raise AuthenticationFailed('00Unauthenticated')
         #opponenet username
         try:
+            game_id = request.data['game_id']
+            if MatchHistory.objects.filter(game_id=game_id).exists():
+                return Response("The match history stored successfully", status=200)
             opponent_username = request.data['opponent_username']
             opponent_score = request.data['opponent_score']
             user_score = request.data['user_score']
+            game_type = request.data['game_type']
 
         except:
             raise ValidationError({'field error': 'you missed some fields'})
@@ -339,7 +383,9 @@ class MatchHistoryView(APIView):
             user2=user2,
             user1_score=user_score,
             user2_score=opponent_score,
-            winner=winner
+            winner=winner,
+            game_type=game_type,
+            game_id=game_id
         )
         history.save()
         user.score += user_score
@@ -371,11 +417,26 @@ class   UsersRanking(APIView):
         serializer = UsersRankingSerializer(users, many=True)
         return Response(serializer.data, status=200)
 
-        
-def friendRequestHandling(data):
-    print("data received: in the view: ", data, flush=True)
-
-
+class   OtpActivate(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        data = request.data['isactive']
+        if data == True:
+            message = "OTP has been deactivated"
+            user.use_otp = True
+        else:
+            message = "OTP has been activated"
+            user.use_otp = True
+        return Response({"message":message}, status=200)
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        return Response(user.use_otp, status=200)
 # def checkIfTheRelationExsit(user1, user2, action):
 #     # Check if a friendship exists between the two users in either direction
 #     if  Friendship.objects.filter(from_user=user1, to_user=user2, status=action).exists():

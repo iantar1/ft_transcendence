@@ -219,7 +219,7 @@ export function tournamentBracket(
     function createTeam(name, score = null, isWinner = false) {
         const team = document.createElement('div');
         team.className = `team ${isWinner ? 'winner' : ''}`;
-        team.innerHTML = `${name} ${score !== null ? `<span>Score: ${score}</span>` : ''}`;
+        team.innerHTML = `${shortenText(name, 10)} ${score !== null ? `<span>Score: ${score}</span>` : ''}`;
         return team;
     }
 
@@ -263,7 +263,7 @@ export function tournamentBracket(
 
     const title = document.createElement('h2');
     title.className = 'bracket-title';
-    title.innerHTML = `<span style="color : var(--red)">${name}</span> Tournament`;
+    title.innerHTML = `<span style="color : var(--red);">${shortenText(name, 10)}</span> Tournament`;
 
     const content = document.createElement('div');
     content.className = 'bracket-content';
@@ -293,9 +293,9 @@ export function tournamentBracket(
         CurrentRound.innerHTML = `
             <h3>Round ${currentMatch}</h3>
             <div class="match">
-                <span class="pl">${matches[currentMatch - 1].player1}</span>
+                <span class="pl">${shortenText(matches[currentMatch - 1].player1, 10)}</span>
                 <span class="vs">VS</span>
-                <span class="pl">${matches[currentMatch - 1].player2}</span>
+                <span class="pl">${shortenText(matches[currentMatch - 1].player2, 10)}</span>
             </div>
         `;
     }
@@ -308,7 +308,7 @@ export function tournamentBracket(
         round1.appendChild(createMatch(matches[0], 'up', currentMatch === 1));
         round1.appendChild(createMatch(matches[1], 'down', currentMatch === 2));
         round2.appendChild(createMatch(matches[2], 'final', currentMatch === 3));
-        winner.textContent = matches[2].winner ? matches[2].winner : 'Winner';
+        winner.textContent = shortenText((matches[2].winner ? matches[2].winner : 'Winner'), 10);
         console.log(matches[2].winner);
     }
 
@@ -358,6 +358,14 @@ export function tournamentBracket(
         ws.close();
         render(menu(), document.body.querySelector('game-pong').shadowRoot.querySelector('.game-pong'));
     });
+
+    function shortenText(text, maxLength) {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength) + '...';
+        } else {
+            return text;
+        }
+    }
 
     content.appendChild(round1);
     content.appendChild(round2);

@@ -2,7 +2,6 @@ import { render  } from "./render.js";
 import { GameOver } from "./gameOver.js";
 
 
-
 function gameCanvas() {
     const canvas = document.createElement('canvas');
     
@@ -16,6 +15,8 @@ function createcountdown() {
 
     return countdown;
 }
+
+
 
 export function ai_mode()
 {
@@ -49,7 +50,119 @@ export function ai_mode()
             width: 100%;
             height: 100%;
         }
+
+
+
+
+
+        .controls-container {
+            position: fixed;
+            bottom: 8%;
+            left: 0;
+            right: 0;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            z-index: 1000;
+        }
+
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #00f7ff;
+            background: linear-gradient(135deg, #2b0150, #000428);
+            box-shadow: 0 0 20px #00f7ff,
+                        inset 0 0 15px rgba(0, 247, 255, 0.5);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 247, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-btn:active::before {
+            opacity: 1;
+        }
+        .control-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 30px #00f7ff,
+                        inset 0 0 20px rgba(0, 247, 255, 0.7);
+        }   
+
+        .arrow {
+            color: #00f7ff;
+            font-size: 3rem;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            user-select: none;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 5px #00f7ff);
+        }
+
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+      
+        .controls-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: -1;
+        }
     `;
+
+    const controlButtons = document.createElement('div');
+    controlButtons.className = 'controls-container';
+    controlButtons.innerHTML = `
+        <button class="control-btn left">
+            <div class="arrow">←</div>
+        </button>
+        <button class="control-btn right">
+            <div class="arrow">→</div>
+        </button>
+    `;
+    const leftBtn = controlButtons.querySelector('.control-btn.left');
+    const rightBtn = controlButtons.querySelector('.control-btn.right');
+
+
+
+
+
+    // Mouse events
+    leftBtn.addEventListener('mousedown', () => handleMoveStart('left'));
+    rightBtn.addEventListener('mousedown', () => handleMoveStart('right')); 
+
+    document.addEventListener('touchend', handleMoveEnd);
+    document.addEventListener('mouseup', handleMoveEnd);
+
 
     const gamePage = document.body.querySelector('game-pong');
 
@@ -62,6 +175,7 @@ export function ai_mode()
     pongCanvas.appendChild(style);
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
+    pongCanvas.appendChild(controlButtons)
     
     const ai_URL = 'wss://'+window.location.host+'/ws/ai/';
     let wsOpen = false;
@@ -156,7 +270,6 @@ export function ai_mode()
     };
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        // console.table('data', data)
         if (data.type === "start") {
 
             table_config = data.table;
@@ -209,6 +322,8 @@ export function ai_mode()
         console.log("Connection Error for WebSocket!");
     }
 
+
+
     document.addEventListener("keydown", movePaddle);
     document.addEventListener("keyup", stopPaddle);
     function movePaddle(e)
@@ -224,9 +339,28 @@ export function ai_mode()
     }
 
 
+    // Touch events
+    leftBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('left');
+    });
+  
+    rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleMoveStart('right');
+    });
 
-
-
+    function handleMoveStart(dir) {
+        if(dir === 'left')
+            playerDirection = -1;
+        if(dir === 'right')
+            playerDirection = 1;
+    }
+  
+    function handleMoveEnd() {
+        playerDirection = 0;
+        console.log('Stopped moving');
+    }
 
 
 
@@ -260,7 +394,7 @@ export function ai_mode()
             camera.fov = baseFOV + (aspectRatioThreshold - aspect) * 5;
         }
     
-        // Ensure the FOV remains within a reasonable range
+        // Ensure the FOV recontrolButtonss within a reasonable range
         camera.fov = Math.max(75, Math.min(camera.fov, 80)); // Clamping FOV between 45 and 75
     
         // Update the projection matrix with the new FOV
@@ -271,6 +405,14 @@ export function ai_mode()
         width = pongCanvas.clientWidth ;
         height = pongCanvas.clientHeight ;
         const aspect = (width / height);
+
+        console.log("width :: ", width)
+        
+        if(width <= 720)
+            controlButtons.style.display = 'flex';
+        else
+            controlButtons.style.display = 'none';
+
 
         adjustFOV(camera, aspect);
         adjustCameraPosition(camera, aspect);
@@ -319,7 +461,6 @@ export function ai_mode()
                 clearcoatRoughness: 0.25,
                 color: new THREE.Color(0xffffff),
                 ior: 1.2,
-                thickness: 10.0
             } )
         );
         plane.receiveShadow = true;
@@ -610,8 +751,6 @@ export function ai_mode()
                 player1Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -634,8 +773,6 @@ export function ai_mode()
                 player2Score,
                 new THREE.MeshPhongMaterial({
                     color: 0xffffff,
-                    metalness: 0.5,
-                    roughness: 0.5,
                     emissive: 0x444444
                 })
             );
@@ -737,6 +874,7 @@ export function ai_mode()
 
 
     function startCountdown(duration, onComplete) {
+        resizeCanvas();
         countdownElement.style.display = 'flex'; // Hide the countdown element
 
         let timeLeft = duration;

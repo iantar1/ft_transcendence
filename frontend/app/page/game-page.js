@@ -1,5 +1,5 @@
 
-import {fetchUserData , getCookie} from './readData.js';
+import {fetchUserData , getCookie ,logout} from './readData.js';
 
 import { navigateTo } from '../routing.js';
 import { submitTournament } from '../pong/js/submitTournament.js';
@@ -393,11 +393,11 @@ class gamePage extends HTMLElement {
             <style>
             ${this.navar}
             #content{
-                    display :flex;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                    border-radius :5px;
+                display :flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                border-radius :5px;
             }
             pongxo-page{
                 width :100%;
@@ -424,8 +424,8 @@ class gamePage extends HTMLElement {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 250px;
-            height: 300px;
+            width: 14rem;
+            height: 17rem;
             margin: 0 15px;
             background:  linear-gradient(0deg, 
             rgb(4, 28,68, 1) 100%, 
@@ -442,8 +442,11 @@ class gamePage extends HTMLElement {
             background:rgb(0 0 0 / 0.5);
             border-radius: 5px;
         }
-        @media (min-width: 320px) and (max-width: 1024px) {
+        @media (min-width: 320px) and (max-width: 720px) {
             pongxo-page{
+                flex-direction: column;
+            }
+            .games{
                 flex-direction: column;
             }
           }
@@ -457,7 +460,7 @@ class gamePage extends HTMLElement {
                             Connect Wallet
                         </button>
                 </div>
-            <div style="height:90%; display:flex;flex-direction: row; justify-content: center;align-items: center;" >
+            <div class="games" style="height:90%; gap: 10px; display:flex; justify-content: center;align-items: center;" >
                 <div class="scroll-item">
                 <button id="topong" style="background:var(--red); border :none;" class="btn-home btn btn-secondary " >Pong</button>
                 <div class="track-items" >
@@ -495,7 +498,7 @@ class gamePage extends HTMLElement {
         });
         document.getElementById('toxo').addEventListener('click' , e => {
             const content = document.getElementById('content');
-            content.innerHTML = '<game-tictac></game-tictac>';
+            content.innerHTML = '<game-tictac width="100%" height="100%"></game-tictac>';
         });
     }
     connectedCallback(){
@@ -504,6 +507,7 @@ class gamePage extends HTMLElement {
             navigateTo('/login');
         }
         this.rander();
+        logout();
     }
 }
 

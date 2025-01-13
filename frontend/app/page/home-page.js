@@ -1,9 +1,9 @@
 
 // console.log("--somthing is cooking");
 
-import {readData , getCookie} from './readData.js';
+import {readData , getCookie ,logout} from './readData.js';
 
-import {fetchUserData} from './readData.js';
+import {fetchUserData ,fetchRankData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
 import { navigateTo } from '../routing.js';
 
@@ -22,6 +22,9 @@ import { betweenPage } from '../routing.js';
     
 //     setTimeout(() => loader.hide(), 3000);
 //   });
+
+var notificationSocket;
+
 function toGame(){
     const page = document.querySelectorAll('#togame');
     page.forEach(element =>{
@@ -367,23 +370,35 @@ class homePage extends HTMLElement {
         </div>
     </div>
             </div>
-<div class="static-home">
-    <table class="nav-static">
-        <thead>
-            <tr>
-                <th>Player</th>
-                <th>Level</th>
-                <th>Game</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody class="table-content"></tbody>
-    </table>
-</div>
-
-<style>
-
-</style>
+    <div class="static-home" style="overflow-y:auto; height:90%;" >
+        <table class="nav-static">
+            <thead style="position: sticky; top: 0; background:var(--dark);" >
+                <tr>
+                    <th>Player</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody class="table-content"></tbody>
+        </table>
+    </div>
+        <style>
+            .static-home::-webkit-scrollbar {
+                width: 6px; /* Narrow scrollbar for a mobile-like feel */
+            }
+    
+            .static-home::-webkit-scrollbar-thumb {
+                background: var(--red); /* Thumb color */
+                border-radius: 10px; /* Rounded thumb for a smooth look */
+            }
+    
+            .static-home::-webkit-scrollbar-thumb:hover {
+                background: #fff; /* Darker color on hover */
+            }
+    
+            .static-home::-webkit-scrollbar-track {
+                background: transparent; /* Transparent track for minimalistic style */
+            }
+        </style>
 
             `;
         navBar = `
@@ -448,24 +463,9 @@ class homePage extends HTMLElement {
                 navigateTo('/login');
             }
             this.info = await fetchUserData();
-            // if(!this.info.id){
-            //     navigateTo('/login');
-            // }
+
             document.getElementById('username').textContent = "," + this.info.username
-            // var data = [
-            //     [0, 4, "Good night "], 
-            //     [5, 11, "Good morning "],          //Store messages in an array
-            //     [12, 17, "Good afternoon "],
-            //     [18, 24, "Good night "]
-            // ],
-            //     hr = new Date().getHours();
-            
-            // for(var i = 0; i < data.length; i++){
-            //     if(hr >= data[i][0] && hr <= data[i][1]){
-            //         document.getElementById('curentTime').textContent = data[i][2];
-            //         console.log(data[i][2]);
-            //     }
-            // }
+
             const getTimeOfDay = () => {
                 const hour = new Date().getHours();
                 if (hour < 12) return 'Good morning';
@@ -478,6 +478,17 @@ class homePage extends HTMLElement {
             // const usernameSpan = this.shadowRoot.getElementById('username');
         }
         uuss();
+        window.notificationSocket = new WebSocket('wss://'+window.location.host+'/wss/notif/');
+        window.notificationSocket.onopen = (event) => {
+            console.log("notification Connetcted ...");
+        };
+        window.notificationSocket.onmessage = (message) => {
+            data = JSON.parse(message);
+            console.log(data);
+        };
+        window.notificationSocket.onerror = (e) => {
+            console.log('error :', e);
+        };
         this.innerHTML = `
             <style>
             ${this.style}
@@ -489,33 +500,25 @@ class homePage extends HTMLElement {
                 ${this.templateHome}
             `;
     }
-    staticHome(){
-         this.matchHistory = [
-            { player: "Jam Josh", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Justina Kap", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Chris Colt", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"}
-          ];
-          const cartHome = document.querySelector('.table-content');
-          let cart = '';
+    async staticHome() {
+        this.matchHistory = await fetchRankData();
+        console.table(this.matchHistory)
+        const cartHome = document.querySelector('.table-content');
+        let cart = '';
         this.matchHistory.forEach(element => {
             cart += `
-                <tr>
+                <tr >
                     <td>
-                        <img class="Player-img" src=${element.img}>
-                        ${element.player}
+                        <img class="Player-img" src="${element.image}" >
+                        ${element.username}
                     </td>
-                    <td>${element.lvl}</td>
-                    <td>${element.Exp}</td>
                     <td>${element.score}</td>
                 </tr>
             `;
-            });
+        });
         cartHome.innerHTML = cart;
     }
+    
     async getData(){
         // const data = fetchUserMatchHistory();
         // const data = fetchUserData('match_history');
@@ -527,6 +530,7 @@ class homePage extends HTMLElement {
         // this.getData();
         this.staticHome();
         toGame();
+        logout();
 
     }
 }

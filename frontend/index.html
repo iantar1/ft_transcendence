@@ -57,13 +57,13 @@
     <a id="home" href="/home" data-link class="fa-solid fa-house"> </a>
     <a id="prof" href="/prof" data-link  class="fa-solid fa-user"></a>
     <a id="game" href="/game" data-link class="fa-solid fa-gamepad"></a>
-      <div class="nav-02">
+      <div class="nav-02" id="navmain">
         <a id="setting" href="/setting" data-link class="fa-solid fa-gear"></a>
-        <a id="logout" type="click" href="/logout" id="logoutButton" data-link class="fa-solid fa-right-from-bracket"></a>
-        </div>
+        <!-- <a id="logout" type="click" id="logoutButton" class="fa-solid fa-right-from-bracket"></a> -->
+        <span id="spano" type="click" ><i class="fa-solid fa-right-from-bracket"></i></span>
+      </div>
     </nav>
     <div id="content">
-      
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script type="module" src="/app/page/getstarted.js"></script>
@@ -71,11 +71,42 @@
     <script type="module" src="/app/page/home-page.js"></script>
     <script type="module" src="/app/page/profile-page.js"></script>
     <script type="module" src="/app/page/setting-page.js"></script>
+    <script type="module" src="/app/page/not-found.js"></script>
     <script type="module" src="/app/page/logout.js"></script>
     <script type="module" src="/app/page/login.js"></script>
     <script type="module" src='./app/pong/js/gamePage.js'></script>
     <script type="module" src='/app/TicTacToe/tix-taco.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+    <!-- <script>
+      // Replace 'ws://localhost:8000/ws/ticwinlose/' with your WebSocket server URL
+      const socketUrl = 'wss://localhost:8000/wss/notif/';
+      
+      // Create a new WebSocket connection
+      window.windowsocket = new WebSocket(socketUrl);
 
+      // Event handler for successful connection
+      socket.onopen = (event) => {
+          console.log(`connected ${event}`);
+      };
+
+      // Event handler for connection failure or errors
+      socket.onerror = (error) => {
+          console.log('WebSocket error: ', error);
+      };
+
+      socket.onmessage = (message) => {
+          console.log(`message: ${message.data}`)
+      };
+
+      socket.addEventListener("open", (event) => {
+          socket.send("hello from frontend");
+      });
+      // Optional: Event handler for when the connection is closed
+      socket.onclose = (event) => {
+          if (!event.wasClean) {
+              console.log("Connection closed unexpectedly");
+          }
+      };
+  </script> -->
 </body>
 </html>
