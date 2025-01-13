@@ -1,21 +1,22 @@
 from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 
 
-class   Notifications(WebsocketConsumer):
-    def connect(self):
-        self.accept()
-        print('connect')
+class Notifications(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+        print('connect', flush=True)
 
 
-    def disconnect(self, code):
+    async def disconnect(self, code):
         print("disconnect")
     
-    def receive(self, text_data=None, bytes_data=None):
+    async def receive(self, text_data=None, bytes_data=None):
         print(f"Message received: {text_data}")
-        self.send()
+        await self.send()
 
-    def send(self, text_data=None, bytes_data=None, close=False):
+    async def send(self, text_data=None, bytes_data=None, close=False):
         print("send")
         # text_data = json.dumps("hello from backend")
         text_data = "hello from backend"
