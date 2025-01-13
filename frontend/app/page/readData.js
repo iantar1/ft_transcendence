@@ -39,7 +39,7 @@ export const readData = (function() {
 export async function fetchUserData() {
     try {
 
-        const res = await fetch("https://localhost:3000/user/", {
+        const res = await fetch("https://"+window.location.host+"/user/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ export async function fetchUserData() {
 export async function fetchMatchData() {
     try {
 
-        const res = await fetch("https://localhost:3000/match_history/", {
+        const res = await fetch("https://"+window.location.host+"/match_history/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export async function fetchMatchData() {
 export async function fetchStatsData() {
     try {
 
-        const res = await fetch("https://localhost:3000/stats/", {
+        const res = await fetch("https://"+window.location.host+"/stats/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export async function logoutUser(user) {
     
     const data = { username: user };
     try{
-        const res = await fetch("https://localhost:3000/logout/", {
+        const res = await fetch("https://"+window.location.host+"/logout/", {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -149,7 +149,7 @@ export async function postImage(alias,redir){
     // }
     console.log(JSON.stringify(alias))
     try{
-        const res = await fetch("https://localhost:3000/" + redir + "/", {
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
             method: 'POST', 
             credentials: 'include',
             headers: {
@@ -171,7 +171,7 @@ export async function postImage(alias,redir){
 
 export async function postMethode(alias,redir, method){
     try{
-        const res = await fetch("https://localhost:3000/" + redir + "/", {
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
             method: method, 
             credentials: 'include',
             headers: {
@@ -200,7 +200,7 @@ export async function postInfo(alias,redir){
     const fromData = new FormData(form);
     const data = Object.fromEntries(fromData);
     try{
-        const res = await fetch(`https://localhost:3000/api/${redir}`, {
+        const res = await fetch(`https://"+window.location.host+"/api/${redir}`, {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',

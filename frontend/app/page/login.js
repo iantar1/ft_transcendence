@@ -7,7 +7,7 @@ import {readData} from './readData.js';
 import {getCookie} from './readData.js';
 
 
-const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0ebdda4b19ab43b23646a570a1cca0290462151e294cd51cfbd5a82c742adc8d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code";
+const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-44701ed50de1251b7881036e7c955b632ef27d9ad189012806bf5e16dc67c249&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code";
 const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";
 
 class loginPage extends HTMLElement {
@@ -410,7 +410,7 @@ class loginPage extends HTMLElement {
                 const fromData = new FormData(form);
                 const data = Object.fromEntries(fromData);
                 try{
-                    const res = await fetch("https://localhost:3000/api/register/", {
+                    const res = await fetch("https://"+window.location.host+"/api/register/", {
                         method: 'POST', 
                         headers: {
                             'Content-Type': 'application/json',
@@ -449,7 +449,7 @@ class loginPage extends HTMLElement {
                 // Make the fetch call to verify OTP
                 try {
                     console.log(data);
-                    const res =  await fetch("https://localhost:3000/api/verify_otp/", {
+                    const res =  await fetch("https://"+window.location.host+"/api/verify_otp/", {
                             method: 'POST', 
                             headers: {
                                 'Content-Type': 'application/json',
@@ -465,7 +465,7 @@ class loginPage extends HTMLElement {
                         console.log('--- OTP VERIFIED SUCCESSFULLY ---');
 
                         try{
-                            const res = await fetch("https://localhost:3000/api/user/", {
+                            const res = await fetch("https://"+window.location.host+"/api/user/", {
                                 method: 'GET', 
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -531,7 +531,7 @@ class loginPage extends HTMLElement {
                     const arr = ['ahe','ceb',1337];
                     readData.setData(arr);
                     try{
-                        const response = await fetch("https://localhost:3000/api/login/", {
+                        const response = await fetch("https://"+window.location.host+"/api/login/", {
                                 method: 'POST', 
                                 headers: {
                                     'Content-Type': 'application/json',

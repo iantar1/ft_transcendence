@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-zyz*f+#nuu@%qz(&jvc!+)$jwdrl#am@px=mc#*l)0ctm@)_&3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '*'
+    ]
 
 
 # Application definition
@@ -70,24 +72,25 @@ ASGI_APPLICATION = "config.asgi.application"
 # }
 
 SESSION_COOKIE_SAMESITE = None
-
-CORS_ORIGIN_ALLOW_ALL = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
     'http://localhost:8000',  # Add the port where your frontend is running if different
     'https://localhost:3000',
+    'https://10.14.4.4:3000',
     'http://localhost:4040',
     'http://localhost:5050',
 ]
 
+
 CORS_ALLOW_CREDENTIALS = True # make sure this is set to True 
-# SESSION_COOKIE_DOMAIN = 'http://localhost:8000'
 
 
 SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = False  # For local development
+SESSION_COOKIE_SECURE = True  # For local development
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 
@@ -95,6 +98,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://localhost:3000",
+    "https://10.14.4.4:3000",
 ]
 
 CORS_ALLOW_METHODS = [

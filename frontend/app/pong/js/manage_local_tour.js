@@ -153,6 +153,10 @@ export function manageLocalTournament(participants, tournamentName) {
     pongCanvas.appendChild(style);
     pongCanvas.appendChild(canvas);
     pongCanvas.appendChild(countdownElement);
+    pongCanvas.appendChild(controlButtons);
+    pongCanvas.appendChild(controlButtons2);
+
+
 
     let wsOpen = false;
     let ball_config, ball;
@@ -311,8 +315,6 @@ export function manageLocalTournament(participants, tournamentName) {
             ball.position.x = data.ball.x;
             ball.position.z = data.ball.z;
             score = data.score;
-            shakeCamera(camera);
-            // shakeCamera(camera2);
             scoreManager.addPoint(score);
         }
         if (data.type === "game_over") {

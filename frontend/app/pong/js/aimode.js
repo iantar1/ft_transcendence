@@ -2,7 +2,6 @@ import { render  } from "./render.js";
 import { GameOver } from "./gameOver.js";
 
 
-
 function gameCanvas() {
     const canvas = document.createElement('canvas');
     
