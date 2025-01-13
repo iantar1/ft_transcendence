@@ -1,7 +1,7 @@
 
 // console.log("--somthing is cooking");
 
-import {readData , getCookie} from './readData.js';
+import {readData , getCookie ,logout} from './readData.js';
 
 import {fetchUserData ,fetchRankData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
@@ -531,6 +531,7 @@ class homePage extends HTMLElement {
         // this.getData();
         this.staticHome();
         toGame();
+        logout();
 
     }
 }

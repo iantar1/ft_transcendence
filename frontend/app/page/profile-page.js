@@ -1,6 +1,6 @@
 
 
-import {fetchUserData , fetchMatchData, getCookie , fetchStatsData} from './readData.js';
+import {fetchUserData , fetchMatchData, getCookie ,logout, fetchStatsData} from './readData.js';
 
 // import {fetchMatchData} from './readData.js';
 
@@ -1263,6 +1263,7 @@ class profilePage extends HTMLElement {
         this.slidFriend();
         this.stockFriends();
         this.openProfile();
+        logout();
 
     }
 }

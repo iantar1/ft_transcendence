@@ -2,6 +2,18 @@
 import { navigateTo } from "../routing.js";
 
 // navigateTo('/login');
+export function logout(){
+    const content = document.getElementById('navmain');
+    const log = content.querySelector('#spano');
+    log.addEventListener('click' ,( e )=> {
+        const main = document.getElementById('content')
+        const popup = document.createElement('span')
+        popup.className = 'popuplogout';
+        main.appendChild(popup)
+        const poping = document.querySelector('.popuplogout')
+        poping.innerHTML = `<logout-page></logout-page>`;
+    });
+}
 
 export function getCookie(name) {
     const cookies = document.cookie.split('; '); // Split by '; ' to get individual key-value pairs

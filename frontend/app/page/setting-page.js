@@ -1,5 +1,5 @@
 
-import {fetchUserData , getCookie ,postImage,postMethode} from './readData.js';
+import {fetchUserData , getCookie ,logout,postImage,postMethode} from './readData.js';
 
 import { navigateTo } from '../routing.js';
 
@@ -874,6 +874,7 @@ class settingPage extends HTMLElement {
         //     navigateTo('/login');
         // }
         this.render();
+        logout()
     }
 }
 
