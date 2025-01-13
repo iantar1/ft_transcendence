@@ -3,7 +3,7 @@
 
 import {readData , getCookie} from './readData.js';
 
-import {fetchUserData} from './readData.js';
+import {fetchUserData ,fetchRankData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
 import { navigateTo } from '../routing.js';
 
@@ -367,23 +367,35 @@ class homePage extends HTMLElement {
         </div>
     </div>
             </div>
-<div class="static-home">
-    <table class="nav-static">
-        <thead>
-            <tr>
-                <th>Player</th>
-                <th>Level</th>
-                <th>Game</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody class="table-content"></tbody>
-    </table>
-</div>
-
-<style>
-
-</style>
+    <div class="static-home" style="overflow-y:auto; height:90%;" >
+        <table class="nav-static">
+            <thead style="position: sticky; top: 0; background:var(--dark);" >
+                <tr>
+                    <th>Player</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody class="table-content"></tbody>
+        </table>
+    </div>
+        <style>
+            .static-home::-webkit-scrollbar {
+                width: 6px; /* Narrow scrollbar for a mobile-like feel */
+            }
+    
+            .static-home::-webkit-scrollbar-thumb {
+                background: var(--red); /* Thumb color */
+                border-radius: 10px; /* Rounded thumb for a smooth look */
+            }
+    
+            .static-home::-webkit-scrollbar-thumb:hover {
+                background: #fff; /* Darker color on hover */
+            }
+    
+            .static-home::-webkit-scrollbar-track {
+                background: transparent; /* Transparent track for minimalistic style */
+            }
+        </style>
 
             `;
         navBar = `
@@ -489,33 +501,25 @@ class homePage extends HTMLElement {
                 ${this.templateHome}
             `;
     }
-    staticHome(){
-         this.matchHistory = [
-            { player: "Jam Josh", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Justina Kap", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Chris Colt", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"},
-            { player: "Jane Doe", lvl: "1337", img: "../images/prof.jpeg", Exp: "1337",score: "25"}
-          ];
-          const cartHome = document.querySelector('.table-content');
-          let cart = '';
+    async staticHome() {
+        this.matchHistory = await fetchRankData();
+        console.table(this.matchHistory)
+        const cartHome = document.querySelector('.table-content');
+        let cart = '';
         this.matchHistory.forEach(element => {
             cart += `
                 <tr>
                     <td>
-                        <img class="Player-img" src=${element.img}>
-                        ${element.player}
+                        <img class="Player-img" src="${element.image}" >
+                        ${element.username}
                     </td>
-                    <td>${element.lvl}</td>
-                    <td>${element.Exp}</td>
                     <td>${element.score}</td>
                 </tr>
             `;
-            });
+        });
         cartHome.innerHTML = cart;
     }
+    
     async getData(){
         // const data = fetchUserMatchHistory();
         // const data = fetchUserData('match_history');

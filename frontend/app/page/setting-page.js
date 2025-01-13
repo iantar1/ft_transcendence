@@ -345,11 +345,13 @@ class settingPage extends HTMLElement {
         <div class="formProf d-flex flex-column" >
             <form >
                 <label for="fname">Old Password</label><br><br>
-                <input type="text"  class="pass1" name="crrent_password1" required><br>
+                <input type="password"  class="pass1" name="crrent_password1" required><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="pass2" name="new_password1" required ><br>
+                <input type="password"  class="pass2" name="new_password1" required ><br>
                 <label for="fname">New Password</label><br><br>
-                <input type="text"  class="pass3" name="new_password" required><br><br>
+                <input type="password"  class="pass3" name="new_password" required><br><br>
+                <span id="error" style="color :gray; display:none; text-aling:center;font-size:16px; font-family: sans-serif;" >change password fail</span>
+                <br>
                 <input style="background : var(--red);" type="submit" value="Submit" id="postData" class="btn-home fiter btn btn-secondary" >
             </form>
             </div>
@@ -559,16 +561,20 @@ class settingPage extends HTMLElement {
             const pass1 = document.querySelector('.pass1').value;
             const pass2 = document.querySelector('.pass2').value;
             const pass3 = document.querySelector('.pass3').value;
-            const formData = {
-                crrent_password : pass1,
-                new_password1 : pass2,
-                new_password2 : pass3,
+            if (pass2 != pass3){
+                document.getElementById('error').style.display = "block"
+            }else{
+                const formData = {
+                    crrent_password : pass1,
+                    new_password1 : pass2,
+                    new_password2 : pass3,
+                }
+                // new FormData();
+                // formData.append('crrent_password1', pass1);
+                // formData.append('new_password1', pass2);
+                // formData.append('new_password2', pass3);
+                await postMethode(formData , 'change_password'); 
             }
-            // new FormData();
-            // formData.append('crrent_password1', pass1);
-            // formData.append('new_password1', pass2);
-            // formData.append('new_password2', pass3);
-            await postMethode(formData , 'change_password'); 
     });
 }
     render() {
@@ -657,6 +663,7 @@ class settingPage extends HTMLElement {
                 .formProf input{
                      width :100%;
                      height :12%;
+                     padding :5px;
                     background:rgb(0 0 0 / 0.5);               
                 }
                 .humbergr-bar{
