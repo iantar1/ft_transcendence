@@ -1,6 +1,6 @@
 
 
-import {fetchUserData , fetchFriendsData,fetchMatchData, getCookie ,logout, fetchStatsData} from './readData.js';
+import {fetchUserData , fetchFriendsData,fetchMatchData, getCookie ,logout, fetchStatsData, fetchNoFriendsData} from './readData.js';
 
 // import {fetchMatchData} from './readData.js';
 
@@ -99,7 +99,7 @@ function profSection(name, img , bool) {
             <span>${name}</span>
         </div>
         <div class="newfriend" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
-            <button type="click" id="addnewfriend" style="background : var(--red);" class="btn-home btn btn-secondary">${type}</button>
+            <button type="click" id="addnewfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary">${type}</button>
             <button style="background :gray;" type="click" id="backtosearch" class="btn-home btn btn-secondary">Back</button>
         </div>
     </div>
@@ -178,7 +178,7 @@ function slidProf(info){
                     <span>${name}</span>
                 </div>
                 <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;" >
-                    <button type="click" id="deletefriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary " >delete</button>
+                    <button type="click" id="deletefriend" style="background : var(--red);" class="btn-home btn btn-secondary " >delete</button>
                     <button style="background :gray;" type="click" id="toprof" class="btn-home btn btn-secondary " >Back</button>
                 </div>
             </div>
@@ -1120,32 +1120,46 @@ class profilePage extends HTMLElement {
         });
     }
     
-    bindSearchBarEvents() {
+    async bindSearchBarEvents() {
         const searchBar = document.getElementById('search-bar');
         const resultsDiv = document.getElementById('results');
         const popup = document.getElementById('popup');
         const popupText = document.getElementById('popup-text');
         const overlay = document.getElementById('overlay');
         //here where we add the search for no friend
-        const sampleData = this.statsHistory.map(item => ({
-            name: item.player,
-            img: item.img
-        }));
-    
-        // Function to display matching results
-        function displayResults(query) {
+        const nofriend = await fetchNoFriendsData();
+
+        nofriend.forEach(elem => {
+            console.log(elem.username)
+            console.log(elem.image)
+        })
+        async function displayResults(query) {
             resultsDiv.innerHTML = ''; // Clear previous results
+            
             if (query) {
-                const filteredData = sampleData.filter(item =>
-                    item.name.toLowerCase().includes(query.toLowerCase())
-                );
+                // Fetch the no friends data asynchronously
+                const nofriend = await fetchNoFriendsData();
+        
+                // Filter the no friends data based on the query (search by first_name, last_name, or username)
+                const filteredData = nofriend.filter(item => {
+                    // Combine first_name and last_name for full name search or search by username/email
+                    const fullName = `${item.first_name} ${item.last_name}`.toLowerCase();
+                    const username = item.username.toLowerCase();
+                    const email = item.email.toLowerCase();
+                    return fullName.includes(query.toLowerCase()) || username.includes(query.toLowerCase()) || email.includes(query.toLowerCase());
+                });
+        
+                // Display results based on the filtered data
                 if (filteredData.length) {
                     resultsDiv.innerHTML = `
                         <ul>
                             ${filteredData
                                 .map(
                                     item =>
-                                        `<li data-name="${item.name}" data-img="${item.img}" class="search-result">${item.name}</li>`
+                                        `<li data-name="${item.first_name} ${item.last_name}" data-img="${item.image}" class="search-result">
+                                            <img src="${item.image}" alt="${item.first_name} ${item.last_name}" width="50">
+                                            ${item.first_name} ${item.last_name} (${item.username})
+                                        </li>`
                                 )
                                 .join('')}
                         </ul>`;
@@ -1154,6 +1168,7 @@ class profilePage extends HTMLElement {
                 }
             }
         }
+        
     
         // Event delegation for dynamically generated search result items
         if (resultsDiv) {

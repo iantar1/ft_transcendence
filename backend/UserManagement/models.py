@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-
+import os
 
 class User(AbstractUser):
     username = models.CharField(max_length=50, unique=True)
@@ -12,6 +12,7 @@ class User(AbstractUser):
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     score = models.PositiveBigIntegerField(default=0)
+    use_otp = models.BooleanField(default=True)
 
     def delete_image(self):
         if self.image:

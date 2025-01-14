@@ -334,6 +334,7 @@ class settingPage extends HTMLElement {
                     <input type="text" class="editUser" name="username" required><br><br>
                     <label for="lname">Bio</label><br>
                     <textarea rows="10" class="baio" name="blog" ></textarea><br><br>
+                    <span id="status" style="color :gray; text-aling:center;font-size:16px; font-family: sans-serif;" ></span>
                     <input type="submit" value="Submit" id="postData" class="btn-home filter btn btn-secondary" style="background: var(--red);">
                 <form>
             </div>
@@ -423,13 +424,13 @@ class settingPage extends HTMLElement {
                 border-radius: 50%;
                 }
         </style>
-            <div class="formProf" >
+            <div style="display :flex; flex-direction :column; gap :10px; margin :10px;" class="formProf" >
             <label class="switch">
-                <input type="checkbox">
+                <input type="checkbox" id="toggle-switch" >
                 <span class="slider round"></span>
             </label>
+            <input style="font-size:16px; font-family: sans-serif; background : var(--red);" type="submit" value="Submit" id="postData" class="btn-home filter btn btn-secondary" style="background: var(--red);">
             </div>
-            <input style="background : var(--red); margin-top :5px;" type="submit" value="Submit" id="postData" class="btn-home fiter btn btn-secondary" >
 
         `;
     }
@@ -546,10 +547,9 @@ class settingPage extends HTMLElement {
                     username: username,
                     bio: bio,
                   };
-                console.log(data);
-                // formData.forEach((value, key) => {
-                //     console.log(`${key}: ${value}`);
-                // });
+                  if (bio && !username){
+                    document.getElementById('status').textContent = 'username required';
+                  }
                 document.querySelector('.clean').reset();
                 await postMethode(data , 'bio'); 
   
@@ -577,8 +577,25 @@ class settingPage extends HTMLElement {
                 await postMethode(formData , 'change_password');
                 document.querySelector('.clean').reset();
             }
-    });
-}
+        });
+    }
+    passAuth(){
+        const toggleSwitch = document.getElementById('toggle-switch');
+        toggleSwitch.addEventListener('change', (e) => {
+            document.querySelector('#postData').addEventListener('click', async function (event) {
+                event.preventDefault(); // Prevent form submission and page reload
+                if (e.target.checked) {
+                    console.log('Switch turned ON');
+                } else {
+                    console.log('Switch turned OFF');
+                }
+                console.log("HERE IS THE AUTH PART");
+    
+                // Listen for changes
+            });
+
+        });
+    }
     render() {
         this.innerHTML = `
             <style>
@@ -852,6 +869,7 @@ class settingPage extends HTMLElement {
                 this.hiddeHover('.passSetting');
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.authEdit();
+                this.passAuth();
             // this.infoPost("");
 
             });

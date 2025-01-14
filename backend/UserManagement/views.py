@@ -169,8 +169,9 @@ class UserView(APIView):
         if user:
             user.delete()
             return Response({"detail": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-        
+    
         raise AuthenticationFailed('User not found')
+    
     
     
 class LogoutView(APIView):

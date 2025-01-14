@@ -75,7 +75,7 @@ def getData(access_token) -> User:
 
 def auth(request):
 
-    domain = "10.14.4.4" if "10.14.4.4" in request.get_host() else "localhost"
+    # domain = "10.14.4.4" if "10.14.4.4" in request.get_host() else "localhost"
 
     queryStr = request.GET.get('code')
     print("CODE : ", queryStr, flush=True)
@@ -97,8 +97,8 @@ def auth(request):
     refresh_token = create_refresh_token(user.id)
 
     response = HttpResponseRedirect(FRONTEND_REDIRECT_URL)  # Redirect to frontend
-    response.set_cookie(key="access", value=access_token, httponly=False, secure=True, samesite='None', max_age=3600, domain=domain)
-    response.set_cookie(key="refresh", value=refresh_token, httponly=True, secure=True, samesite='None', max_age=86400, domain=domain)
+    response.set_cookie(key="access", value=access_token, httponly=False)
+    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
 
     print("THE RESPONSE : ", response, flush=True)
     print("Response Cookies:", response.cookies, flush=True)
