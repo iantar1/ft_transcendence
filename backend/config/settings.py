@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -71,6 +71,14 @@ MIDDLEWARE = [
 #     },
 # }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # For development
+        # For production, use a Redis backend:
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {"hosts": [("localhost", 6379)]},
+    }
+}
 SESSION_COOKIE_SAMESITE = None
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'None'

@@ -7,3 +7,5 @@ backend/friendSystem/migrations/__pycache__/*
 backend/friendSystem/__pycache__/*
 backend/config/__pycache__/*
 backend/UserManagement/__pycache__/*
+PongGame/pong/__pycache__/*
+

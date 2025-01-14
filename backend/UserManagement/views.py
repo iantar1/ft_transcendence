@@ -400,7 +400,7 @@ class StatsView(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        stats = Stats.objects.get(user=user)
+        stats = Stats.objects.get_or_create(user=user)
         if stats == None:
             return Response({"error":"stats not found"}, status=404)
         serialer = StatsSerializer(stats)
@@ -418,6 +418,8 @@ class   UsersRanking(APIView):
         return Response(serializer.data, status=200)
 
         
+def friendRequestHandling(data):
+    print("data received: in the view: ", data, flush=True)
 
 
 # def checkIfTheRelationExsit(user1, user2, action):

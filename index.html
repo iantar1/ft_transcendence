@@ -4,10 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket Connection</title>
+    <style>
+        .container {
+            display: flex;              /* Set the container to use Flexbox */
+            justify-content: space-between; /* Distribute space between items */
+            padding: 20px;
+          }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <button onclick="sendData('send')">add user</button>
+        <button onclick="sendData('remove')">remove user</button>
+        <button onclick="sendData('accept')">accept request</button>
+        <button onclick="sendData('reject')">reject request</button>
+    </div>
+
+    <input type="text" id="imputUsername" placeholder="add friend">
+
+
     <script>
         // Replace 'ws://localhost:8000/ws/ticwinlose/' with your WebSocket server URL
+
+        let data = {
+            "from_user":"",
+            "to_user":"",
+            "action":"",
+            "status":""
+        };
+
+        function sendData(action)
+        {
+            const usrname = document.getElementById("imputUsername").value;
+            if (usrname == "")
+            {
+                alert("enter username");
+                return;
+            }
+            data["to_user"] = usrname;
+            data["action"] = action;
+            socket.send(JSON.stringify(data));
+        }
+
         const socketUrl = 'ws://localhost:8000/ws/notif/';
         
         // Create a new WebSocket connection
@@ -24,12 +62,19 @@
         };
 
         socket.onmessage = (message) => {
-            console.log(`message: ${message.data}`)
+            console.log(`message received: ${message.data}`)
         };
 
-        socket.addEventListener("open", (event) => {
-            socket.send("hello from frontend");
-        });
+        // socket.addEventListener("open", (event) => {
+        //     const data = {
+        //         "from_user":"iantar",
+        //         "to_user":"arahmoun",
+        //         "status":"",
+        //         "action":"accepted"
+        //     };
+        //     console.log('')
+        //     socket.send(JSON.stringify(data));
+        // });
         // Optional: Event handler for when the connection is closed
         socket.onclose = (event) => {
             if (!event.wasClean) {
