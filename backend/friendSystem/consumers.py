@@ -1,4 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from UserManagement.views import friendRequestHandling
 from UserManagement.models import User
@@ -12,14 +13,33 @@ import requests
 
 user_channels = {}
 
-def get_user_by_token(token):
-    if not token:
-        return None
-    try:
-        payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-        return User.objects.filter(id=payload['id']).first()
-    except (jwt.ExpiredSignatureError, jwt.DecodeError):
-        return None
+# class Notifications(AsyncWebsocketConsumer):
+#     async def connect(self):
+#         await self.accept()
+#         print('connect', flush=True)
+
+
+#     async def disconnect(self, code):
+#         print("disconnect")
+    
+#     async def receive(self, text_data=None, bytes_data=None):
+#         print(f"Message received: {text_data}")
+#         await self.send()
+
+#     async def send(self, text_data=None, bytes_data=None, close=False):
+#         print("send")
+#         # text_data = json.dumps("hello from backend")
+#         text_data = "hello from backend"
+#         text_data = {"":"", "":"", "":""}
+#         return super().send(text_data, bytes_data, close)
+# def get_user_by_token(token):
+#     if not token:
+#         return None
+#     try:
+#         payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+#         return User.objects.filter(id=payload['id']).first()
+#     except (jwt.ExpiredSignatureError, jwt.DecodeError):
+#         return None
 
 class Notifications(WebsocketConsumer):
     def connect(self):
