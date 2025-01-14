@@ -277,18 +277,17 @@ function handleNotification(){
             notificationIcon.style.animation = "scaleNotification 1s ease-in-out infinite";
             notificationIcon.style.color = "var(--red)"
 
-            const allnotif = ['ahbajao' ,'ayoub' , 'hamza' , 'omry']
             const  hey = await getnotification('friendship')
-            console.log(hey);
+            const allnotif = hey.map(item => ({ username: item.from_user.username }));
             const fillnoti =  document.querySelector('#seenotification');
             let  data = '';
             allnotif.forEach(elem => {
                 data += `
                      <li><a style="display:flex; justify-content:space-between;" class="dropdown-item">
-                     ${elem}
+                     ${elem.username}
                      <div>
-                     <i id="addhim" data-name=${elem} class="fa-regular fa-circle-check"></i>
-                     <i id="refusehim" data-name=${elem} class="fa-regular fa-circle-xmark"></i>
+                     <i id="addhim" data-name=${elem.username} class="fa-regular fa-circle-check"></i>
+                     <i id="refusehim" data-name=${elem.username} class="fa-regular fa-circle-xmark"></i>
                      </div>
                      </a>
                      </li>
@@ -298,14 +297,28 @@ function handleNotification(){
         const addhim = document.querySelectorAll('#addhim')
         addhim.forEach(elem =>{
             elem.addEventListener('click' , (e) =>{
-                console.log("ADD HIME HERE " + elem.dataset.name);
+                // console.log("ADD HIME HERE " + elem.dataset.name);
+                const data = {
+                    to_user : elem.dataset.name,
+                    form_user :"",
+                    action : "accepted",
+                    status : ""
+                }
+                addordelete(data,'POST','friendship');
                 
             })
         })
         const refusehim = document.querySelectorAll('#refusehim')
         refusehim.forEach(elem =>{
             elem.addEventListener('click' , (e) =>{
-                console.log("refusehim HERE " + elem.dataset.name);
+                // console.log("refusehim HERE " + elem.dataset.name);
+                const data = {
+                    to_user : elem.dataset.name,
+                    form_user :"",
+                    action : "rejected",
+                    status : ""
+                }
+                addordelete(data,'POST','friendship');
                 
             })
         })

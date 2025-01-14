@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from UserManagement.models import User
 import jwt
 from rest_framework.exceptions import ValidationError
-from .serializers import FriendsProfileSerializer
+from .serializers import FriendsProfileSerializer, FriendshipSerializer
 from UserManagement.serializers import UserSerializer
 
 
@@ -77,14 +77,13 @@ class FriendShipView(APIView):
         user = get_user_by_token(token)
         if user is None:
             raise AuthenticationFailed('Unauthenticated')
-        try:
-            friend_requests = Friendship.objects.get(to_user=user)
-            serialer = FriendshipSerializer(friend_requests, many=True)
-            return Response(serialer.data, status=200)
-        except:
-            pass
-
-        return Response(status=200)
+        friend_requests = Friendship.objects.filter(to_user=user, status='sent')
+        serialer = FriendshipSerializer(friend_requests, many=True)
+        return Response(serialer.data, status=200)
+        # try:
+        # except:
+        #     pass
+        return Response({"message":"no friend requests"}, status=200)
 
     def isThisActionExist(sender, receiver, status):
         pass
@@ -134,7 +133,7 @@ class FriendShipView(APIView):
 
 
     def acceptFriendRequest(self, to_user, from_user):
-        relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
+        relation = Friendship.objects.get(from_user=to_user, to_user=from_user)
         if relation == None:
             return Response({"error": "friendship not found"}, status=404)
         relation.status = 'accept'
