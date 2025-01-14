@@ -78,11 +78,12 @@ async function init() {
                     const tournamentData = data.map((tournament, index) => ({
                         tournament: tournament.name,
                         time : new Date(tournament.timestamp * 1000).toLocaleString(),
+                        
                         players: [
-                            { address: tournament.player1.name, rank: 1, points: 160 },
-                            { address: tournament.player2.name, rank: 2, points: 120 },
-                            { address: tournament.player3.name, rank: 3, points: 80 },
-                            { address: tournament.player4.name, rank: 4, points: 40 }
+                            { address: tournament.players[0].name, rank: tournament.players[0].rank, points: tournament.players[0].score },
+                            { address: tournament.players[1].name, rank: tournament.players[1].rank, points: tournament.players[1].score },
+                            { address: tournament.players[2].name, rank: tournament.players[2].rank, points: tournament.players[2].score },
+                            { address: tournament.players[3].name, rank: tournament.players[3].rank, points: tournament.players[3].score }
                         ]
                     }));
                     // Sample tournament data - replace with your actual data
