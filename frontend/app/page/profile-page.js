@@ -1,12 +1,11 @@
 
 
-import {fetchUserData , fetchFriendsData,fetchMatchData, getCookie ,logout, fetchStatsData} from './readData.js';
+import {fetchUserData , addordelete ,fetchFriendsData,fetchMatchData, getCookie ,logout, fetchStatsData, fetchNoFriendsData, getnotification} from './readData.js';
 
 // import {fetchMatchData} from './readData.js';
 
 import { navigateTo } from '../routing.js';
-// const info = await fetchUserData();
-// this.narotu = await fetchMatchData();
+
 
 
 function serachBar(){
@@ -79,7 +78,7 @@ function serachBar(){
     </style>
     <div id="search-container" style="flex-direction: column; width :100%;" >
         <div style="width :100%; height :100%;" >
-            <input type="text" id="search-bar" placeholder="Search here..." />
+            <input style="padding:5px; color :#000; text-aling:center;font-size:16px; font-family: sans-serif;" type="text" id="search-bar" placeholder="Search here..." />
             <div id="results"></div>
             <button style="background :gray;" type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
         </div>
@@ -99,29 +98,41 @@ function profSection(name, img , bool) {
             <span>${name}</span>
         </div>
         <div class="newfriend" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
-            <button type="click" id="addnewfriend" style="background : var(--red);" class="btn-home btn btn-secondary">${type}</button>
+            <button type="click" id="addnewfriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary">${type}</button>
             <button style="background :gray;" type="click" id="backtosearch" class="btn-home btn btn-secondary">Back</button>
         </div>
     </div>
     `;
 }
 
-function addnewFriend(){
-    
-    console.log("BEFOR ADD FRIEND");
-    const newfriend = document.getElementById('addnewfriend')
+function addnewFriend(name){
+        const newfriend = document.getElementById('addnewfriend')
     if (newfriend){
         newfriend.addEventListener('click' , (e) => {
             console.log("HANDEL ADD NEW FRIEND HERE");
+            const data = {
+                to_user : name,
+                form_user :"",
+                action : "sent",
+                status : ""
+            }
+          addordelete(data,'POST','friendship');
         });
     }
 }
 
-function deleteFriend(){
+function deleteFriend(name){
     const newfriend = document.getElementById('deletefriend')
     if (newfriend){
         newfriend.addEventListener('click' , (e) => {
-            console.log("HANDEL DELETE FRIEND HERE");
+            console.log("HANDEL ADD NEW FRIEND HERE");
+            const data = {
+                to_user : name,
+                form_user :"",
+                action : "remove",
+                status : ""
+            }
+            addordelete(data,'POST','friendship');
         });
     }
 }
@@ -178,7 +189,7 @@ function slidProf(info){
                     <span>${name}</span>
                 </div>
                 <div style="width:100%; height :100%; display :flex; flex-direction: column; align-items :center; justify-content:center; gap :10px;" >
-                    <button type="click" id="deletefriend" style="background-color: #4CAF50;" class="btn-home btn btn-secondary " >delete</button>
+                    <button type="click" id="deletefriend" style="background : var(--red);" class="btn-home btn btn-secondary " >delete</button>
                     <button style="background :gray;" type="click" id="toprof" class="btn-home btn btn-secondary " >Back</button>
                 </div>
             </div>
@@ -262,20 +273,21 @@ function handleNotification(){
     const html = profSection();
     notificationIcon.style.animation = "none";
     notificationIcon.style.color = "#fff"
-    document.querySelector('.notif').addEventListener('click' , (e) => {
+    document.querySelector('.notif').addEventListener('click' , async (e) => {
             notificationIcon.style.animation = "scaleNotification 1s ease-in-out infinite";
             notificationIcon.style.color = "var(--red)"
 
-            const allnotif = ['ahbajao' ,'ayoub' , 'hamza' , 'omry']
+            const  hey = await getnotification('friendship')
+            const allnotif = hey.map(item => ({ username: item.from_user.username }));
             const fillnoti =  document.querySelector('#seenotification');
             let  data = '';
             allnotif.forEach(elem => {
                 data += `
                      <li><a style="display:flex; justify-content:space-between;" class="dropdown-item">
-                     ${elem}
+                     ${elem.username}
                      <div>
-                     <i id="addhim" data-name=${elem} class="fa-regular fa-circle-check"></i>
-                     <i id="refusehim" data-name=${elem} class="fa-regular fa-circle-xmark"></i>
+                     <i id="addhim" data-name=${elem.username} class="fa-regular fa-circle-check"></i>
+                     <i id="refusehim" data-name=${elem.username} class="fa-regular fa-circle-xmark"></i>
                      </div>
                      </a>
                      </li>
@@ -285,14 +297,28 @@ function handleNotification(){
         const addhim = document.querySelectorAll('#addhim')
         addhim.forEach(elem =>{
             elem.addEventListener('click' , (e) =>{
-                console.log("ADD HIME HERE " + elem.dataset.name);
+                // console.log("ADD HIME HERE " + elem.dataset.name);
+                const data = {
+                    to_user : elem.dataset.name,
+                    form_user :"",
+                    action : "accepted",
+                    status : ""
+                }
+                addordelete(data,'POST','friendship');
                 
             })
         })
         const refusehim = document.querySelectorAll('#refusehim')
         refusehim.forEach(elem =>{
             elem.addEventListener('click' , (e) =>{
-                console.log("refusehim HERE " + elem.dataset.name);
+                // console.log("refusehim HERE " + elem.dataset.name);
+                const data = {
+                    to_user : elem.dataset.name,
+                    form_user :"",
+                    action : "rejected",
+                    status : ""
+                }
+                addordelete(data,'POST','friendship');
                 
             })
         })
@@ -329,8 +355,8 @@ class profilePage extends HTMLElement {
                         </div>
                         <div class="lvl">
                             <div class="progress">
-                                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width:10%; box-shadow:none;"></div>
-                                <div class="progress-value">10%</div>
+                                <div id="progcon" class="progress-bar progress-bar-info progress-bar-striped active" style=" box-shadow:none;"></div>
+                                <div id="progvalue" class="progress-value">10%</div>
                             </div>
                         </div>
 
@@ -861,111 +887,52 @@ class profilePage extends HTMLElement {
     </style>
     `;
     cycleProgress = `
-    <div class="cycle blue">
-    <span class="cycle-left">
-        <span class="cycle-bar "></span>
-    </span>
-    <span class="cycle-right">
-        <span class="cycle-bar"></span>
-    </span>
-    <div id="cycleValue" class="cycle-value"></div>
+    <div class="circle-progress">
+        <svg class="circle" width="200" height="200">
+            <circle class="circle-bg" cx="100" cy="100" r="85"></circle>
+            <circle class="circle-progress-path" cx="100" cy="100" r="85"></circle>
+        </svg>
+        <div class="circle-value">0%</div>
     </div>
-
 <style>
-  .cycle {
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    background: none;
-    margin: 20px;
-    position: relative;
-    border-radius: 50%;
-  }
-
-  .cycle:after {
-    display: none;
-    content: "";
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 12px solid #fff;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  .cycle>span {
-    width: 50%;
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    z-index: 1;
-  }
-
-  .cycle .cycle-left {
-    left: 0;
-  }
-
-  .cycle .cycle-bar {
-    width: 100%;
-    height: 100%;
-    background: none;
-    border-width: 12px;
-    border-style: solid;
-    position: absolute;
-    top: 0;
-  }
-
-  .cycle .cycle-left .cycle-bar {
-    left: 100%;
-    border-top-right-radius: 80px;
-    border-bottom-right-radius: 80px;
-    border-left: 0;
-    transform-origin: center left;
-  }
-
-  .cycle .cycle-right {
-    right: 0;
-  }
-
-  .cycle .cycle-right .cycle-bar {
-    left: -100%;
-    border-top-left-radius: 80px;
-    border-bottom-left-radius: 80px;
-    border-right: 0;
-    transform-origin: center right;
-    animation: loading-1 1s ease-out forwards ;
-  }
-
-  .cycle .cycle-value {
-    width: 90%;
-    height: 90%;
-    border-radius: 50%;
-    background:rgb(0 0 0 / 0.5);
-    font-size: 24px;
-    color: #fff;
-    line-height: 135px;
-    text-align: center;
-    position: absolute;
-    top: 5%;
-    left: 5%;
-  }
-
-  .cycle.blue .cycle-bar {
-    border-color: var(--red);
-  }
-
-  @keyframes loading-1 {
-    0% {
-      transform: rotate(0deg);
+  :root {
+      --value: 20; /* Default value */
     }
-    100% {
-      transform: rotate(180deg);
-    }
-  }
-  }
+
+        .circle-progress {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .circle {
+            transform: rotate(-90deg);
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: #ddd;
+            stroke-width: 12;
+        }
+
+        .circle-progress-path {
+            fill: none;
+            stroke: #4CAF50;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .circle-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+        }
 </style>
+
 
     `
     templatTwo = `
@@ -1120,32 +1087,45 @@ class profilePage extends HTMLElement {
         });
     }
     
-    bindSearchBarEvents() {
+    async bindSearchBarEvents() {
         const searchBar = document.getElementById('search-bar');
         const resultsDiv = document.getElementById('results');
         const popup = document.getElementById('popup');
         const popupText = document.getElementById('popup-text');
         const overlay = document.getElementById('overlay');
         //here where we add the search for no friend
-        const sampleData = this.statsHistory.map(item => ({
-            name: item.player,
-            img: item.img
-        }));
-    
-        // Function to display matching results
-        function displayResults(query) {
+        const nofriend = await fetchNoFriendsData();
+
+        nofriend.forEach(elem => {
+            console.log(elem.username)
+            console.log(elem.image)
+        })
+        async function displayResults(query) {
             resultsDiv.innerHTML = ''; // Clear previous results
+            
             if (query) {
-                const filteredData = sampleData.filter(item =>
-                    item.name.toLowerCase().includes(query.toLowerCase())
-                );
+                // Fetch the no friends data asynchronously
+                const nofriend = await fetchNoFriendsData();
+        
+                // Filter the no friends data based on the query (search by first_name, last_name, or username)
+                const filteredData = nofriend.filter(item => {
+                    // Combine first_name and last_name for full name search or search by username/email
+                    const fullName = `${item.first_name} ${item.last_name}`.toLowerCase();
+                    const username = item.username.toLowerCase();
+                    const email = item.email.toLowerCase();
+                    return fullName.includes(query.toLowerCase()) || username.includes(query.toLowerCase()) || email.includes(query.toLowerCase());
+                });
+        
+                // Display results based on the filtered data
                 if (filteredData.length) {
                     resultsDiv.innerHTML = `
                         <ul>
                             ${filteredData
                                 .map(
                                     item =>
-                                        `<li data-name="${item.name}" data-img="${item.img}" class="search-result">${item.name}</li>`
+                                        `<li data-name="${item.username}" data-img="${item.image}" class="search-result">
+                                            ${item.username}
+                                        </li>`
                                 )
                                 .join('')}
                         </ul>`;
@@ -1154,6 +1134,7 @@ class profilePage extends HTMLElement {
                 }
             }
         }
+        
     
         // Event delegation for dynamically generated search result items
         if (resultsDiv) {
@@ -1176,7 +1157,7 @@ class profilePage extends HTMLElement {
                         document.querySelector('.forAdd').innerHTML = slidFriend();
                         this.bindSearchBarEvents();
                     });
-                    addnewFriend();
+                    addnewFriend(name);
                 }
             });
         }
@@ -1197,26 +1178,29 @@ class profilePage extends HTMLElement {
     
     
     openProfile() {
+        
         const openProfileElements = document.querySelectorAll('.profsign'); // Select all span elements with the class 'profsign'
-    
+        
+        console.log("---------------------------------" + openProfileElements);
         openProfileElements.forEach(field => {
             field.addEventListener('click', (e) => {
                 // Get data attributes from the clicked element
                 const name = field.querySelector('.forsddProf').dataset.name;
                 const img = field.querySelector('.forsddProf').dataset.img;
-    
+        
                 // Pass the data dynamically to slidProf and display the popup
                 const profilePopup = slidProf({ name, img });
                 document.body.insertAdjacentHTML('beforeend', profilePopup);
-    
+        
                 // Add functionality to the back button
                 const backToSearch = document.querySelector('#toprof');
                 backToSearch.addEventListener('click', () => {
                     document.querySelector('#logoutPopup').remove(); // Close the popup
                 });
-                deleteFriend();
+                deleteFriend(name);
             });
         });
+        
     }
     
     async stockFriends() {
@@ -1229,17 +1213,18 @@ class profilePage extends HTMLElement {
        let  index = 0;
        this.statsHistory.forEach((info) => {
            // index++;
-           const status = info.status === true ? "green" : "red";           prof += `
-           <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
-           <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%;" src="${info.img}">
-           <span id="" data-name="${info.player}" data-img="${info.img}" class="forsddProf" style=""></span>
-           <span class="sign" style="background: ${status};"></span> 
-                </span>
+         prof += `
+           <span type"click" class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
+           <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%;" src="${info.image}">
+           <span id="" data-name="${info.username}" data-img="${info.image}" class="forsddProf" style=""></span>
+           <span class="sign" style="background: ; border :none;"></span> 
+            </span>
             `;
         });
         main.innerHTML = prof;
+        this.openProfile()
     }
-    
+    cycleValue;
     render() {
         const uuss = async () => {
             if (!getCookie('access')){
@@ -1247,14 +1232,8 @@ class profilePage extends HTMLElement {
             }
             this.info = await fetchUserData();
             if (this.info){
-                // console.log(this.info.image);
-                if (!this.info.username){
-                    this.info.username = "ASTRO"
-                }
                 if (this.info.image){
                     document.getElementById('img_intra').src = this.info.image
-                }else{
-                    document.getElementById('img_intra').src = "/images/default.jpeg";
                 }
                 document.getElementById('username').textContent = this.info.username
                 document.getElementById('BIO').textContent = this.info.bio
@@ -1264,12 +1243,69 @@ class profilePage extends HTMLElement {
        
                 // Optional: If you need to update duplicate or additional elements, create aliases
                 console.log("stats win : " +  stats.wins);
-                if (stats){
-                    document.getElementById('win').textContent = stats.wins;
-                    document.getElementById('winone').textContent = "";
-                    document.getElementById('lose').textContent = stats.losses;
-                    document.getElementById('loseone').textContent = "";
-                    document.getElementById('cycleValue').textContent = stats.total;
+                // this.cycleValue = 10;
+                // const cycleValueElement = document.getElementById('cycleValue');
+              
+      
+                    // Generate a random value between 0 and 100
+                    // const newValue = Math.floor(Math.random() * 100);
+                    if (stats){
+                        document.getElementById('win').textContent = stats.wins;
+                        document.getElementById('winone').textContent = "";
+                        document.getElementById('lose').textContent = stats.losses;
+                        document.getElementById('loseone').textContent = "";
+                        // document.getElementById('cycleValue').textContent = stats.total;
+                        // document.getElementById('progvalue').textContent = stats.total;
+                        document.getElementById('progcon').style.width = "10%";
+                        const newValue = (stats.wins / (stats.wins + stats.losses) * 100);
+
+
+
+
+
+                        const circle = document.querySelector('.circle-progress-path');
+                        const valueDisplay = document.querySelector('.circle-value');
+
+                        const radius = circle.r.baseVal.value;
+                        const circumference = 2 * Math.PI * radius;
+
+                        // Set initial values
+                        circle.style.strokeDasharray = circumference;
+                        circle.style.strokeDashoffset = circumference;
+                        function setProgress(percent) {
+                            // Ensure percent is between 0 and 100
+                            percent = Math.min(100, Math.max(0, percent));
+                            
+                            const offset = circumference - (percent / 100 * circumference);
+                            circle.style.strokeDashoffset = offset;
+                            valueDisplay.textContent = Math.round(percent) + '%';
+                        }
+
+                        let progress = 0;
+                        const interval = setInterval(() => {
+                            progress += 1;
+                            setProgress(progress);
+                            if (progress >= newValue) clearInterval(interval);
+                        }, 30);
+
+
+
+
+                        // const radius = circle.r.baseVal.value;
+                        // const circumference = 2 * Math.PI * radius;
+                
+                        // // Set initial values
+                        // circle.style.strokeDasharray = circumference;
+                        // circle.style.strokeDashoffset = circumference;
+
+
+                        console.log("---> : " + newValue)
+                        // const circumference = 2 * Math.PI * 50;
+                        // Update the CSS variable for the animation
+                        // document.documentElement.style.setProperty('--value', `${circumference - (newValue / 100) * circumference}deg`);
+                        // Update the displayed value
+
+                            // cycleValueElement.textContent = `${newValue}%`;
                 }else{
                     document.getElementById('win').textContent = "0";
                     document.getElementById('winone').textContent = "";
@@ -1345,10 +1381,13 @@ class profilePage extends HTMLElement {
     }
     connectedCallback() {
         this.render();
+        console.log('this is value of : ' + this.cycleValue)
         this.statsPlayer();
         this.slidFriend();
         this.stockFriends();
-        this.openProfile();
+        
+        // this.openProfile();
+        // console.log("---------------------------------")
         logout();
         handleNotification();
         // deleteFriend();
@@ -1358,3 +1397,7 @@ class profilePage extends HTMLElement {
 
 customElements.define('profile-page', profilePage);
 
+// "to_user":""
+// "from_user":""
+// "action":"sent remove"
+// "status":""

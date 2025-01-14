@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from UserManagement.models import User
 import jwt
 from rest_framework.exceptions import ValidationError
-from .serializers import FriendsProfileSerializer
-
+from .serializers import FriendsProfileSerializer, FriendshipSerializer
+from UserManagement.serializers import UserSerializer
 
 
 # Create your views here.
@@ -42,7 +42,7 @@ class FriendShipView(APIView):
         from_user = get_user_by_token(token)
         if from_user is None:
             raise AuthenticationFailed('Unauthenticated')
-
+    
         to_user_name = request.data.get('to_user')
         if not to_user_name:
             raise ValidationError({'field error': 'You missed the "to_user" field.'})
@@ -68,6 +68,22 @@ class FriendShipView(APIView):
         elif action == 'remove':
             return self.removeFriend(to_user, from_user)
         return  Response({"error": "This action doesn't exists."}, status=400)
+        
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+
+        user = get_user_by_token(token)
+        if user is None:
+            raise AuthenticationFailed('Unauthenticated')
+        friend_requests = Friendship.objects.filter(to_user=user, status='sent')
+        serialer = FriendshipSerializer(friend_requests, many=True)
+        return Response(serialer.data, status=200)
+        # try:
+        # except:
+        #     pass
+        return Response({"message":"no friend requests"}, status=200)
 
     def isThisActionExist(sender, receiver, status):
         pass
@@ -117,7 +133,7 @@ class FriendShipView(APIView):
 
 
     def acceptFriendRequest(self, to_user, from_user):
-        relation = Friendship.objects.get(from_user=from_user, to_user=to_user)
+        relation = Friendship.objects.get(from_user=to_user, to_user=from_user)
         if relation == None:
             return Response({"error": "friendship not found"}, status=404)
         relation.status = 'accept'
@@ -150,4 +166,21 @@ class   UserFriends(APIView):
         
         serializer = FriendsProfileSerializer(friends_profile)
         return Response(serializer.data, status=200)
-        # return Response({"friends": friends}, status=200)
+    
+class   NotUserFriends(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        friends_profile = FriendsProfile.objects.get(user=user)
+        friends = friends_profile.friends.all()
+        not_friends = User.objects.exclude(id=user.id).exclude(id__in=friends.values_list('id', flat=True))
+        user_serializer = UserSerializer(not_friends, many=True)
+        return Response(user_serializer.data, status=200)
+# {
+# "to_user":""
+# "from_user":""
+# "action":"sent remove"
+# "status":""
+# }

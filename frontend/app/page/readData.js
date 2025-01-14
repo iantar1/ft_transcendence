@@ -105,7 +105,7 @@ export async function fetchMatchData() {
 export async function fetchFriendsData() {
     try {
 
-        const res = await fetch("https://"+window.location.host+"/friend_ship/userFreinds/", {
+        const res = await fetch("https://"+window.location.host+"/friendship/userFreinds/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -129,6 +129,32 @@ export async function fetchFriendsData() {
     }
 }
 
+export async function fetchNoFriendsData() {
+    try {
+
+        const res = await fetch("https://"+window.location.host+"/friendship/notFreinds/", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Sends cookies along with the request
+        });
+
+        // Check if the response is successfuurl
+        if (!res.ok) {
+            throw new Error(`Error fetching data: ${res.statusText}`);
+        }
+
+        // Parse the response JSON to an array
+        const data = await res.json();
+
+        // Return the fetched data (which will be an array)
+        return data;
+    } catch (error) {
+        console.error("Error in fetchUserData:", error);
+        return []; // Return an empty array in case of an error
+    }
+}
 export async function fetchRankData() {
     try {
 
@@ -228,6 +254,100 @@ export async function postImage(alias,redir,met){
         console.log("POST ERROR :", error);
     }
 
+}
+export async function CheckUserAuth(alias,met,redir){
+    try{
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
+            method: met, 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            // body: JSON.stringify(alias),
+            
+        })
+        if (res.ok) {
+                console.log('POST METHOD HAS BEEN SUCCESS')
+                return res.json();
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
+
+}
+
+export async function CheckAuth(alias,met,redir){
+    try{
+        console.log(redir)
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
+            method: met, 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(alias),
+            
+        })
+        if (res.ok) {
+                console.log('POST METHOD HAS BEEN SUCCESS')
+                return res.json();
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
+}
+
+export async function getnotification(redir){
+    try{
+        console.log(redir)
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
+            method: 'GET', 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            
+        })
+        if (res.ok) {
+            const data = await res.json();
+            return data;
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
+}
+
+export async function addordelete(alias,met,redir){
+    try{
+        console.log(redir)
+        const res = await fetch("https://"+window.location.host+"/" + redir + "/", {
+            method: met, 
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(alias),
+            
+        })
+        if (res.ok) {
+                console.log('POST METHOD HAS BEEN SUCCESS')
+                return res.json();
+        } else {
+            console.log('POST METHOD HAS BEEN NOT SUCCESS')
+        }
+    } catch(error) {
+        console.log("POST ERROR :", error);
+    }
 }
 
 export async function postMethode(alias,redir){

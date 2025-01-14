@@ -5,9 +5,10 @@ from rest_framework import serializers
 
 class   FriendshipSerializer(serializers.ModelSerializer):
 
+    from_user = UserSerializer()
     class Meta:
         model = Friendship
-        fields = ['from_user', 'to_user', 'status', 'action']
+        fields = ['from_user', 'status']
 
 
 class   FriendsProfileSerializer(serializers.ModelSerializer):
@@ -16,3 +17,4 @@ class   FriendsProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendsProfile
         fields = ['user', 'friends']
+

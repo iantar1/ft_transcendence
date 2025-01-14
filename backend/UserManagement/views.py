@@ -53,7 +53,17 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed("incorrect password")
 
-         # Generate OTP
+        if user.use_otp == False:
+            access_token = create_access_token(user.id)
+            refresh_token = create_refresh_token(user.id)
+            response = Response({"message": "NOOTP"})
+            response.set_cookie(key="access", value=access_token)
+            response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+            
+            return response
+
+        # Generate OTP
+
         otp_token = create_otp_token(user.id)
         otp = str(random.randint(100000, 999999))
         user.otp = otp
@@ -103,13 +113,8 @@ class VerifyOTPView(APIView):
 
         response = Response()
         response.delete_cookie('otp_token')
-        print("access: {}")
         response.set_cookie(key="access", value=access_token)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
-        # response.data = {
-        #     "access": access_token,
-        #     "refresh": refresh_token
-        # }
 
         return response
 
@@ -169,8 +174,9 @@ class UserView(APIView):
         if user:
             user.delete()
             return Response({"detail": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-        
+    
         raise AuthenticationFailed('User not found')
+    
     
     
 class LogoutView(APIView):
@@ -289,7 +295,7 @@ class ChangeImage(APIView):
         
         user = User.objects.filter(id=playload['id']).first()
         user.delete_image()
-
+        return Response({"message":"the image has been deleted successfully"})
 
 
 class ChangeBio(APIView):
@@ -343,15 +349,13 @@ class MatchHistoryView(APIView):
             raise AuthenticationFailed('11Unauthenticated')
         match_history = MatchHistory.objects.filter(user1=user.id) | MatchHistory.objects.filter(user2=user.id)
         match_history_list = MatchHistorySerializer(match_history, many=True).data
-        print({"matchHistory": match_history_list})
         return Response({"matchHistory": match_history_list})
 
     def post(self, request):
-        print("POST HISTORY : ", request)
         token = request.COOKIES.get('access')
         user = get_user_by_token(token)
         if user == None:
-            raise AuthenticationFailed('00Unauthenticated')
+            raise AuthenticationFailed('Unauthenticated')
         #opponenet username
         try:
             game_id = request.data['game_id']
@@ -399,7 +403,11 @@ class StatsView(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        stats = Stats.objects.get(user=user)
+        # stats = Stats.objects.get_or_create(user=user)
+        try:
+            stats = Stats.objects.get(user=user)
+        except:
+            stats = Stats.objects.create(user=user)
         if stats == None:
             return Response({"error":"stats not found"}, status=404)
         serialer = StatsSerializer(stats)
@@ -416,7 +424,31 @@ class   UsersRanking(APIView):
         serializer = UsersRankingSerializer(users, many=True)
         return Response(serializer.data, status=200)
 
-        
+class   OtpActivate(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        data = request.data['isactivate']
+        if data == False:
+            message = "OTP has been desactivated"
+            user.use_otp = False
+        else:
+            message = "OTP has been activated"
+            user.use_otp = True
+        user.save()
+        return Response({"message":message}, status=200)
+
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        return Response(user.use_otp, status=200)
+    
+
+
 
 
 # def checkIfTheRelationExsit(user1, user2, action):

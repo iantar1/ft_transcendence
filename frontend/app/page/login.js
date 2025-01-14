@@ -2,10 +2,12 @@
 
 import {navigateTo} from '../routing.js';
 
-import {readData} from './readData.js';
+import {CheckAuth, CheckUserAuth, readData} from './readData.js';
 
 import {getCookie} from './readData.js';
 
+//localhost
+// const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0340bd018f511405be07414064e236ed0c11845afedf13da4061f48b304f56a1&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code"
 
 const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-44701ed50de1251b7881036e7c955b632ef27d9ad189012806bf5e16dc67c249&redirect_uri=http%3A%2F%2F10.14.4.4%3A8000%2Fintra%2F&response_type=code";
 const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";
@@ -62,7 +64,7 @@ class loginPage extends HTMLElement {
                     <span class="bar"></span>
                     <label>Password</label>
                 </div>
-                <span class="otp-error" ></span>
+                <span  style="color :gray; text-aling:center;font-size:16px; font-family: sans-serif;" class="otp-error" ></span>
                     <input id="formLogin2" class="form-btn" type="submit" value="Log in"  />
                 </form>
                 `;
@@ -432,21 +434,14 @@ class loginPage extends HTMLElement {
             })
 
         }
-        veryOtp() {
-            // Grab the OTP form element
+        async veryOtp() {
+
             const formOtp = document.querySelector('#otp-code');
-            
             // Add an event listener for OTP form submission
-            
             formOtp.addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent the default form submission
-                
-                console.log("---- INSIDE VERIFY OTP ----");
-        
-                // Collect form data
                 const formData = new FormData(formOtp);
                 const data = Object.fromEntries(formData);
-        
                 // Make the fetch call to verify OTP
                 try {
                     console.log(data);
@@ -455,7 +450,6 @@ class loginPage extends HTMLElement {
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRFToken': getCookie('csrftoken'),
-
                             },
                             credentials: 'include',
                             body: JSON.stringify(data),
@@ -479,7 +473,7 @@ class loginPage extends HTMLElement {
                             })
                             console.log(`res : ${res}`)
                                 if (res.ok) {
-                                    console.log('----DATA USER----');
+
                                     console.log('--- USER DATA VERIFIED SUCCESSFULLY ---');
                                     // // Add success logic, like redirecting to home page
                                     const data = await res.json();
@@ -494,8 +488,7 @@ class loginPage extends HTMLElement {
                                 console.log("Error verifying OTP:", error);
                             }
                     } else {
-                        console.log('--- OTP VERIFICATION FAILED ---');
-                        // Display an error message on the OTP form
+    
                         const errorCode = document.querySelector('.otp-error');
                         errorCode.textContent = "Invalid OTP. Please try again.";
                         errorCode.style.color = "#670505";
@@ -514,12 +507,10 @@ class loginPage extends HTMLElement {
                     const otpSubmitBtn = document.querySelector('#formLogin2');
                     otpSubmitBtn.disabled = true;
                     e.preventDefault();
-                    console.log("--- INSIDE EVEN LOG IN ---");
                     let flag = true;
                     const fromData = new FormData(loginSub);
                     const data = Object.fromEntries(fromData);
-                    const arr = ['ahe','ceb',1337];
-                    readData.setData(arr);
+                    // readData.setData(arr);
                     try{
                         const response = await fetch("https://"+window.location.host+"/api/login/", {
                                 method: 'POST', 
@@ -531,17 +522,20 @@ class loginPage extends HTMLElement {
                                 body: JSON.stringify(data),
                             })
                             if (response.ok){ 
-           
-                                        loginSub.remove();
-                                        loginRegiste.remove();
-                                        socialIcon.remove();
-   
-        
-                                     pepe.innerHTML = `
-                                            ${this.opt}
-                                        `;
-                                     this.veryOtp();
-                                        
+                                    const data = await response.json()
+                                    console.log(data.message)
+                                    loginSub.remove();
+                                    loginRegiste.remove();
+                                    socialIcon.remove();
+                                    if (data.message != 'NOOTP'){
+                                        pepe.innerHTML = `
+                                               ${this.opt}
+                                           `;
+                                        this.veryOtp();
+                                    }else{
+                                        navigateTo('/home');
+                                    }
+
                                     }
                                     else{
                                     const errorCode = document.querySelector('.otp-error');
