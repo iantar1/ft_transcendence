@@ -2,7 +2,6 @@ import { render  } from "./render.js";
 import { GameOver } from "./gameOver.js";
 
 
-
 function gameCanvas() {
     const canvas = document.createElement('canvas');
     
@@ -988,7 +987,7 @@ export function ai_mode()
                 wsOpen = false;
                 cancelAnimationFrame(animationId);
                 socket.close();
-                render(GameOver(winner, score), 
+                render(GameOver(winner, score, "ai"), 
                     gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }

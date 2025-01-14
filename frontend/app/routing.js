@@ -134,12 +134,12 @@ class LoadingScreen {
         betweenPage();
         content.innerHTML = '<setting-page></setting-page>';
         break;
-      case '/logout':
-        betweenPage();
-        content.innerHTML = '<logout-page></logout-page>';
-        break;
+      // case '/logout':
+      //   betweenPage();
+      //   content.innerHTML = '<logout-page></logout-page>';
+      //   break;
       default:
-        content.innerHTML = `<h1>404 - Page Not Found</h1>`;
+        content.innerHTML = `<not-found></not-found>`;
         break;
     }
   }

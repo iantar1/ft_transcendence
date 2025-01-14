@@ -1,5 +1,5 @@
 
-import {fetchUserData , getCookie ,postImage,postMethode} from './readData.js';
+import {fetchUserData , getCookie ,logout,postImage,postMethode} from './readData.js';
 
 import { navigateTo } from '../routing.js';
 
@@ -248,7 +248,7 @@ class settingPage extends HTMLElement {
                             
                             <div>
                                 <button class="btn-home " id="uploadBtn" style="display:none;">Upload</button><br>
-                                <button class="btn-home " id="closePopupBtn">Close</button>
+                                <button style="background:gray; margin-top :5px;" class="btn-home " id="closePopupBtn">Close</button>
                             </div>
                         </div>
                     </div>
@@ -329,7 +329,7 @@ class settingPage extends HTMLElement {
     profEdit(){
         return `
         <div class="formProf d-flex flex-column">
-                 <form>
+                 <form class="clean" >
                     <label for="fname">Username</label><br><br>
                     <input type="text" class="editUser" name="username" required><br><br>
                     <label for="lname">Bio</label><br>
@@ -343,7 +343,7 @@ class settingPage extends HTMLElement {
     passEdit(){
         return `
         <div class="formProf d-flex flex-column" >
-            <form >
+            <form class="clean" >
                 <label for="fname">Old Password</label><br><br>
                 <input type="password"  class="pass1" name="crrent_password1" required><br>
                 <label for="fname">New Password</label><br><br>
@@ -514,9 +514,8 @@ class settingPage extends HTMLElement {
 
             const formData = new FormData();
             formData.append('image', file);
-    
-
             await postImage(formData , 'change_image','POST');
+            navigateTo('/setting')
         });
 
         // Event listeners to open and close the popup
@@ -551,7 +550,9 @@ class settingPage extends HTMLElement {
                 // formData.forEach((value, key) => {
                 //     console.log(`${key}: ${value}`);
                 // });
+                document.querySelector('.clean').reset();
                 await postMethode(data , 'bio'); 
+  
         });
     }
     passPost(){
@@ -573,7 +574,8 @@ class settingPage extends HTMLElement {
                 // formData.append('crrent_password1', pass1);
                 // formData.append('new_password1', pass2);
                 // formData.append('new_password2', pass3);
-                await postMethode(formData , 'change_password'); 
+                await postMethode(formData , 'change_password');
+                document.querySelector('.clean').reset();
             }
     });
 }
@@ -856,11 +858,8 @@ class settingPage extends HTMLElement {
             this.displayNav();
             const uuss = async () => {
                 this.info = await fetchUserData();
-                if (!this.info.image){
-                    this.info.image = "/images/default.jpeg"
-                }
+                console.table(this.info)
                 document.getElementById('imgSetting').src = this.info.image
-            
             }
             uuss();
             this.imgEffect();
@@ -870,10 +869,11 @@ class settingPage extends HTMLElement {
 
     connectedCallback() {
         // console.log('HERE IS THE SETTING PAGE')
-        if (!getCookie('access')){
-            navigateTo('/login');
-        }
+        // if (!getCookie('access')){
+        //     navigateTo('/login');
+        // }
         this.render();
+        logout()
     }
 }
 

@@ -1,9 +1,9 @@
-from django.urls import re_path
+from django.urls import path
 from .consumers import Notifications
 
 
 # define your routing list
 
 websock_urlspatternd = [
-    re_path('ws/notif', Notifications.as_asgi()),
+    path('wss/notif/', Notifications.as_asgi()),
 ]

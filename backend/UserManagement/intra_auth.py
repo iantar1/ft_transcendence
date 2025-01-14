@@ -36,7 +36,7 @@ def home(request):
 def createUpdateUser(data_json)-> User:
 
     image_link = data_json.get("image", {}).get("link")
-
+    print(image_link, flush=True)
     response = requests.get(image_link)
     if response.status_code == 200:
         img_temp = NamedTemporaryFile()#IF the temporary file will be deleted once it's closed
@@ -75,27 +75,32 @@ def getData(access_token) -> User:
 
 def auth(request):
 
+    # domain = "10.14.4.4" if "10.14.4.4" in request.get_host() else "localhost"
+
     queryStr = request.GET.get('code')
-    print(queryStr)
+    print("CODE : ", queryStr, flush=True)
     payload = {'grant_type':'authorization_code', 
                'client_id':CLIENT_ID,
                'client_secret':CLIENT_SECRET,
                'code':queryStr,
-               'redirect_uri':REDIRECT_URI,}
+               'redirect_uri':REDIRECT_URI
+               }
     
     r = requests.post(OUUTH_TOKEN_URI, data=payload)
-    print(f"here: {r.json()}")
+    print(f"here: {r.json()}", flush=True)
 
     intra_access_token = r.json().get('access_token')#['access_token']
-
+    print("acceeessss : ", intra_access_token, flush=True)
     user = getData(intra_access_token)
-
 
     access_token = create_access_token(user.id)
     refresh_token = create_refresh_token(user.id)
 
-    response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
+    response = HttpResponseRedirect(FRONTEND_REDIRECT_URL)  # Redirect to frontend
     response.set_cookie(key="access", value=access_token, httponly=False)
     response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+
+    print("THE RESPONSE : ", response, flush=True)
+    print("Response Cookies:", response.cookies, flush=True)
 
     return response

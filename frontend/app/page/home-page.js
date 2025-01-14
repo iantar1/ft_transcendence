@@ -1,7 +1,7 @@
 
 // console.log("--somthing is cooking");
 
-import {readData , getCookie} from './readData.js';
+import {readData , getCookie ,logout} from './readData.js';
 
 import {fetchUserData ,fetchRankData} from './readData.js';
 // import {fetchUserMatchHistory} from './readData.js';
@@ -22,6 +22,9 @@ import { betweenPage } from '../routing.js';
     
 //     setTimeout(() => loader.hide(), 3000);
 //   });
+
+var notificationSocket;
+
 function toGame(){
     const page = document.querySelectorAll('#togame');
     page.forEach(element =>{
@@ -460,24 +463,9 @@ class homePage extends HTMLElement {
                 navigateTo('/login');
             }
             this.info = await fetchUserData();
-            // if(!this.info.id){
-            //     navigateTo('/login');
-            // }
+
             document.getElementById('username').textContent = "," + this.info.username
-            // var data = [
-            //     [0, 4, "Good night "], 
-            //     [5, 11, "Good morning "],          //Store messages in an array
-            //     [12, 17, "Good afternoon "],
-            //     [18, 24, "Good night "]
-            // ],
-            //     hr = new Date().getHours();
-            
-            // for(var i = 0; i < data.length; i++){
-            //     if(hr >= data[i][0] && hr <= data[i][1]){
-            //         document.getElementById('curentTime').textContent = data[i][2];
-            //         console.log(data[i][2]);
-            //     }
-            // }
+
             const getTimeOfDay = () => {
                 const hour = new Date().getHours();
                 if (hour < 12) return 'Good morning';
@@ -490,6 +478,17 @@ class homePage extends HTMLElement {
             // const usernameSpan = this.shadowRoot.getElementById('username');
         }
         uuss();
+        window.notificationSocket = new WebSocket('wss://'+window.location.host+'/wss/notif/');
+        window.notificationSocket.onopen = (event) => {
+            console.log("notification Connetcted ...");
+        };
+        window.notificationSocket.onmessage = (message) => {
+            data = JSON.parse(message);
+            console.log(data);
+        };
+        window.notificationSocket.onerror = (e) => {
+            console.log('error :', e);
+        };
         this.innerHTML = `
             <style>
             ${this.style}
@@ -508,7 +507,7 @@ class homePage extends HTMLElement {
         let cart = '';
         this.matchHistory.forEach(element => {
             cart += `
-                <tr>
+                <tr >
                     <td>
                         <img class="Player-img" src="${element.image}" >
                         ${element.username}
@@ -531,6 +530,7 @@ class homePage extends HTMLElement {
         // this.getData();
         this.staticHome();
         toGame();
+        logout();
 
     }
 }

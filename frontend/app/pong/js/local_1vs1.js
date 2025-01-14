@@ -297,8 +297,6 @@ export function local_1vs1()
             ball.position.x = data.ball.x;
             ball.position.z = data.ball.z;
             score = data.score;
-            // shakeCamera(camera);
-            // shakeCamera(camera2);
             scoreManager.addPoint(score);
         }
         if (data.type === "game_over") {
@@ -1006,7 +1004,7 @@ export function local_1vs1()
                 wsOpen = false;
                 cancelAnimationFrame(animationId);
                 socket.close();
-                render(GameOver(winner, score), 
+                render(GameOver(winner, score, "local"), 
                     gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }

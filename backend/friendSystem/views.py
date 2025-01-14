@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from UserManagement.models import User
 import jwt
 from rest_framework.exceptions import ValidationError
+from .serializers import FriendsProfileSerializer
 
 
 
@@ -138,3 +139,15 @@ class FriendShipView(APIView):
         return Response({'success':'the friend has been removed succefull'}, status=200)
 
 
+class   UserFriends(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        user = get_user_by_token(token)
+        if user == None:
+            raise AuthenticationFailed('Unauthenticated')
+        friends_profile, created = FriendsProfile.objects.get_or_create(user=user)
+        # friends = friends_profile.get_friends()
+        
+        serializer = FriendsProfileSerializer(friends_profile)
+        return Response(serializer.data, status=200)
+        # return Response({"friends": friends}, status=200)

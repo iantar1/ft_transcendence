@@ -18,9 +18,10 @@ class LogoutPage extends HTMLElement {
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1000;
+            z-index: 3000;
             justify-content: center;
             align-items: center;
+            background: var(--dark);
         }
 
         .logout-popup-content {
@@ -48,17 +49,19 @@ class LogoutPage extends HTMLElement {
 
         <!-- Logout Popup -->
         <div id="logoutPopup" class="logout-popup">
-            <div class="logout-popup-content">
-                <h2 class="confirmtext" >Confirm Logout</h2>
-                <p class="paratext">Are you sure you want to log out?</p>
+            <div  class="logout-popup-content">
+                <h2 style="color:var(--red); -webkit-text-stroke: 1px #fff;" class="confirmtext" >Confirm Logout</h2>
+                <p class="paratext" style="color:gray; font-family: sans-serif; font-size :16px;" >Are you sure you want to log out?</p>
                 <button type="click" id="tologout" class="btn-home btn btn-secondary " >Logout</button>
             </div>
         </div>
         `;
-        // const logoutButton = document.getElementById('logoutButton');
-        const logoutPopup = document.getElementById('logoutPopup');
-        const logoutConfirm = document.getElementById('logoutConfirm');
 
+    }
+    backhome(){
+        document.querySelector('.logout-popup').addEventListener('click' , (e) =>{
+            document.querySelector('.logout-popup').remove();
+        });
     }
     async tolog(){
         const log = document.querySelector("#tologout")
@@ -76,6 +79,7 @@ class LogoutPage extends HTMLElement {
         }
         this.render(); // Correct method name
         this.tolog();
+        this.backhome();
     }
 }
 

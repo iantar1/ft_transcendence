@@ -210,7 +210,7 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                         "opponent_username": self.opponent.username,
                         "opponent_score": 1 if self.opponent.role == winner else 0,
                         "user_score": 1 if self.opponent.role != winner else 0,
-                        "game": "tictactoe",
+                        "game_type": "tictactoe",
                         "draw": False,
                         "game_id": self.game_room
                     }
@@ -238,7 +238,7 @@ class RemoteConsumer(AsyncWebsocketConsumer):
                         "opponent_username": self.opponent.username,
                         "opponent_score": 0,
                         "user_score": 0,
-                        "game": "tictactoe",
+                        "game_type": "tictactoe",
                         "draw": True,
                         "game_id": self.game_room
                     }

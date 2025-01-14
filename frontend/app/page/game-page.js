@@ -1,5 +1,5 @@
 
-import {fetchUserData , getCookie} from './readData.js';
+import {fetchUserData , getCookie ,logout} from './readData.js';
 
 import { navigateTo } from '../routing.js';
 import { submitTournament } from '../pong/js/submitTournament.js';
@@ -508,6 +508,7 @@ class gamePage extends HTMLElement {
             navigateTo('/login');
         }
         this.rander();
+        logout();
     }
 }
 
