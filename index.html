@@ -27,10 +27,8 @@
         // Replace 'ws://localhost:8000/ws/ticwinlose/' with your WebSocket server URL
 
         let data = {
-            "from_user":"",
             "to_user":"",
             "action":"",
-            "status":""
         };
 
         function sendData(action)
@@ -62,9 +60,15 @@
         };
 
         socket.onmessage = (message) => {
-            console.log(`message received: ${message.data}`)
+            console.log("-------------");
+            console.log(`message received: ${message.data}`);
+            
         };
-
+        function    sendRequest()
+        {
+            const url = "";
+            // fetch(url, () => )
+        }    
         // socket.addEventListener("open", (event) => {
         //     const data = {
         //         "from_user":"iantar",

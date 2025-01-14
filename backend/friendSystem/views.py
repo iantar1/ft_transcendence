@@ -10,7 +10,6 @@ from .serializers import FriendsProfileSerializer
 from UserManagement.serializers import UserSerializer
 
 
-
 # Create your views here.
 
 
