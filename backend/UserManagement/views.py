@@ -53,7 +53,18 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed("incorrect password")
 
-         # Generate OTP
+        if user.use_otp == False:
+            access_token = create_access_token(user.id)
+            refresh_token = create_refresh_token(user.id)
+
+            response = Response()
+            response.set_cookie(key="access", value=access_token)
+            response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+            
+            return response
+
+        # Generate OTP
+
         otp_token = create_otp_token(user.id)
         otp = str(random.randint(100000, 999999))
         user.otp = otp
@@ -103,13 +114,8 @@ class VerifyOTPView(APIView):
 
         response = Response()
         response.delete_cookie('otp_token')
-        print("access: {}")
         response.set_cookie(key="access", value=access_token)
         response.set_cookie(key="refresh", value=refresh_token, httponly=True)
-        # response.data = {
-        #     "access": access_token,
-        #     "refresh": refresh_token
-        # }
 
         return response
 
@@ -290,7 +296,7 @@ class ChangeImage(APIView):
         
         user = User.objects.filter(id=playload['id']).first()
         user.delete_image()
-
+        return Response({"message":"the image has been deleted successfully"})
 
 
 class ChangeBio(APIView):
@@ -425,18 +431,24 @@ class   OtpActivate(APIView):
             raise AuthenticationFailed('Unauthenticated')
         data = request.data['isactive']
         if data == True:
-            message = "OTP has been deactivated"
-            user.use_otp = True
-        else:
             message = "OTP has been activated"
+            user.use_otp = False
+        else:
+            message = "OTP has been desactivated"
             user.use_otp = True
         return Response({"message":message}, status=200)
+
     def get(self, request):
         token = request.COOKIES.get('access')
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
         return Response(user.use_otp, status=200)
+    
+
+
+
+
 # def checkIfTheRelationExsit(user1, user2, action):
 #     # Check if a friendship exists between the two users in either direction
 #     if  Friendship.objects.filter(from_user=user1, to_user=user2, status=action).exists():
