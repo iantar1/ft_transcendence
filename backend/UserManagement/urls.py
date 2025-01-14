@@ -28,7 +28,7 @@ urlpatterns = [
 
 
 
-    path('google/', google_auth.home),
+    # path('google/', google_auth.home),
 
 
     # path('list_frinds/', ),

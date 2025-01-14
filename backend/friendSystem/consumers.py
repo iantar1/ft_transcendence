@@ -46,18 +46,6 @@ class Notifications(WebsocketConsumer):
                 del user_channels[username]
             print(f"Removed channel for user {username}")
 
-    # def forward_to_view(self, data):
-    #     cookies = self.scope.get("cookies", {})
-    #     access_token = cookies.get("access")
-    #     refresh_token = cookies.get("refresh")
-    #     print(f'access: {access_token}, refresh: {refresh_token}')
-        
-    #     # Use cookies parameter instead of adding them to headers
-    #     url = "http://localhost:8000/friendship/"  # Replace with your endpoint
-    #     response = requests.post(url, json=data, cookies={"access": access_token, "refresh": refresh_token})
-    #     return response
-
-
     def receive(self, text_data=None, bytes_data=None):
         print(f"Message received: {text_data}", flush=True)
         if not text_data:

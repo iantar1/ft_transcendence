@@ -15,25 +15,35 @@ from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
 from .utils import *
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.renderers import JSONRenderer
 
-AUTH_PROVIDER_URI = "https://www.googleapis.com/oauth2/v1/certs"
-PROJECT_ID = "transcendence-432116"
+
+load_dotenv()
+
+
+
+os.getenv('')
+os.getenv('')
+os.getenv('')
+# AUTH_PROVIDER_URI = "https://www.googleapis.com/oauth2/v1/certs"
+# PROJECT_ID = "transcendence-432116"
 # AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
-CLIENT_ID = "242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com"
-CLIENT_SECRET = "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"
-OUUTH_TOKEN_URI = "https://oauth2.googleapis.com/token"
+CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+OUUTH_TOKEN_URI = os.getenv('GOOGOLE_TOKEN_URI')
 
-redirect_uri = "https://yourdomain.com/googleAuth/callback"  # This should match the URI on Google Cloud
 
 google_auth_url = "https://accounts.google.com/o/oauth2/auth"
-REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/login/callback/"
+REDIRECT_URI = "http://localhost:8000/accounts/google/login/callback/"
 
 AUTH_URI = f"{google_auth_url}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=profile%20email&response_type=code&access_type=offline"
+load_dotenv()
+FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
 # AuthUri = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code"
 
-def home(request):
-    return redirect(AUTH_URI)
+# def home(request):
+#     return redirect(AUTH_URI)
 
 
 from django.shortcuts import redirect
@@ -41,36 +51,36 @@ from django.http import JsonResponse
 
 
 
-def google_callback(request):
-    # Retrieve the authorization code from the callback URL
-    code = request.GET.get('code')
-    if not code:
-        return JsonResponse({'error': 'Authorization code not provided'}, status=400)
+# def google_callback(request):
+#     # Retrieve the authorization code from the callback URL
+#     code = request.GET.get('code')
+#     if not code:
+#         return JsonResponse({'error': 'Authorization code not provided'}, status=400)
 
-    # Exchange the authorization code for an access token
-    token_url = "https://oauth2.googleapis.com/token"
-    data = {
-        "code": code,
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "redirect_uri": REDIRECT_URI,
-        "grant_type": "authorization_code"
-    }
-    response = requests.post(token_url, data=data)
-    token_response_data = response.json()
+#     # Exchange the authorization code for an access token
+#     token_url = "https://oauth2.googleapis.com/token"
+#     data = {
+#         "code": code,
+#         "client_id": CLIENT_ID,
+#         "client_secret": CLIENT_SECRET,
+#         "redirect_uri": REDIRECT_URI,
+#         "grant_type": "authorization_code"
+#     }
+#     response = requests.post(token_url, data=data)
+#     token_response_data = response.json()
 
-    # Retrieve access token from the response
-    access_token = token_response_data.get("access_token")
-    if not access_token:
-        return JsonResponse({'error': 'Failed to retrieve access token'}, status=400)
+#     # Retrieve access token from the response
+#     access_token = token_response_data.get("access_token")
+#     if not access_token:
+#         return JsonResponse({'error': 'Failed to retrieve access token'}, status=400)
 
-    # Use access token to get user info from Google
-    user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
-    user_info_response = requests.get(user_info_url, headers={"Authorization": f"Bearer {access_token}"})
-    user_data = user_info_response.json()
+#     # Use access token to get user info from Google
+#     user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+#     user_info_response = requests.get(user_info_url, headers={"Authorization": f"Bearer {access_token}"})
+#     user_data = user_info_response.json()
 
-    # Output user data (in production, you’d probably save this to your database or create a user session)
-    return JsonResponse(user_data)
+#     # Output user data (in production, you’d probably save this to your database or create a user session)
+#     return JsonResponse(user_data)
 
 def get_code(request):
     code = request.GET.get('code')
@@ -92,26 +102,10 @@ def get_code(request):
 
     access = create_access_token(user.id)
     refresh = create_refresh_token(user.id)
-
+    print("cookies: ", access, refresh, flush=True)
     response = HttpResponseRedirect('https://localhost:3000/home')  # Redirect to frontend
-    # response.set_cookie(key="access", value=access_token, httponly=False)
-    # response.set_cookie(key="refresh", value=refresh_token, httponly=True)
-
-    response.set_cookie(
-        key="access", 
-        value=access, 
-        httponly=False, 
-        secure=True,  # Requires HTTPS
-        samesite="None"  # Allows cross-site requests
-    )
-    response.set_cookie(
-        key="refresh", 
-        value=refresh, 
-        httponly=True, 
-        secure=True, 
-        samesite="None"
-    )
-
+    response.set_cookie(key="access", value=access, httponly=False)
+    response.set_cookie(key="refresh", value=refresh, httponly=True)
 
     return response
 
@@ -124,12 +118,7 @@ def getUserInfo(access_token):
 
 
 def createUpdateUser(data)-> User:
-    # check if the user already exsit
-    # existing_user = User.objects.filter(email=data.get("email")).first()
-    # existing_user = User.objects.filter(username=data.get("given_name") + data.get("family_name")).first()
 
-    # if existing_user:
-    #     return existing_user
     response = requests.get(data.get("picture"))
     if response.status_code == 200:
         img_temp = NamedTemporaryFile(delete=True, suffix='.png')
@@ -138,15 +127,6 @@ def createUpdateUser(data)-> User:
 
         # Extract the image filename from the URL
         filename = os.path.basename(data.get("picture")) + ".png"
-
-
-    # user = User(
-    #         first_name = data.get("given_name"),
-    #         last_name = data.get("family_name"),
-    #         email = data.get("email"),
-    #         image = File(img_temp, name=filename),#set default if you can't get the image
-    #         username = data.get("given_name") + data.get("family_name")
-    #     )
 
     user, created = User.objects.update_or_create(
         username=data.get("given_name") + data.get("family_name"),
@@ -159,12 +139,11 @@ def createUpdateUser(data)-> User:
     )
     user.save()
     return user
-    
-def generateUserName(first_name, last_name):
-    return f"{first_name}_{last_name}"
+
 
 def getData(access_token) -> User:
     url = "https://accounts.google.com/gsi/client"#add this to env var
+
     headers = {
         "Authorization": f"Bearer {access_token}"
     }
@@ -172,37 +151,32 @@ def getData(access_token) -> User:
     print(f"the resposnse josn: {response.json()}")
     return createUpdateUser(response.json())
 
-from rest_framework.renderers import JSONRenderer
 
-def auth(request):
+
+# def auth(request):
     
-    queryStr = request.GET.get('code')
+#     queryStr = request.GET.get('code')
 
-    payload = {'grant_type':'authorization_code', 
-               'client_id':CLIENT_ID,
-               'client_secret':CLIENT_SECRET,
-               'code':queryStr,
-               'redirect_uri':REDIRECT_URI,}
-    r = requests.post(OUUTH_TOKEN_URI, data=payload)
-    print(f"here: {r.json()}")
+#     payload = {'grant_type':'authorization_code', 
+#                'client_id':CLIENT_ID,
+#                'client_secret':CLIENT_SECRET,
+#                'code':queryStr,
+#                'redirect_uri':REDIRECT_URI,}
+#     r = requests.post(OUUTH_TOKEN_URI, data=payload)
+#     print(f"here: {r.json()}")
 
-    intra_access_token = r.json().get('access_token')#['access_token']
-    user = getData(intra_access_token)
+#     google_access_token = r.json().get('access_token')
+#     user = getData(google_access_token)
 
-    print(f"------------------------>>>>>> {intra_access_token}")
+#     print(f"------------------------>>>>>> {google_access_token}")
         
-    serializer = UserSerializer(user)
-    # user.use
-    response = Response(serializer.data)
-    response.accepted_renderer = JSONRenderer()
-    response.accepted_media_type = 'application/json'
-    response.renderer_context = {
-    'request': request,
-    'response': response
-    }
-    access_token = create_access_token(user.id)
-    refresh_token = create_refresh_token(user.id)
-    response.set_cookie(key="access", value=access_token)
-    response.set_cookie(key="refresh", value=refresh_token, httponly=True)
-    return response
+
+#     # response = HttpResponseRedirect(FRONTEND_REDIRECT_URL) 
+#     response = Response({"message":"success"})
+#     access_token = create_access_token(user.id)
+#     refresh_token = create_refresh_token(user.id)
+
+#     response.set_cookie(key="access", value=access_token)
+#     response.set_cookie(key="refresh", value=refresh_token, httponly=True)
+#     return response
 

@@ -62,13 +62,30 @@
         socket.onmessage = (message) => {
             console.log("-------------");
             console.log(`message received: ${message.data}`);
+            let data = {
+                "to_user":"kali",
+                "action":"send",
+                "from_user":"iantar",
+                "status":"",
+            };
+            sendRequest(data);
             
         };
-        function    sendRequest()
+        async function    sendRequest(data)
         {
-            const url = "";
-            // fetch(url, () => )
-        }    
+            const url = "http://localhost:8000/friendship/";
+
+            const res = await fetch(url, {
+                method:"POST",
+                body:JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                credentials: 'include',
+            });
+            return res;
+        }
         // socket.addEventListener("open", (event) => {
         //     const data = {
         //         "from_user":"iantar",

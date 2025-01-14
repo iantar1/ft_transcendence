@@ -10,7 +10,7 @@ import {getCookie} from './readData.js';
 const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0340bd018f511405be07414064e236ed0c11845afedf13da4061f48b304f56a1&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code"
 
 // const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-44701ed50de1251b7881036e7c955b632ef27d9ad189012806bf5e16dc67c249&redirect_uri=http%3A%2F%2F10.14.4.4%3A8000%2Fintra%2F&response_type=code";
-const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-1e6f1paf05v1ngnpfdd6vblr1t1clru8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";
+const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-enn222ktvi3n3ps4efvogc3r866mstpt.apps.googleusercontent.com&redirect_uri=http://localhost:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";
 
 class loginPage extends HTMLElement {
 
