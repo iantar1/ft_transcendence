@@ -355,8 +355,6 @@ class MatchHistoryView(APIView):
         #opponenet username
         try:
             game_id = request.data['game_id']
-            if MatchHistory.objects.filter(game_id=game_id).exists():
-                return Response("The match history stored successfully", status=200)
             opponent_username = request.data['opponent_username']
             opponent_score = request.data['opponent_score']
             user_score = request.data['user_score']
@@ -377,16 +375,18 @@ class MatchHistoryView(APIView):
             user.stats.losses += 1
         user.stats.save()
         # Save the match history
-        history = MatchHistory(
-            user1=user,
-            user2=user2,
-            user1_score=user_score,
-            user2_score=opponent_score,
-            winner=winner,
-            game_type=game_type,
-            game_id=game_id
-        )
-        history.save()
+        if not MatchHistory.objects.filter(game_id=game_id).exists():
+            history = MatchHistory(
+                user1=user,
+                user2=user2,
+                user1_score=user_score,
+                user2_score=opponent_score,
+                winner=winner,
+                game_type=game_type,
+                game_id=game_id
+            )
+            history.save()
+
         user.score += user_score
         user.save()
         return Response("The match history stored successfully", status=200)

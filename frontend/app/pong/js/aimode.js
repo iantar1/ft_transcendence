@@ -987,7 +987,7 @@ export function ai_mode()
                 wsOpen = false;
                 cancelAnimationFrame(animationId);
                 socket.close();
-                render(GameOver(winner, score), 
+                render(GameOver(winner, score, "ai"), 
                     gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }

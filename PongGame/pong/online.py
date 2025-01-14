@@ -270,9 +270,9 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
         # Determine if ball is at paddle's z-position
         is_at_paddle = (
             (paddle == self.player1 and 
-             ball["z"] + ball["radius"] >= paddle["z"] - settings.PADDLE_DEPTH / 2) or
+             ball["z"] + ball["radius"] + ball["dz"] >= paddle["z"] - settings.PADDLE_DEPTH / 2) or
             (paddle == self.player2 and 
-             ball["z"] - ball["radius"] <= paddle["z"] + settings.PADDLE_DEPTH / 2)
+             ball["z"] - ball["radius"] + ball["dz"] <= paddle["z"] + settings.PADDLE_DEPTH / 2)
         )
 
         if not is_at_paddle:
