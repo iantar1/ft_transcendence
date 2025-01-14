@@ -1,7 +1,6 @@
 from channels.generic.websocket import WebsocketConsumer
-from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from UserManagement.views import friendRequestHandling
+# from UserManagement.views import friendRequestHandling
 from UserManagement.models import User
 from UserManagement.serializers import UserSerializer
 from rest_framework.exceptions import AuthenticationFailed
@@ -9,37 +8,19 @@ import jwt
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import requests
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 
 user_channels = {}
 
-# class Notifications(AsyncWebsocketConsumer):
-#     async def connect(self):
-#         await self.accept()
-#         print('connect', flush=True)
-
-
-#     async def disconnect(self, code):
-#         print("disconnect")
-    
-#     async def receive(self, text_data=None, bytes_data=None):
-#         print(f"Message received: {text_data}")
-#         await self.send()
-
-#     async def send(self, text_data=None, bytes_data=None, close=False):
-#         print("send")
-#         # text_data = json.dumps("hello from backend")
-#         text_data = "hello from backend"
-#         text_data = {"":"", "":"", "":""}
-#         return super().send(text_data, bytes_data, close)
-# def get_user_by_token(token):
-#     if not token:
-#         return None
-#     try:
-#         payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-#         return User.objects.filter(id=payload['id']).first()
-#     except (jwt.ExpiredSignatureError, jwt.DecodeError):
-#         return None
+def get_user_by_token(token):
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        return User.objects.filter(id=payload['id']).first()
+    except (jwt.ExpiredSignatureError, jwt.DecodeError):
+        return None
 
 class Notifications(WebsocketConsumer):
     def connect(self):
@@ -65,16 +46,16 @@ class Notifications(WebsocketConsumer):
                 del user_channels[username]
             print(f"Removed channel for user {username}")
 
-    def forward_to_view(self, data):
-        cookies = self.scope.get("cookies", {})
-        access_token = cookies.get("access")
-        refresh_token = cookies.get("refresh")
-        print(f'access: {access_token}, refresh: {refresh_token}')
+    # def forward_to_view(self, data):
+    #     cookies = self.scope.get("cookies", {})
+    #     access_token = cookies.get("access")
+    #     refresh_token = cookies.get("refresh")
+    #     print(f'access: {access_token}, refresh: {refresh_token}')
         
-        # Use cookies parameter instead of adding them to headers
-        url = "http://localhost:8000/friendship/"  # Replace with your endpoint
-        response = requests.post(url, json=data, cookies={"access": access_token, "refresh": refresh_token})
-        return response
+    #     # Use cookies parameter instead of adding them to headers
+    #     url = "http://localhost:8000/friendship/"  # Replace with your endpoint
+    #     response = requests.post(url, json=data, cookies={"access": access_token, "refresh": refresh_token})
+    #     return response
 
 
     def receive(self, text_data=None, bytes_data=None):
@@ -124,6 +105,25 @@ class Notifications(WebsocketConsumer):
 # a user receives a friend request 
 # 
 
+# class Notifications(AsyncWebsocketConsumer):
+#     async def connect(self):
+#         await self.accept()
+#         print('connect', flush=True)
+
+
+#     async def disconnect(self, code):
+#         print("disconnect")
+    
+#     async def receive(self, text_data=None, bytes_data=None):
+#         print(f"Message received: {text_data}")
+#         await self.send()
+
+#     async def send(self, text_data=None, bytes_data=None, close=False):
+#         print("send")
+#         # text_data = json.dumps("hello from backend")
+#         text_data = "hello from backend"
+#         text_data = {"":"", "":"", "":""}
+#         return super().send(text_data, bytes_data, close)
 
 
 # Redis is used as a storage layer

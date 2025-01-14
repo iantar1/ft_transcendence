@@ -1,12 +1,11 @@
 
 
-import {fetchUserData , fetchFriendsData,fetchMatchData, getCookie ,logout, fetchStatsData, fetchNoFriendsData} from './readData.js';
+import {fetchUserData , addordelete ,fetchFriendsData,fetchMatchData, getCookie ,logout, fetchStatsData, fetchNoFriendsData, getnotification} from './readData.js';
 
 // import {fetchMatchData} from './readData.js';
 
 import { navigateTo } from '../routing.js';
-// const info = await fetchUserData();
-// this.narotu = await fetchMatchData();
+
 
 
 function serachBar(){
@@ -79,7 +78,7 @@ function serachBar(){
     </style>
     <div id="search-container" style="flex-direction: column; width :100%;" >
         <div style="width :100%; height :100%;" >
-            <input type="text" id="search-bar" placeholder="Search here..." />
+            <input style="padding:5px; color :#000; text-aling:center;font-size:16px; font-family: sans-serif;" type="text" id="search-bar" placeholder="Search here..." />
             <div id="results"></div>
             <button style="background :gray;" type="click" id="backtoprof" class="btn-home btn btn-secondary " >Back</button>
         </div>
@@ -106,22 +105,34 @@ function profSection(name, img , bool) {
     `;
 }
 
-function addnewFriend(){
-    
-    console.log("BEFOR ADD FRIEND");
-    const newfriend = document.getElementById('addnewfriend')
+function addnewFriend(name){
+        const newfriend = document.getElementById('addnewfriend')
     if (newfriend){
         newfriend.addEventListener('click' , (e) => {
             console.log("HANDEL ADD NEW FRIEND HERE");
+            const data = {
+                to_user : name,
+                form_user :"",
+                action : "sent",
+                status : ""
+            }
+          addordelete(data,'POST','friendship');
         });
     }
 }
 
-function deleteFriend(){
+function deleteFriend(name){
     const newfriend = document.getElementById('deletefriend')
     if (newfriend){
         newfriend.addEventListener('click' , (e) => {
-            console.log("HANDEL DELETE FRIEND HERE");
+            console.log("HANDEL ADD NEW FRIEND HERE");
+            const data = {
+                to_user : name,
+                form_user :"",
+                action : "remove",
+                status : ""
+            }
+            addordelete(data,'POST','friendship');
         });
     }
 }
@@ -262,11 +273,13 @@ function handleNotification(){
     const html = profSection();
     notificationIcon.style.animation = "none";
     notificationIcon.style.color = "#fff"
-    document.querySelector('.notif').addEventListener('click' , (e) => {
+    document.querySelector('.notif').addEventListener('click' , async (e) => {
             notificationIcon.style.animation = "scaleNotification 1s ease-in-out infinite";
             notificationIcon.style.color = "var(--red)"
 
             const allnotif = ['ahbajao' ,'ayoub' , 'hamza' , 'omry']
+            const  hey = await getnotification('friendship')
+            console.log(hey);
             const fillnoti =  document.querySelector('#seenotification');
             let  data = '';
             allnotif.forEach(elem => {
@@ -329,8 +342,8 @@ class profilePage extends HTMLElement {
                         </div>
                         <div class="lvl">
                             <div class="progress">
-                                <div class="progress-bar progress-bar-info progress-bar-striped active" style="width:10%; box-shadow:none;"></div>
-                                <div class="progress-value">10%</div>
+                                <div id="progcon" class="progress-bar progress-bar-info progress-bar-striped active" style=" box-shadow:none;"></div>
+                                <div id="progvalue" class="progress-value">10%</div>
                             </div>
                         </div>
 
@@ -861,111 +874,104 @@ class profilePage extends HTMLElement {
     </style>
     `;
     cycleProgress = `
+<div id="cycle-container">
     <div class="cycle blue">
-    <span class="cycle-left">
-        <span class="cycle-bar "></span>
-    </span>
-    <span class="cycle-right">
-        <span class="cycle-bar"></span>
-    </span>
-    <div id="cycleValue" class="cycle-value"></div>
+        <span class="cycle-left">
+            <span class="cycle-bar"></span>
+        </span>
+        <span class="cycle-right">
+            <span class="cycle-bar"></span>
+        </span>
+        <div id="cycleValue" class="cycle-value"></div>
     </div>
-
+</div>
 <style>
-  .cycle {
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    background: none;
-    margin: 20px;
-    position: relative;
-    border-radius: 50%;
+  :root {
+      --value: 20; /* Default value */
   }
 
-  .cycle:after {
-    display: none;
-    content: "";
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 12px solid #fff;
-    position: absolute;
-    top: 0;
-    left: 0;
+  .cycle {
+      width: 150px;
+      height: 150px;
+      line-height: 150px;
+      background: none;
+      margin: 20px;
+      position: relative;
+      border-radius: 50%;
   }
 
   .cycle>span {
-    width: 50%;
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    z-index: 1;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      z-index: 1;
   }
 
   .cycle .cycle-left {
-    left: 0;
+      left: 0;
   }
 
   .cycle .cycle-bar {
-    width: 100%;
-    height: 100%;
-    background: none;
-    border-width: 12px;
-    border-style: solid;
-    position: absolute;
-    top: 0;
+      width: 100%;
+      height: 100%;
+      background: none;
+      border-width: 12px;
+      border-style: solid;
+      position: absolute;
+      top: 0;
   }
 
   .cycle .cycle-left .cycle-bar {
-    left: 100%;
-    border-top-right-radius: 80px;
-    border-bottom-right-radius: 80px;
-    border-left: 0;
-    transform-origin: center left;
+      left: 100%;
+      border-top-right-radius: 80px;
+      border-bottom-right-radius: 80px;
+      border-left: 0;
+      transform-origin: center left;
   }
 
   .cycle .cycle-right {
-    right: 0;
+      right: 0;
   }
 
   .cycle .cycle-right .cycle-bar {
-    left: -100%;
-    border-top-left-radius: 80px;
-    border-bottom-left-radius: 80px;
-    border-right: 0;
-    transform-origin: center right;
-    animation: loading-1 1s ease-out forwards ;
+      left: -100%;
+      border-top-left-radius: 80px;
+      border-bottom-left-radius: 80px;
+      border-right: 0;
+      transform-origin: center right;
+      animation: loading-1 1s ease-out forwards;
   }
 
   .cycle .cycle-value {
-    width: 90%;
-    height: 90%;
-    border-radius: 50%;
-    background:rgb(0 0 0 / 0.5);
-    font-size: 24px;
-    color: #fff;
-    line-height: 135px;
-    text-align: center;
-    position: absolute;
-    top: 5%;
-    left: 5%;
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      background: rgb(0 0 0 / 0.5);
+      font-size: 24px;
+      color: #fff;
+      line-height: 135px;
+      text-align: center;
+      position: absolute;
+      top: 5%;
+      left: 5%;
   }
 
   .cycle.blue .cycle-bar {
-    border-color: var(--red);
+      border-color: blue;
   }
 
   @keyframes loading-1 {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(180deg);
-    }
-  }
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(var(--value, 0deg));
+      }
   }
 </style>
+
 
     `
     templatTwo = `
@@ -1156,9 +1162,8 @@ class profilePage extends HTMLElement {
                             ${filteredData
                                 .map(
                                     item =>
-                                        `<li data-name="${item.first_name} ${item.last_name}" data-img="${item.image}" class="search-result">
-                                            <img src="${item.image}" alt="${item.first_name} ${item.last_name}" width="50">
-                                            ${item.first_name} ${item.last_name} (${item.username})
+                                        `<li data-name="${item.username}" data-img="${item.image}" class="search-result">
+                                            ${item.username}
                                         </li>`
                                 )
                                 .join('')}
@@ -1191,7 +1196,7 @@ class profilePage extends HTMLElement {
                         document.querySelector('.forAdd').innerHTML = slidFriend();
                         this.bindSearchBarEvents();
                     });
-                    addnewFriend();
+                    addnewFriend(name);
                 }
             });
         }
@@ -1212,26 +1217,29 @@ class profilePage extends HTMLElement {
     
     
     openProfile() {
+        
         const openProfileElements = document.querySelectorAll('.profsign'); // Select all span elements with the class 'profsign'
-    
+        
+        console.log("---------------------------------" + openProfileElements);
         openProfileElements.forEach(field => {
             field.addEventListener('click', (e) => {
                 // Get data attributes from the clicked element
                 const name = field.querySelector('.forsddProf').dataset.name;
                 const img = field.querySelector('.forsddProf').dataset.img;
-    
+        
                 // Pass the data dynamically to slidProf and display the popup
                 const profilePopup = slidProf({ name, img });
                 document.body.insertAdjacentHTML('beforeend', profilePopup);
-    
+        
                 // Add functionality to the back button
                 const backToSearch = document.querySelector('#toprof');
                 backToSearch.addEventListener('click', () => {
                     document.querySelector('#logoutPopup').remove(); // Close the popup
                 });
-                deleteFriend();
+                deleteFriend(name);
             });
         });
+        
     }
     
     async stockFriends() {
@@ -1244,17 +1252,18 @@ class profilePage extends HTMLElement {
        let  index = 0;
        this.statsHistory.forEach((info) => {
            // index++;
-           const status = info.status === true ? "green" : "red";           prof += `
-           <span class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
-           <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%;" src="${info.img}">
-           <span id="" data-name="${info.player}" data-img="${info.img}" class="forsddProf" style=""></span>
-           <span class="sign" style="background: ${status};"></span> 
-                </span>
+         prof += `
+           <span type"click" class="profsign d-flex justify-content-center align-items-center flex-column" data-index="${index}">
+           <img id="openprof" type="click" style="position: static; width: 50px; height: 50px; border-radius: 50%;" src="${info.image}">
+           <span id="" data-name="${info.username}" data-img="${info.image}" class="forsddProf" style=""></span>
+           <span class="sign" style="background: ; border :none;"></span> 
+            </span>
             `;
         });
         main.innerHTML = prof;
+        this.openProfile()
     }
-    
+    cycleValue;
     render() {
         const uuss = async () => {
             if (!getCookie('access')){
@@ -1262,14 +1271,8 @@ class profilePage extends HTMLElement {
             }
             this.info = await fetchUserData();
             if (this.info){
-                // console.log(this.info.image);
-                if (!this.info.username){
-                    this.info.username = "ASTRO"
-                }
                 if (this.info.image){
                     document.getElementById('img_intra').src = this.info.image
-                }else{
-                    document.getElementById('img_intra').src = "/images/default.jpeg";
                 }
                 document.getElementById('username').textContent = this.info.username
                 document.getElementById('BIO').textContent = this.info.bio
@@ -1279,12 +1282,27 @@ class profilePage extends HTMLElement {
        
                 // Optional: If you need to update duplicate or additional elements, create aliases
                 console.log("stats win : " +  stats.wins);
-                if (stats){
-                    document.getElementById('win').textContent = stats.wins;
-                    document.getElementById('winone').textContent = "";
-                    document.getElementById('lose').textContent = stats.losses;
-                    document.getElementById('loseone').textContent = "";
-                    document.getElementById('cycleValue').textContent = stats.total;
+                this.cycleValue = 10;
+                const cycleValueElement = document.getElementById('cycleValue');
+              
+      
+                    // Generate a random value between 0 and 100
+                    // const newValue = Math.floor(Math.random() * 100);
+                    if (stats){
+                        document.getElementById('win').textContent = stats.wins;
+                        document.getElementById('winone').textContent = "";
+                        document.getElementById('lose').textContent = stats.losses;
+                        document.getElementById('loseone').textContent = "";
+                        document.getElementById('cycleValue').textContent = stats.total;
+                        document.getElementById('progvalue').textContent = stats.total;
+                        document.getElementById('progcon').style.width = "10%";
+                        const newValue = stats.total;
+                        // Update the CSS variable for the animation
+                        document.documentElement.style.setProperty('--value', `${(newValue / 200) * 360}deg`);
+                        // Update the displayed value
+                        if (stats.total){
+                            cycleValueElement.textContent = `${newValue}%`;
+                        }
                 }else{
                     document.getElementById('win').textContent = "0";
                     document.getElementById('winone').textContent = "";
@@ -1360,10 +1378,13 @@ class profilePage extends HTMLElement {
     }
     connectedCallback() {
         this.render();
+        console.log('this is value of : ' + this.cycleValue)
         this.statsPlayer();
         this.slidFriend();
         this.stockFriends();
-        this.openProfile();
+        
+        // this.openProfile();
+        // console.log("---------------------------------")
         logout();
         handleNotification();
         // deleteFriend();
@@ -1373,3 +1394,7 @@ class profilePage extends HTMLElement {
 
 customElements.define('profile-page', profilePage);
 
+// "to_user":""
+// "from_user":""
+// "action":"sent remove"
+// "status":""

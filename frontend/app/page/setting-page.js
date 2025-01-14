@@ -1,5 +1,5 @@
 
-import {fetchUserData , getCookie ,logout,postImage,postMethode} from './readData.js';
+import {CheckAuth, CheckUserAuth, fetchUserData , getCookie ,logout,postImage,postMethode} from './readData.js';
 
 import { navigateTo } from '../routing.js';
 
@@ -429,7 +429,6 @@ class settingPage extends HTMLElement {
                 <input type="checkbox" id="toggle-switch" >
                 <span class="slider round"></span>
             </label>
-            <input style="font-size:16px; font-family: sans-serif; background : var(--red);" type="submit" value="Submit" id="postData" class="btn-home filter btn btn-secondary" style="background: var(--red);">
             </div>
 
         `;
@@ -558,7 +557,6 @@ class settingPage extends HTMLElement {
     passPost(){
         document.querySelector('#postData').addEventListener('click', async function (event) {
             event.preventDefault(); // Prevent form submission and page reload
-            console.log("HERE HERE");
             const pass1 = document.querySelector('.pass1').value;
             const pass2 = document.querySelector('.pass2').value;
             const pass3 = document.querySelector('.pass3').value;
@@ -570,31 +568,33 @@ class settingPage extends HTMLElement {
                     new_password1 : pass2,
                     new_password2 : pass3,
                 }
-                // new FormData();
-                // formData.append('crrent_password1', pass1);
-                // formData.append('new_password1', pass2);
-                // formData.append('new_password2', pass3);
                 await postMethode(formData , 'change_password');
                 document.querySelector('.clean').reset();
             }
         });
     }
-    passAuth(){
-        const toggleSwitch = document.getElementById('toggle-switch');
-        toggleSwitch.addEventListener('change', (e) => {
-            document.querySelector('#postData').addEventListener('click', async function (event) {
-                event.preventDefault(); // Prevent form submission and page reload
-                if (e.target.checked) {
-                    console.log('Switch turned ON');
-                } else {
-                    console.log('Switch turned OFF');
-                }
-                console.log("HERE IS THE AUTH PART");
-    
-                // Listen for changes
-            });
+    async passAuth(){
 
-        });
+        const toggleSwitch = document.getElementById('toggle-switch');
+        const status = await CheckUserAuth('' , 'GET' , "otp_activate");
+        toggleSwitch.checked = status;
+        toggleSwitch.addEventListener('change', (e) => {
+                e.preventDefault(); // Prevent form submission and page reload
+                if (e.target.checked) {
+
+                    console.log('Switch turned ON');
+                    const data = {
+                        isactivate : true
+                    }
+                    CheckAuth(data,'POST','otp_activate')
+                } else {
+                    const data = {
+                        isactivate : false
+                    }
+                    CheckAuth(data,'POST','otp_activate')
+                }
+                console.log("HERE IS THE AUTH PART");    
+            });
     }
     render() {
         this.innerHTML = `
@@ -861,7 +861,7 @@ class settingPage extends HTMLElement {
                 this.passPost('change_password');
             });
             const authEdit = document.querySelector('.authSetting');
-            authEdit.addEventListener('click' , (e) => {
+            authEdit.addEventListener('click' , async (e) => {
                 e.preventDefault()
                 authEdit.style.background = "rgba(56, 75, 112, 0.2)";
                 authEdit.style.borderRight = ' 10px solid rgba(56, 75, 112, 1)';
@@ -870,8 +870,6 @@ class settingPage extends HTMLElement {
                 const editInfo = document.querySelector('.editInfo');
                 editInfo.innerHTML = this.authEdit();
                 this.passAuth();
-            // this.infoPost("");
-
             });
             this.displayNav();
             const uuss = async () => {
@@ -887,9 +885,9 @@ class settingPage extends HTMLElement {
 
     connectedCallback() {
         // console.log('HERE IS THE SETTING PAGE')
-        // if (!getCookie('access')){
-        //     navigateTo('/login');
-        // }
+        if (!getCookie('access')){
+            navigateTo('/login');
+        }
         this.render();
         logout()
     }

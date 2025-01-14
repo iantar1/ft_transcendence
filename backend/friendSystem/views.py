@@ -10,7 +10,6 @@ from .serializers import FriendsProfileSerializer
 from UserManagement.serializers import UserSerializer
 
 
-
 # Create your views here.
 
 
@@ -69,6 +68,23 @@ class FriendShipView(APIView):
         elif action == 'remove':
             return self.removeFriend(to_user, from_user)
         return  Response({"error": "This action doesn't exists."}, status=400)
+        
+    def get(self, request):
+        token = request.COOKIES.get('access')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+
+        user = get_user_by_token(token)
+        if user is None:
+            raise AuthenticationFailed('Unauthenticated')
+        try:
+            friend_requests = Friendship.objects.get(to_user=user)
+            serialer = FriendshipSerializer(friend_requests, many=True)
+            return Response(serialer.data, status=200)
+        except:
+            pass
+
+        return Response(status=200)
 
     def isThisActionExist(sender, receiver, status):
         pass
@@ -163,3 +179,9 @@ class   NotUserFriends(APIView):
         not_friends = User.objects.exclude(id=user.id).exclude(id__in=friends.values_list('id', flat=True))
         user_serializer = UserSerializer(not_friends, many=True)
         return Response(user_serializer.data, status=200)
+# {
+# "to_user":""
+# "from_user":""
+# "action":"sent remove"
+# "status":""
+# }
