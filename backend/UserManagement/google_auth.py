@@ -20,67 +20,26 @@ from rest_framework.renderers import JSONRenderer
 
 load_dotenv()
 
-
-
-os.getenv('')
-os.getenv('')
-os.getenv('')
 # AUTH_PROVIDER_URI = "https://www.googleapis.com/oauth2/v1/certs"
 # PROJECT_ID = "transcendence-432116"
 # AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 OUUTH_TOKEN_URI = os.getenv('GOOGOLE_TOKEN_URI')
+FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
 
 google_auth_url = "https://accounts.google.com/o/oauth2/auth"
 REDIRECT_URI = "http://localhost:8000/accounts/google/login/callback/"
 
 AUTH_URI = f"{google_auth_url}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=profile%20email&response_type=code&access_type=offline"
-load_dotenv()
-FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
-# AuthUri = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code"
 
-# def home(request):
-#     return redirect(AUTH_URI)
 
 
 from django.shortcuts import redirect
 from django.http import JsonResponse
 
-
-
-# def google_callback(request):
-#     # Retrieve the authorization code from the callback URL
-#     code = request.GET.get('code')
-#     if not code:
-#         return JsonResponse({'error': 'Authorization code not provided'}, status=400)
-
-#     # Exchange the authorization code for an access token
-#     token_url = "https://oauth2.googleapis.com/token"
-#     data = {
-#         "code": code,
-#         "client_id": CLIENT_ID,
-#         "client_secret": CLIENT_SECRET,
-#         "redirect_uri": REDIRECT_URI,
-#         "grant_type": "authorization_code"
-#     }
-#     response = requests.post(token_url, data=data)
-#     token_response_data = response.json()
-
-#     # Retrieve access token from the response
-#     access_token = token_response_data.get("access_token")
-#     if not access_token:
-#         return JsonResponse({'error': 'Failed to retrieve access token'}, status=400)
-
-#     # Use access token to get user info from Google
-#     user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
-#     user_info_response = requests.get(user_info_url, headers={"Authorization": f"Bearer {access_token}"})
-#     user_data = user_info_response.json()
-
-#     # Output user data (in production, you’d probably save this to your database or create a user session)
-#     return JsonResponse(user_data)
 
 def get_code(request):
     code = request.GET.get('code')
