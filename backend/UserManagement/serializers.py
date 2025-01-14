@@ -71,7 +71,7 @@ class MatchHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = MatchHistory
 
-        fields = ['user1', 'user2', 'user1_score', 'user2_score', 'winner']
+        fields = ['user1', 'user2', 'user1_score', 'user2_score', 'winner', 'game_type']
 
 
 class StatsSerializer(serializers.ModelSerializer):
