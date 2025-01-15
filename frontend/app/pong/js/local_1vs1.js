@@ -1004,7 +1004,7 @@ export function local_1vs1()
                 wsOpen = false;
                 cancelAnimationFrame(animationId);
                 socket.close();
-                render(GameOver(winner, score), 
+                render(GameOver(winner, score, "local"), 
                     gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }

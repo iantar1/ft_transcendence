@@ -1,5 +1,6 @@
 import { render } from './render.js';
 import { menu } from './loby.js';
+import { GameOver } from './gameOver.js';
 
 
 class GamePage extends HTMLElement {
@@ -37,7 +38,6 @@ class GamePage extends HTMLElement {
                 height: 100%;
                 width: 100%;
             }
- 
         `;
         shadow.appendChild(style);
         shadow.appendChild(main);

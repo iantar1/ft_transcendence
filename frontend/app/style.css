@@ -8,11 +8,11 @@
 
 :root {
   --blue: linear-gradient(0deg, 
-  rgb(4, 28,68, 1) 100%, 
+  #041c44 100%, 
   rgba(56, 75, 112, 0.2) 100%
    );
   --red: rgb(227, 5, 46);
-
+  
   --bluenes : linear-gradient(-80deg, 
   rgb(4, 28,68, 1) 5%, 
   rgba(56, 75, 112, 0.2) 100%

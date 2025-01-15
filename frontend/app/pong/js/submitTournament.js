@@ -24,21 +24,8 @@ export async function submitTournament(
               },
               {
                 "internalType": "uint256",
-                "name": "rank",
+                "name": "score",
                 "type": "uint256"
-              }
-            ],
-            "indexed": false,
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player1",
-            "type": "tuple"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
               },
               {
                 "internalType": "uint256",
@@ -47,45 +34,9 @@ export async function submitTournament(
               }
             ],
             "indexed": false,
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player2",
-            "type": "tuple"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256",
-                "name": "rank",
-                "type": "uint256"
-              }
-            ],
-            "indexed": false,
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player3",
-            "type": "tuple"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256",
-                "name": "rank",
-                "type": "uint256"
-              }
-            ],
-            "indexed": false,
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player4",
-            "type": "tuple"
+            "internalType": "struct TournamentDetails.Player[]",
+            "name": "players",
+            "type": "tuple[]"
           },
           {
             "indexed": false,
@@ -105,44 +56,19 @@ export async function submitTournament(
             "type": "string"
           },
           {
-            "internalType": "string",
-            "name": "player1Name",
-            "type": "string"
+            "internalType": "string[4]",
+            "name": "playerNames",
+            "type": "string[4]"
           },
           {
-            "internalType": "uint256",
-            "name": "player1Rank",
-            "type": "uint256"
+            "internalType": "uint256[4]",
+            "name": "playerScores",
+            "type": "uint256[4]"
           },
           {
-            "internalType": "string",
-            "name": "player2Name",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "player2Rank",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "player3Name",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "player3Rank",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "player4Name",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "player4Rank",
-            "type": "uint256"
+            "internalType": "uint256[4]",
+            "name": "playerRanks",
+            "type": "uint256[4]"
           }
         ],
         "name": "addTournament",
@@ -170,20 +96,8 @@ export async function submitTournament(
                   },
                   {
                     "internalType": "uint256",
-                    "name": "rank",
+                    "name": "score",
                     "type": "uint256"
-                  }
-                ],
-                "internalType": "struct TournamentDetails.Player",
-                "name": "player1",
-                "type": "tuple"
-              },
-              {
-                "components": [
-                  {
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
                   },
                   {
                     "internalType": "uint256",
@@ -191,43 +105,9 @@ export async function submitTournament(
                     "type": "uint256"
                   }
                 ],
-                "internalType": "struct TournamentDetails.Player",
-                "name": "player2",
-                "type": "tuple"
-              },
-              {
-                "components": [
-                  {
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "rank",
-                    "type": "uint256"
-                  }
-                ],
-                "internalType": "struct TournamentDetails.Player",
-                "name": "player3",
-                "type": "tuple"
-              },
-              {
-                "components": [
-                  {
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "rank",
-                    "type": "uint256"
-                  }
-                ],
-                "internalType": "struct TournamentDetails.Player",
-                "name": "player4",
-                "type": "tuple"
+                "internalType": "struct TournamentDetails.Player[]",
+                "name": "players",
+                "type": "tuple[]"
               },
               {
                 "internalType": "uint256",
@@ -257,74 +137,6 @@ export async function submitTournament(
             "internalType": "string",
             "name": "name",
             "type": "string"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256",
-                "name": "rank",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player1",
-            "type": "tuple"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256",
-                "name": "rank",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player2",
-            "type": "tuple"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256",
-                "name": "rank",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player3",
-            "type": "tuple"
-          },
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "internalType": "uint256",
-                "name": "rank",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct TournamentDetails.Player",
-            "name": "player4",
-            "type": "tuple"
           },
           {
             "internalType": "uint256",
@@ -362,10 +174,12 @@ export async function submitTournament(
     // add tournament 
     async function addTournament() {
       const tournamentName = name;
-      const player1Name = players.player1;
-      const player2Name = players.player2;
-      const player3Name = players.player3;
-      const player4Name = players.player4;
+      const playerNames = [players.player1, players.player2, players.player3, players.player4];
+      const playerscores = [160, 120, 80, 60];
+      const playerranks = [1, 2, 3, 4];
+
+
+
 
       if (!contract) {
           alert('Contract is not initialized. Please refresh the page.');
@@ -377,7 +191,7 @@ export async function submitTournament(
 
       console.log('Sending transaction:', {
           tournamentName,
-          players: [player1Name, player2Name, player3Name, player4Name],
+          players: [players.player1, players.player2, players.player3, players.player4],
           account
       });
 
@@ -385,10 +199,9 @@ export async function submitTournament(
 
           const receipt = await contract.methods.addTournament(
               tournamentName,
-              player1Name, 1,
-              player2Name, 2,
-              player3Name, 3,
-              player4Name, 4
+              playerNames,
+              playerscores,
+              playerranks,
           ).send({ from: account});
           console.log('Transaction successful:', receipt);
           return true;

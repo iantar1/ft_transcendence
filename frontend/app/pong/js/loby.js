@@ -44,32 +44,56 @@ export function menu() {
       gap :10px;
     }
 
+
     button {
+        font-family: "Pong War";
+        padding: 15px 30px;
         width: 200px;
-        height: 50px;
-        background-color: rgba(228, 5, 47, 1);
-        border-radius: 12px;
-        border: none;
-        font-size: 100%;
-        z-index: 2000;
-        color: #fff;
+        letter-spacing: 2px;
+        color: white;
+        background-color: var(--red);
+        border: 2px solid white;
+        border-radius: 8px;
         cursor: pointer;
-        transition: transform 0.3s ease;
-        font-family: "Pong War", "Freeware";
-        font-weight: bold;
-        border :1px solid;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
     }
-    button.hidden {
-      display: none;
+
+    button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+        );
+        transition: 0.5s;
+    }
+
+    button:hover {
+        background-color: #ff1f1f;
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(227, 5, 46, 0.5);
+    }
+
+    button:hover::before {
+        left: 100%;
     }
 
     button:nth-child(6) {
       background-color: var(--blue);
     }
 
-    button:hover {
-      background-color: rgba(255, 15, 47, 0.5);
-      transform: scale(1.1);
+    button.hidden {
+      display: none;
+    }
 
   }`;
 

@@ -84,24 +84,46 @@ class GameTictac extends HTMLElement {
             width: 100%;
         }
         
-        .btn-secondary {
+        button {
+            font-family: "Pong War";
+            padding: 15px 30px;
             width: 200px;
-            height: 50px;
-            background-color: rgba(228, 5, 47, 1);
-            border-radius: 12px;
-            border: none;
-            font-size: 100%;
-            z-index: 2000;
-            color: #fff;
+            letter-spacing: 2px;
+            color: white;
+            background-color: var(--red);
+            border: 2px solid white;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            border :1px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
         }
 
-        /* Scale effect on hover */
-        .btn-secondary:hover {
-            background-color: rgba(255, 15, 47, 0.5);
-            transform: scale(1.1);
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        button:hover {
+            background-color: #ff1f1f;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(227, 5, 46, 0.5);
+        }
+
+        button:hover::before {
+            left: 100%;
         }
         @media (min-width: 320px) and (max-width: 1024px) {
             .nav-bar{
@@ -158,9 +180,9 @@ class GameTictac extends HTMLElement {
     <div class="menu" id="tictactoe_id">
         <div class="game-title" >Tic Tac Toe</div>
         <div style="width :100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction: column; gap:10px;" >
-            <button id="tolocal" type="button" class="btn-home btn-secondary">Local</button>
-            <button id="toremote" type="button" class="btn-home btn-secondary">Remote</button>
-            <button style="background:#000;" id="toback" type="click" class="btn-home btn-secondary">Back</button>
+            <button id="tolocal" >Local</button>
+            <button id="toremote" >Remote</button>
+            <button style="background:#000;" id="toback" type="click">Back</button>
         </div>
     </div>
     `

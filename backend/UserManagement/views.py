@@ -56,8 +56,7 @@ class LoginView(APIView):
         if user.use_otp == False:
             access_token = create_access_token(user.id)
             refresh_token = create_refresh_token(user.id)
-            response = Response({"message": "Tokens have been set successfully"})
-            response = Response()
+            response = Response({"message": "NOOTP"})
             response.set_cookie(key="access", value=access_token)
             response.set_cookie(key="refresh", value=refresh_token, httponly=True)
             
@@ -358,6 +357,15 @@ class MatchHistoryView(APIView):
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
         #opponenet username
+        try:
+            game_id = request.data['game_id']
+            opponent_username = request.data['opponent_username']
+            opponent_score = request.data['opponent_score']
+            user_score = request.data['user_score']
+            game_type = request.data['game_type']
+
+        except:
+            raise ValidationError({'field error': 'you missed some fields'})
         user2 = User.objects.filter(username=opponent_username).first()
 
         if user2 is None:
@@ -370,26 +378,18 @@ class MatchHistoryView(APIView):
             winner = user2
             user.stats.losses += 1
         user.stats.save()
-
-        try:
-            game_id = request.data['game_id']
-            if not MatchHistory.objects.filter(game_id=game_id).exists():
-                opponent_username = request.data['opponent_username']
-                opponent_score = request.data['opponent_score']
-                user_score = request.data['user_score']
-                game_type = request.data['game_type']
-                history = MatchHistory(
-                    user1=user,
-                    user2=user2,
-                    user1_score=user_score,
-                    user2_score=opponent_score,
-                    winner=winner,
-                    game_type=game_type,
-                    game_id=game_id
-                )
-                history.save()
-        except:
-            raise ValidationError({'field error': 'you missed some fields'})
+        # Save the match history
+        if not MatchHistory.objects.filter(game_id=game_id).exists():
+            history = MatchHistory(
+                user1=user,
+                user2=user2,
+                user1_score=user_score,
+                user2_score=opponent_score,
+                winner=winner,
+                game_type=game_type,
+                game_id=game_id
+            )
+            history.save()
 
         user.score += user_score
         user.save()
@@ -403,7 +403,11 @@ class StatsView(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        stats = Stats.objects.get_or_create(user=user)
+        # stats = Stats.objects.get_or_create(user=user)
+        try:
+            stats = Stats.objects.get(user=user)
+        except:
+            stats = Stats.objects.create(user=user)
         if stats == None:
             return Response({"error":"stats not found"}, status=404)
         serialer = StatsSerializer(stats)
@@ -426,13 +430,14 @@ class   OtpActivate(APIView):
         user = get_user_by_token(token)
         if user == None:
             raise AuthenticationFailed('Unauthenticated')
-        data = request.data['isactive']
-        if data == True:
-            message = "OTP has been activated"
+        data = request.data['isactivate']
+        if data == False:
+            message = "OTP has been desactivated"
             user.use_otp = False
         else:
-            message = "OTP has been desactivated"
+            message = "OTP has been activated"
             user.use_otp = True
+        user.save()
         return Response({"message":message}, status=200)
 
     def get(self, request):

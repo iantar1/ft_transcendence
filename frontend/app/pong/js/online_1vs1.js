@@ -999,7 +999,7 @@ export function online_1vs1()
                 wsOpen = false;
                 cancelAnimationFrame(animationId);
                 socket.close();
-                render(GameOver(winner, score), 
+                render(GameOver(winner, score, "online"),
                     gamePage.shadowRoot.querySelector('.game-pong'));
             }
         }

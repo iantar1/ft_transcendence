@@ -43,10 +43,6 @@
       <!-- Stats (FPS counter) -->
       <script src="https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js"></script>
       
-      <!-- lil-gui -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
-      
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
       
 
@@ -77,36 +73,5 @@
     <script type="module" src='./app/pong/js/gamePage.js'></script>
     <script type="module" src='/app/TicTacToe/tix-taco.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
-    <!-- <script>
-      // Replace 'ws://localhost:8000/ws/ticwinlose/' with your WebSocket server URL
-      const socketUrl = 'wss://localhost:8000/wss/notif/';
-      
-      // Create a new WebSocket connection
-      window.windowsocket = new WebSocket(socketUrl);
-
-      // Event handler for successful connection
-      socket.onopen = (event) => {
-          console.log(`connected ${event}`);
-      };
-
-      // Event handler for connection failure or errors
-      socket.onerror = (error) => {
-          console.log('WebSocket error: ', error);
-      };
-
-      socket.onmessage = (message) => {
-          console.log(`message: ${message.data}`)
-      };
-
-      socket.addEventListener("open", (event) => {
-          socket.send("hello from frontend");
-      });
-      // Optional: Event handler for when the connection is closed
-      socket.onclose = (event) => {
-          if (!event.wasClean) {
-              console.log("Connection closed unexpectedly");
-          }
-      };
-  </script> -->
 </body>
 </html>
