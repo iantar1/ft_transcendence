@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from dotenv import load_dotenv
 from pathlib import Path
+import os
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -137,8 +139,6 @@ CORS_ALLOW_HEADERS = [
 
 ROOT_URLCONF = 'config.urls'
 
-import os
-
 
 TEMPLATES = [
     {
@@ -168,13 +168,23 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydatabase',
+        'USER': 'myuser',
+        'PASSWORD': 'mypassword',
+        'HOST': 'postgree_db',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -239,37 +249,8 @@ EMAIL_HOST_USER = 'antartalha@gmail.com'
 EMAIL_HOST_PASSWORD = 'cnoy ivmc yoyc rjii'
 
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     )
-# }
-
-# from datetime import timedelta
 
 
-# SIMPLE_JWT = {
-#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-
-#     "AUTH_HEADER_TYPES": ("Bearer",),
-#     }
-
-
-
-# LOGIN_URL = 'two_factor:login'
-# LOGIN_REDIRECT_URL = 'two_factor:profile'
-
-#woumechtak@gmail.com
-
-
-import os
-from dotenv import load_dotenv
-from pathlib import Path
-
-
-load_dotenv()
 
 
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
