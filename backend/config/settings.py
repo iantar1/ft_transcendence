@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_otp.middleware.OTPMiddleware',
-    'UserManagement.middleware.new_middleware',
+    # 'UserManagement.middleware.new_middleware',
 ]
 
 # ASGI_APPLICATION = "config.asgi.application"
