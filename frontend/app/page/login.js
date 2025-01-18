@@ -1,15 +1,16 @@
 
+// const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-44701ed50de1251b7881036e7c955b632ef27d9ad189012806bf5e16dc67c249&redirect_uri=http%3A%2F%2F10.14.4.4%3A8000%2Fintra%2F&response_type=code";
+// const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-44701ed50de1251b7881036e7c955b632ef27d9ad189012806bf5e16dc67c249&redirect_uri=http%3A%2F%2F10.14.4.4%3A8000%2Fintra%2F&response_type=code";
 
 import {navigateTo} from '../routing.js';
 
 import {CheckAuth, CheckUserAuth, readData} from './readData.js';
 
 import {getCookie} from './readData.js';
-// const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-44701ed50de1251b7881036e7c955b632ef27d9ad189012806bf5e16dc67c249&redirect_uri=http%3A%2F%2F10.14.4.4%3A8000%2Fintra%2F&response_type=code";
-// const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-44701ed50de1251b7881036e7c955b632ef27d9ad189012806bf5e16dc67c249&redirect_uri=http%3A%2F%2F10.14.4.4%3A8000%2Fintra%2F&response_type=code";
 
 //localhost
-const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0340bd018f511405be07414064e236ed0c11845afedf13da4061f48b304f56a1&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code"
+// const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0340bd018f511405be07414064e236ed0c11845afedf13da4061f48b304f56a1&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fintra%2F&response_type=code"
+const API_INTRA = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-826c2045c21c67d12e260fedf3b5baeee4a69fd21338582b8ac39981a0358a23&redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Fintra%2F&response_type=code"
 
 
 const API_GOOGLE = "https://accounts.google.com/o/oauth2/auth?client_id=242624585573-enn222ktvi3n3ps4efvogc3r866mstpt.apps.googleusercontent.com&redirect_uri=http://localhost:8000/accounts/google/login/callback/&scope=profile%20email&response_type=code&access_type=offline";

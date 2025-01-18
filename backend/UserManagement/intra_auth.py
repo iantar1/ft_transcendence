@@ -18,7 +18,7 @@ from rest_framework.exceptions import AuthenticationFailed
 # AUTH_URI = os.environ.get('AUTH_URI')
 
 load_dotenv()
-AUTH_URI = os.getenv('AUTH_URI')
+# AUTH_URI = os.getenv('AUTH_URI')
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
@@ -29,8 +29,8 @@ FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
 # AuthUri = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-823fda6b1dac06b665ee52b73f2d6ae470b5e11f2a4b3780496c4c8deb9593ed&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code"
 
-def home(request):
-    return redirect(AUTH_URI)
+# def home(request):
+#     return redirect(AUTH_URI)
 
 
 def createUpdateUser(data_json)-> User:

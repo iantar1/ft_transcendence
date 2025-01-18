@@ -22,7 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zyz*f+#nuu@%qz(&jvc!+)$jwdrl#am@px=mc#*l)0ctm@)_&3'
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -168,21 +169,15 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',
-        'USER': 'myuser',
-        'PASSWORD': 'mypassword',
-        'HOST': 'postgree_db',
-        'PORT': '5432',
+        'NAME': os.environ.get('DB_DATABASE'),
+        'USER': os.environ.get('DB_USERNAME'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -241,15 +236,12 @@ environ.Env.read_env()
 
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'antartalha@gmail.com'
-EMAIL_HOST_PASSWORD = 'cnoy ivmc yoyc rjii'
-
-
-
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 
 
@@ -261,6 +253,7 @@ if not GOOGLE_CLIENT_ID:
     )
 
 # We need these lines below to allow the Google sign in popup to work.
+
 SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 CORS_ALLOW_ALL_ORIGINS = True

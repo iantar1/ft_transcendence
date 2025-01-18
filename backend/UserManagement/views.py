@@ -9,8 +9,10 @@ from .utils import *
 import os
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-
-# Create your views here.
+import random
+from datetime import timedelta
+from django.core.mail import send_mail
+from django.utils import timezone
 
 
 class RegesterView(APIView):
@@ -35,10 +37,7 @@ class RegesterView(APIView):
         # return Response(serializer.data)
     
 
-import random
-from datetime import timedelta
-from django.core.mail import send_mail
-from django.utils import timezone
+
 
 class LoginView(APIView):
     
