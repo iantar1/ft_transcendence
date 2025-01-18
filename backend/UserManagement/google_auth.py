@@ -27,7 +27,7 @@ FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
 
 google_auth_url = "https://accounts.google.com/o/oauth2/auth"
-REDIRECT_URI = "http://localhost:8000/accounts/google/login/callback/"
+REDIRECT_URI = "https://localhost:3000/accounts/google/login/callback/"
 
 AUTH_URI = f"{google_auth_url}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=profile%20email&response_type=code&access_type=offline"
 
