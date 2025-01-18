@@ -113,91 +113,48 @@ html , body{
   height: 95vh;
   border-radius: 25px;
 }
-/* .nav-bar a:hover{
-  background: #293247 ;
-
-} */
 
 
 
-
-/* .cycle {
-  position: absolute;
-  height: 775px;
-  width: 747px;
-  left: 444px;
-  top: 183px;
-  border-radius: 1000px;
-  background: conic-gradient(#800200 , #e01010);
-  filter: blur(350px);
-} */
-
-/* background: conic-gradient(red, blue); */
-
-/* .cycle-astro {
-  position: absolute;
-  left: 1083px;
-  top: 183px;
-  width: 745px;
-  height: 747px;
-  border-radius: 1000px;
-  background: conic-gradient(#cccccc , #ffffff);
-  filter: blur(450px);
-} */
-
-/* .content-first-pg{
-  position: absolute;
-  top : 228px;
-  left: 50px;
+.alert-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 4px;
   color: white;
-} */
-
-/* .img-firstpg {
-  width: 922px;
-  height: 843px;
-  position: absolute;
-  top: -200px;
-  left: 900px;
-} */
-
-/* .title-firstpg{
-  font-size: 90px;
-  -webkit-text-stroke-width: 3px;
-  -webkit-text-stroke-color: rgb(248, 248, 248);
-  color: #0e0c0c00;
-
-}
-.content-first-pg h1{
-
-  font-size: 90px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(150%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
 }
 
-.content-first-pg p{
-  font-size: 30px;
-  width: 906px;
-  height: 96px;
-  font-weight: 200;
-  margin-top: 20px;
-  margin-bottom: 40px;
+.alert-popup.show {
+  transform: translateX(0);
 }
 
-.btn-firstpg{
+.alert-popup.success {
+  background-color: #4CAF50;
+}
 
+.alert-popup.error {
+  background-color: #f44336;
+}
+
+.alert-popup.info {
+  background-color: #2196F3;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
   font-size: 18px;
-  text-decoration: none;
-  background-color: #800200;
-  color: #ffffff;
-  padding: 20px 66px 20px 66px;
-  border-radius: 11px;
+  padding: 0;
+  margin-left: 10px;
 }
-
-.shadow-firstpg-1
-{
-  width: 100%;
-  height: 316px;
-  position: absolute;
-  bottom: 0px;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) , rgb(0, 0, 0),rgb(0, 0, 0));
-} */
-
-
