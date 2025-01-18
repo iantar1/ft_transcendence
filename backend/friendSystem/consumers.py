@@ -11,7 +11,17 @@ import requests
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 
+RED = '\033[31m'
+GREEN = '\033[32m'
+YELLOW = '\033[33m'
+BLUE = '\033[34m'
+RESET = '\033[0m'
+
 user_channels = {}
+def print_all_usernames():
+    print(f"{GREEN}", flush=True)
+    print(", ".join(str(value) for value in user_channels), flush=True)
+    print(f"{RESET}", flush=True)
 
 def get_user_by_token(token):
     if not token:
@@ -25,31 +35,32 @@ def get_user_by_token(token):
 class Notifications(WebsocketConsumer):
     def connect(self):
         self.accept()
-        print(f"Connected: {self.channel_name}", flush=True)
+
         cookies = self.scope.get("cookies", {})
         access_token = cookies.get("access")
-        print(f"access_token: {access_token}", flush=True)
+
         self.user = get_user_by_token(access_token)
         if self.user:
             userInfo = UserSerializer(self.user).data
             user_channels[userInfo["username"]] = self.channel_name
-            print(f"User connected: {userInfo['id']}", flush=True)
-            # self.send_to_user(userInfo["id"], {"message": "Welcome!"})
+            print(f"User connected: {userInfo['username']}", flush=True)
+            print(f"{GREEN}num of connected users: {len(user_channels)}: {RESET}", flush=True)
+            print_all_usernames()
+
         else:
-            print("Unauthenticated user.")
+            print("Unauthenticated user.", flush=True)
             self.close()
 
     def disconnect(self, code):
-        print("Disconnect")
         for username, channel_name in list(user_channels.items()):
             if channel_name == self.channel_name:
+                print(f"{RED} {username} Disconnect{RESET}")
                 del user_channels[username]
             print(f"Removed channel for user {username}")
 
     def receive(self, text_data=None, bytes_data=None):
         print(f"Message received: {text_data}", flush=True)
         if not text_data:
-            print("No text data.")
             return
         try:
             data = json.loads(text_data)
@@ -60,13 +71,11 @@ class Notifications(WebsocketConsumer):
             #save friendSy state in database 
             self.send_notif(data)
             self.send_to_user(to_user, data)
-            self.forward_to_view(data)
 
         except json.JSONDecodeError as e:
             print(f"Invalid JSON: {e}")
     
     def send_notif(self, data):
-        print(f"Sending notification: {data}")
         self.send(text_data=json.dumps(data))
 
 
@@ -79,7 +88,7 @@ class Notifications(WebsocketConsumer):
         channel_layer = get_channel_layer()
         if username in user_channels:
             channel_name = user_channels[username]
-            print(f"channalName: {channel_name}")
+
             async_to_sync(channel_layer.send)(
                 channel_name,
                 {

@@ -148,6 +148,7 @@ class UserView(APIView):
             playload = jwt.decode(access_token, 'access_secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             try:
+                print("=-----------------------------=", flush=True)
                 playload = jwt.decode(refresh_token, 'refresh_secret', algorithms=['HS256'])
                 generateNewTokens(response, access_token, refresh_token, playload)
             except jwt.ExpiredSignatureError:

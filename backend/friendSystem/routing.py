@@ -6,4 +6,5 @@ from .consumers import Notifications
 
 websock_urlspatternd = [
     path('ws/notif/', Notifications.as_asgi()),
+    path('wss/notif/', Notifications.as_asgi()),
 ]
