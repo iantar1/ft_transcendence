@@ -407,6 +407,8 @@ class MatchHistoryView(APIView):
             winner = user2
             user.stats.losses += 1
         user.stats.save()
+
+        print(f"{user.username} : has been save stats")
         # Save the match history
         if not MatchHistory.objects.filter(game_id=game_id).exists():
             history = MatchHistory(
