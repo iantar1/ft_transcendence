@@ -20,8 +20,8 @@ services:
     container_name: backend
     image: backend
     build: ./backend
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     volumes:
       - ./backend:/backend
     env_file:
