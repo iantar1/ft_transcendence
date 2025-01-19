@@ -44,7 +44,7 @@
             socket.send(JSON.stringify(data));
         }
 
-        const socketUrl = 'ws://localhost:8000/ws/notif/';
+        const socketUrl = 'wss://localhost:3000/ws/notif/';
         
         // Create a new WebSocket connection
         const socket = new WebSocket(socketUrl);
@@ -68,7 +68,7 @@
                 "from_user":"iantar",
                 "status":"",
             };
-            sendRequest(data);
+            // sendRequest(data);
             
         };
         // async function    sendRequest(data)

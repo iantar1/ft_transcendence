@@ -116,6 +116,7 @@ function addnewFriend(name){
                 status : ""
             }
             addordelete(data,'POST','friendship');
+            window.notificationSocket.send(JSON.stringify(data));
             document.querySelector('.logout-popup').style.display = 'none';
             showAlert('Send request successefully','success')
         });
@@ -276,14 +277,10 @@ function handleNotification(){
     const html = profSection();
     notificationIcon.style.animation = "none";
     notificationIcon.style.color = "#fff"
+
     window.notificationSocket.onmessage = (message) => {
-        data = JSON.parse(message);
-        console.log("socket message :", data);
-        if(data.type === "send.message")
-        {
             notificationIcon.style.animation = "scaleNotification 1s ease-in-out infinite";
             notificationIcon.style.color = "var(--red)"
-        }
     };
     document.querySelector('.notif').addEventListener('click' , async (e) => {
             notificationIcon.style.animation = "none";
@@ -369,7 +366,7 @@ class profilePage extends HTMLElement {
                         <div class="lvl">
                             <div class="progress">
                                 <div id="progcon" class="progress-bar progress-bar-info progress-bar-striped active" style=" box-shadow:none;"></div>
-                                <div id="progvalue" class="progress-value">10%</div>
+                                <div id="progvalue" class="progress-value">0%</div>
                             </div>
                         </div>
 
@@ -635,11 +632,7 @@ class profilePage extends HTMLElement {
             }
         </style>
     `;
-    // const form = [
-    //     { player: "ahbajaou",  img: "/images/ah.png"},
-    //     { player: "arahmoun", img: "/images/ara.png"},
-    //     { player: "iantar", img: "/images/iantar.jpeg"}
-    //   ];
+
     winorLose = `
     <div class="winorlose">
         <table class="table editTabel" >
@@ -924,7 +917,7 @@ class profilePage extends HTMLElement {
 
         .circle-bg {
             fill: none;
-            stroke: #ddd;
+            stroke: var(--dark);
             stroke-width: 12;
         }
 
@@ -1043,6 +1036,7 @@ class profilePage extends HTMLElement {
         let from = '';
     
         // Process each match and construct the table rows
+        console.table("match history : ",  this.narotu);
         this.narotu.forEach(match => {
             const player1 = match.user1;
             const player2 = match.user2;
@@ -1260,7 +1254,8 @@ class profilePage extends HTMLElement {
                         document.getElementById('loseone').textContent = "";
 
                         const newValue = (stats.wins / (stats.wins + stats.losses) * 100);
-                        document.getElementById('progcon').style.width = newValue
+                        document.getElementById('progcon').style.width = Math.round((this.info.score * 100) / 777)+"%";
+                        document.getElementById('progvalue').textContent = Math.round((this.info.score * 100) / 777) + "%";
 
 
 
@@ -1306,15 +1301,17 @@ class profilePage extends HTMLElement {
         }
         uuss();
         window.notificationSocket = new WebSocket('wss://'+window.location.host+'/wss/notif/');
+
+
+        window.notificationSocket.onclose = (event) => {
+                if (!event.wasClean) {
+                        console.log("Connection closed unexpectedly");
+                    }
+                };
         window.notificationSocket.onopen = (event) => {
-            console.log("Socket Connetcted ...");
+            console.log("notification Connetcted ...");
         };
-        window.notificationSocket.onclose = (e) => {
-            console.log('Socket :', e);
-        };
-        window.notificationSocket.onerror = (e) => {
-            console.log('Socket :', e);
-        };
+
         this.innerHTML = `
             ${this.template}
             ${this.templatTwo}

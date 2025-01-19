@@ -339,15 +339,15 @@ export function tournamentBracket(
             try {
                 const result = await submitTournament("submit", ranked, name);
                 if (result === true) {
+                    showAlert("Tournament Score Has been Saved To The Blockchain Succesefully", "success");
                     startButton.disabled = true;
                 }
             } catch (error) {
+                showAlert("Feiled To Save The Tournament Score", "error");
                 console.error('Error saving tournament:', error);
             }
         }
         else {
-            // submitTournament("submit", matches[0].player1, 6);
-
             console.log('start match');
             ws.send(JSON.stringify({ type: 'countdown' }));
         }

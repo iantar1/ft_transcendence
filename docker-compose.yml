@@ -1,21 +1,6 @@
 
 services:
-  backend:
-    depends_on:
-      - postgree_db
-    container_name: backend
-    image: backend
-    build: ./backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/backend
-    env_file:
-      - .env
-    # command:
-    #   sh -c "python manage.py migrate &&
-    #          python manage.py runserver 0.0.0.0:8000"
-  
+
   postgree_db:
     image: postgres:15
     container_name: postgree_db
@@ -24,11 +9,25 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydatabase
     restart: always
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     
+  backend:
+    depends_on:
+      - postgree_db
+    container_name: backend
+    image: backend
+    build: ./backend
+    # ports:
+    #   - "8000:8000"
+    volumes:
+      - ./backend:/backend
+    env_file:
+      - .env
+
+  
 
   ponggame:
     container_name: ponggame
@@ -43,26 +42,26 @@ services:
     container_name: frontend
     image: frontend
     build: ./frontend
-    ports:
-      - "3000:443"
+    # ports:
+    #   - "3000:443"
     volumes:
       - ./frontend:/usr/share/nginx/html
       - ./backend/media/images:/usr/share/nginx/html/media/images
 
 
-  # blockchain:
-  #   build: ./blockchain
-  #   ports:
-  #     - "8545:8545" 
-  #   volumes:
-  #     - ./blockchain:/usr/src/app 
+  blockchain:
+    build: ./blockchain
+    ports:
+      - "8545:8545" 
+    volumes:
+      - ./blockchain:/usr/src/app 
 
   tictactoe:
     container_name: tictactoe
     image: tictactoe
     build: ./TicTacToe
-    ports:
-      - "4040:4040"
+    # ports:
+    #   - "4040:4040"
     volumes:
       - ./TicTacToe:/app
   

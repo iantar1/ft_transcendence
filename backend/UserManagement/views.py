@@ -9,8 +9,10 @@ from .utils import *
 import os
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-
-# Create your views here.
+import random
+from datetime import timedelta
+from django.core.mail import send_mail
+from django.utils import timezone
 
 
 class RegesterView(APIView):
@@ -32,13 +34,9 @@ class RegesterView(APIView):
             **serializer.data
         }
         return response
-        # return Response(serializer.data)
-    
 
-import random
-from datetime import timedelta
-from django.core.mail import send_mail
-from django.utils import timezone
+
+
 
 class LoginView(APIView):
     
@@ -126,7 +124,7 @@ def checkAuthenticationAnsReturnTokens(request):
         raise AuthenticationFailed('Unauthenticated')
     return {access_token, refresh_token}
 
-def generateNewTokens(response, access_token, refresh_token, playload):
+def generateNewTokens(response, playload):
     user = User.objects.filter(id=playload['id']).first()
     access_token = create_access_token(user.id)
     refresh_token = create_refresh_token(user.id)
@@ -137,24 +135,24 @@ def generateNewTokens(response, access_token, refresh_token, playload):
 class UserView(APIView):
     
     def get(self, request):
-        access_token = request.COOKIES.get('access')
-        refresh_token = request.COOKIES.get('refresh')
-        print(f"tokens: {access_token}, refresh: {refresh_token}", flush=True)
-        if not access_token or not refresh_token:
-            raise AuthenticationFailed('Unauthenticated')
-        # access_token, refresh_token = checkAuthenticationAnsReturnTokens(request)
+        # access_token = request.COOKIES.get('access')
+        # refresh_token = request.COOKIES.get('refresh')
+        # print(f"tokens: {access_token}, refresh: {refresh_token}", flush=True)
+        # if not access_token or not refresh_token:
+        #     raise AuthenticationFailed('Unauthenticated')
+
         response = Response()
-        try:
-            playload = jwt.decode(access_token, 'access_secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            try:
-                print("=-----------------------------=", flush=True)
-                playload = jwt.decode(refresh_token, 'refresh_secret', algorithms=['HS256'])
-                generateNewTokens(response, access_token, refresh_token, playload)
-            except jwt.ExpiredSignatureError:
-                raise AuthenticationFailed('Unauthenticated')
+        user = getUserByToken(request.COOKIES, response)
+        # try:
+        #     playload = jwt.decode(access_token, 'access_secret', algorithms=['HS256'])
+        # except jwt.ExpiredSignatureError:
+        #     try:
+        #         playload = jwt.decode(refresh_token, 'refresh_secret', algorithms=['HS256'])
+        #         generateNewTokens(response, playload)
+        #     except jwt.ExpiredSignatureError:
+        #         raise AuthenticationFailed('Unauthenticated')
         
-        user = User.objects.filter(id=playload['id']).first()
+        # user = User.objects.filter(id=playload['id']).first()
         serailiser = UserSerializer(user)
         response.data = serailiser.data
         return response
@@ -198,48 +196,60 @@ class LogoutView(APIView):
 class UpdateView(APIView):
     
     def post(self, request):
-        token = request.COOKIES.get('access')
+        # token = request.COOKIES.get('access')
     
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
-        try:
-            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
+        # if not token:
+        #     raise AuthenticationFailed('Unauthenticated')
+        # try:
+        #     playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        # except jwt.ExpiredSignatureError:
+        #     raise AuthenticationFailed('Unauthenticated')
         
-    #check password and update it (password) (new password)
         
-        user = User.objects.filter(id=playload['id']).first()
+        # user = User.objects.filter(id=playload['id']).first()
+        response = Response()
+        user = getUserByToken(request.COOKIES, response)
         serializer = UserSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        response.data = serializer.data
+        return response
 
 class ChangePasswordView(APIView):
     
     def post(self, request):
-        token = request.COOKIES.get('access')
+        # token = request.COOKIES.get('access')
     
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
+        # if not token:
+        #     raise AuthenticationFailed('Unauthenticated')
         
-        try:
-            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
+        # try:
+        #     playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        # except jwt.ExpiredSignatureError:
+        #     raise AuthenticationFailed('Unauthenticated')
         
-        user = User.objects.filter(id=playload['id']).first()
+        # user = User.objects.filter(id=playload['id']).first()
+
+        response = Response()
+        user = getUserByToken(request.COOKIES, response)
+
         crrent_password = request.data['crrent_password']
         new_password1 = request.data['new_password1']
         new_password2 = request.data['new_password2']
         if not user.check_password(crrent_password):
             raise AuthenticationFailed("incorrect password")
         if new_password1 != new_password2:
-            return Response("Password1 is different from Password2", status=400)
+            response.data = {"error":"Password1 is different from Password2"}
+            response.status = 400
+            return response
+            # return Response("Password1 is different from Password2", status=400)
         
         user.set_password(new_password1)
         user.save()
-        return Response({"seccess":"the password changed successfuly"}, status=200)
+        response.data = {"seccess":"the password changed successfuly"}
+        response.status = 200
+        # return response
+        # return Response({"seccess":"the password changed successfuly"}, status=200)
 
 
 class ChangeBioImage(APIView):
@@ -319,12 +329,30 @@ class ChangeBio(APIView):
         return Response(serializer.data)
 
 
+def getUserByToken(cookies, response):
+    access = cookies.get('access')
+    refresh = cookies.get('refresh')
+    if not access or not refresh:
+        raise AuthenticationFailed('Unauthenticated')
+
+    try:
+        playload = jwt.decode(access, 'access_secret', algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+        try:
+            playload = jwt.decode(refresh, 'refresh_secret', algorithms=['HS256'])
+            generateNewTokens(response, playload)
+        except:
+            raise AuthenticationFailed('Unauthenticated')
+    return User.objects.filter(id=playload['id']).first()
+
+
 def get_user_by_token(token):
     if not token:
         raise AuthenticationFailed('x1Unauthenticated')
     try:
         playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
     except jwt.ExpiredSignatureError:
+
         raise AuthenticationFailed('xxUnauthenticated')
     
     return User.objects.filter(id=playload['id']).first()

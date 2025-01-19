@@ -20,9 +20,6 @@ from rest_framework.renderers import JSONRenderer
 
 load_dotenv()
 
-# AUTH_PROVIDER_URI = "https://www.googleapis.com/oauth2/v1/certs"
-# PROJECT_ID = "transcendence-432116"
-# AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 OUUTH_TOKEN_URI = os.getenv('GOOGOLE_TOKEN_URI')
@@ -30,7 +27,7 @@ FRONTEND_REDIRECT_URL = os.getenv('FRONTEND_REDIRECT_URL')
 
 
 google_auth_url = "https://accounts.google.com/o/oauth2/auth"
-REDIRECT_URI = "http://localhost:8000/accounts/google/login/callback/"
+REDIRECT_URI = "https://localhost:3000/accounts/google/login/callback/"
 
 AUTH_URI = f"{google_auth_url}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=profile%20email&response_type=code&access_type=offline"
 
@@ -109,33 +106,4 @@ def getData(access_token) -> User:
     response = requests.get(url, headers=headers)
     print(f"the resposnse josn: {response.json()}")
     return createUpdateUser(response.json())
-
-
-
-# def auth(request):
-    
-#     queryStr = request.GET.get('code')
-
-#     payload = {'grant_type':'authorization_code', 
-#                'client_id':CLIENT_ID,
-#                'client_secret':CLIENT_SECRET,
-#                'code':queryStr,
-#                'redirect_uri':REDIRECT_URI,}
-#     r = requests.post(OUUTH_TOKEN_URI, data=payload)
-#     print(f"here: {r.json()}")
-
-#     google_access_token = r.json().get('access_token')
-#     user = getData(google_access_token)
-
-#     print(f"------------------------>>>>>> {google_access_token}")
-        
-
-#     # response = HttpResponseRedirect(FRONTEND_REDIRECT_URL) 
-#     response = Response({"message":"success"})
-#     access_token = create_access_token(user.id)
-#     refresh_token = create_refresh_token(user.id)
-
-#     response.set_cookie(key="access", value=access_token)
-#     response.set_cookie(key="refresh", value=refresh_token, httponly=True)
-#     return response
 

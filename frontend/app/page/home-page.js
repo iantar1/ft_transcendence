@@ -1,27 +1,7 @@
-
-// console.log("--somthing is cooking");
-
 import {readData , getCookie ,logout} from './readData.js';
-
 import {fetchUserData ,fetchRankData} from './readData.js';
-// import {fetchUserMatchHistory} from './readData.js';
 import { navigateTo } from '../routing.js';
-
 import { betweenPage } from '../routing.js';
-
-// const isCookieEnabled = navigator.cookieEnabled;
-
-// console.log("Coockies" + isCookieEnabled);
-
-// const token = Cookies.get('access_token');
-// console.log("access token : " + token)
-  // Usage example - wrapped in DOMContentLoaded
-//   document.addEventListener('DOMContentLoaded', () => {
-//     const loader = new LoadingScreen('Loading your content...');
-//     loader.show();
-    
-//     setTimeout(() => loader.hide(), 3000);
-//   });
 
 var notificationSocket;
 
@@ -478,7 +458,7 @@ class homePage extends HTMLElement {
             // const usernameSpan = this.shadowRoot.getElementById('username');
         }
         uuss();
-       
+
         this.innerHTML = `
             <style>
             ${this.style}
@@ -508,16 +488,9 @@ class homePage extends HTMLElement {
         });
         cartHome.innerHTML = cart;
     }
-    
-    async getData(){
-        // const data = fetchUserMatchHistory();
-        // const data = fetchUserData('match_history');
-        // console.log("inside history fitch");
-        // console.log(data);
-    }
+
     connectedCallback(){
         this.rander();
-        // this.getData();
         this.staticHome();
         toGame();
         logout();
@@ -526,33 +499,3 @@ class homePage extends HTMLElement {
 }
 
 customElements.define('home-page',homePage);
-
-    // const urlParams = new urlSearchParams(Window.location.search);
-    // const urlParams = new URLSearchParams(window.location.search);
-    // console.log(`here: ${window.location.search}`);
-
-
-// async function getUserData()
-// {
-//     const accessToken = urlParams.get('access_token');
-    
-
-//     console.log(`first : ${accessToken}`);
-
-//     const res =  await fetch("http://localhost:8000/user/", {
-//         method: 'GET', 
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         credentials: 'include',
-//     })
-//     const data = await res.json();
-//     console.log(data);
-//     const h3Element = document.querySelector('h3');
-
-//     h3Element.innerHTML = h3Element.innerHTML.replace('CHEBCHOUB', data.username);
-//     console.log(`title home : ${ele}`);
-//     return data;
-// }
-
-// const data = getUserData();
