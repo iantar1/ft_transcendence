@@ -109,14 +109,15 @@ function addnewFriend(name){
         const newfriend = document.getElementById('addnewfriend')
     if (newfriend){
         newfriend.addEventListener('click' , (e) => {
-            console.log("HANDEL ADD NEW FRIEND HERE");
             const data = {
                 to_user : name,
                 form_user :"",
                 action : "sent",
                 status : ""
             }
-          addordelete(data,'POST','friendship');
+            addordelete(data,'POST','friendship');
+            document.querySelector('.logout-popup').style.display = 'none';
+            showAlert('Send request successefully','success')
         });
     }
 }
@@ -133,6 +134,8 @@ function deleteFriend(name){
                 status : ""
             }
             addordelete(data,'POST','friendship');
+            document.querySelector('.logout-popup').style.display = 'none';
+            showAlert('deleted successefully','info')
         });
     }
 }
@@ -273,9 +276,18 @@ function handleNotification(){
     const html = profSection();
     notificationIcon.style.animation = "none";
     notificationIcon.style.color = "#fff"
-    document.querySelector('.notif').addEventListener('click' , async (e) => {
+    window.notificationSocket.onmessage = (message) => {
+        data = JSON.parse(message);
+        console.log("socket message :", data);
+        if(data.type === "send.message")
+        {
             notificationIcon.style.animation = "scaleNotification 1s ease-in-out infinite";
             notificationIcon.style.color = "var(--red)"
+        }
+    };
+    document.querySelector('.notif').addEventListener('click' , async (e) => {
+            notificationIcon.style.animation = "none";
+            notificationIcon.style.color = "#fff"
 
             const  hey = await getnotification('friendship')
             const allnotif = hey.map(item => ({ username: item.from_user.username }));
@@ -305,7 +317,8 @@ function handleNotification(){
                     status : ""
                 }
                 addordelete(data,'POST','friendship');
-                
+                showAlert('accepted','info')
+
             })
         })
         const refusehim = document.querySelectorAll('#refusehim')
@@ -319,7 +332,7 @@ function handleNotification(){
                     status : ""
                 }
                 addordelete(data,'POST','friendship');
-                
+                showAlert('rejected','info')  
             })
         })
  
@@ -917,7 +930,7 @@ class profilePage extends HTMLElement {
 
         .circle-progress-path {
             fill: none;
-            stroke: #4CAF50;
+            stroke: var(--red);
             stroke-width: 12;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.5s ease;
@@ -929,7 +942,7 @@ class profilePage extends HTMLElement {
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 24px;
-            font-family: Arial, sans-serif;
+         
         }
 </style>
 
@@ -1240,24 +1253,14 @@ class profilePage extends HTMLElement {
                 
                 const stats = await fetchStatsData(); // Fetch the stats data
 
-       
-                // Optional: If you need to update duplicate or additional elements, create aliases
-                console.log("stats win : " +  stats.wins);
-                // this.cycleValue = 10;
-                // const cycleValueElement = document.getElementById('cycleValue');
-              
-      
-                    // Generate a random value between 0 and 100
-                    // const newValue = Math.floor(Math.random() * 100);
                     if (stats){
                         document.getElementById('win').textContent = stats.wins;
                         document.getElementById('winone').textContent = "";
                         document.getElementById('lose').textContent = stats.losses;
                         document.getElementById('loseone').textContent = "";
-                        // document.getElementById('cycleValue').textContent = stats.total;
-                        // document.getElementById('progvalue').textContent = stats.total;
-                        document.getElementById('progcon').style.width = "10%";
+
                         const newValue = (stats.wins / (stats.wins + stats.losses) * 100);
+                        document.getElementById('progcon').style.width = newValue
 
 
 
@@ -1288,24 +1291,6 @@ class profilePage extends HTMLElement {
                             if (progress >= newValue) clearInterval(interval);
                         }, 30);
 
-
-
-
-                        // const radius = circle.r.baseVal.value;
-                        // const circumference = 2 * Math.PI * radius;
-                
-                        // // Set initial values
-                        // circle.style.strokeDasharray = circumference;
-                        // circle.style.strokeDashoffset = circumference;
-
-
-                        console.log("---> : " + newValue)
-                        // const circumference = 2 * Math.PI * 50;
-                        // Update the CSS variable for the animation
-                        // document.documentElement.style.setProperty('--value', `${circumference - (newValue / 100) * circumference}deg`);
-                        // Update the displayed value
-
-                            // cycleValueElement.textContent = `${newValue}%`;
                 }else{
                     document.getElementById('win').textContent = "0";
                     document.getElementById('winone').textContent = "";
@@ -1320,7 +1305,16 @@ class profilePage extends HTMLElement {
             }
         }
         uuss();
-        // this.slidFriend();
+        window.notificationSocket = new WebSocket('wss://'+window.location.host+'/wss/notif/');
+        window.notificationSocket.onopen = (event) => {
+            console.log("Socket Connetcted ...");
+        };
+        window.notificationSocket.onclose = (e) => {
+            console.log('Socket :', e);
+        };
+        window.notificationSocket.onerror = (e) => {
+            console.log('Socket :', e);
+        };
         this.innerHTML = `
             ${this.template}
             ${this.templatTwo}
@@ -1385,19 +1379,11 @@ class profilePage extends HTMLElement {
         this.statsPlayer();
         this.slidFriend();
         this.stockFriends();
-        
-        // this.openProfile();
-        // console.log("---------------------------------")
         logout();
-        handleNotification();
-        // deleteFriend();
 
+        handleNotification();
     }
 }
 
 customElements.define('profile-page', profilePage);
 
-// "to_user":""
-// "from_user":""
-// "action":"sent remove"
-// "status":""

@@ -478,17 +478,7 @@ class homePage extends HTMLElement {
             // const usernameSpan = this.shadowRoot.getElementById('username');
         }
         uuss();
-        window.notificationSocket = new WebSocket('wss://'+window.location.host+'/wss/notif/');
-        window.notificationSocket.onopen = (event) => {
-            console.log("notification Connetcted ...");
-        };
-        window.notificationSocket.onmessage = (message) => {
-            data = JSON.parse(message);
-            console.log(data);
-        };
-        window.notificationSocket.onerror = (e) => {
-            console.log('error :', e);
-        };
+       
         this.innerHTML = `
             <style>
             ${this.style}

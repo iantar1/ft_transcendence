@@ -516,6 +516,7 @@ class settingPage extends HTMLElement {
             formData.append('image', file);
             await postImage(formData , 'change_image','POST');
             navigateTo('/setting')
+            showAlert("image changed succesfully", "success")
         });
 
         // Event listeners to open and close the popup
@@ -529,7 +530,7 @@ class settingPage extends HTMLElement {
         console.log(img);
         img.addEventListener('click' , async (e) => {
             await postImage(null,'change_image','DELETE');
-            
+            showAlert("image deleted succesfully", "success")
         });
     }
     infoPost(url){
@@ -545,13 +546,17 @@ class settingPage extends HTMLElement {
                 const data = {
                     username: username,
                     bio: bio,
-                  };
-                  if (bio && !username){
+                };
+                if (bio && !username){
+                    showAlert("username required", "error")
                     document.getElementById('status').textContent = 'username required';
-                  }
-                document.querySelector('.clean').reset();
-                await postMethode(data , 'bio'); 
-  
+                }
+                else{
+
+                    document.querySelector('.clean').reset();
+                    await postMethode(data , 'bio');
+                    showAlert("username changed successefully", "success")
+                }
         });
     }
     passPost(){
@@ -562,6 +567,8 @@ class settingPage extends HTMLElement {
             const pass3 = document.querySelector('.pass3').value;
             if (pass2 != pass3){
                 document.getElementById('error').style.display = "block"
+                showAlert("password not correct", "error")
+
             }else{
                 const formData = {
                     crrent_password : pass1,
@@ -570,6 +577,7 @@ class settingPage extends HTMLElement {
                 }
                 await postMethode(formData , 'change_password');
                 document.querySelector('.clean').reset();
+                showAlert("111122", "success")
             }
         });
     }
@@ -587,11 +595,14 @@ class settingPage extends HTMLElement {
                         isactivate : true
                     }
                     CheckAuth(data,'POST','otp_activate')
+                    showAlert("OTP ON", "success")
                 } else {
                     const data = {
                         isactivate : false
                     }
                     CheckAuth(data,'POST','otp_activate')
+                    showAlert("OTP OFF", "success")
+
                 }
                 console.log("HERE IS THE AUTH PART");    
             });

@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='image',
-            field=models.ImageField(default='/images/default.png', upload_to='images/'),
+            field=models.ImageField(default='/images/default.jpg', upload_to='images/'),
         ),
         migrations.CreateModel(
             name='Friendship',

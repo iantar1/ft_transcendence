@@ -6,7 +6,7 @@ import os
 
 class User(AbstractUser):
     username = models.CharField(max_length=50, unique=True)
-    image = models.ImageField(upload_to='images/', default='/images/default.png')
+    image = models.ImageField(upload_to='images/', default='/images/default.jpg')
     email = models.EmailField(unique=True)
     otp =  models.CharField(max_length = 6, null = True, blank=True)
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
@@ -21,7 +21,7 @@ class User(AbstractUser):
             except FileNotFoundError:
                 pass
 
-        self.image = '/images/default.png'
+        self.image = '/images/default.jpg'
         self.save()
 
 # def save_post_user(sender, instance, **kwargs):

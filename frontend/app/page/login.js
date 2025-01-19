@@ -408,7 +408,6 @@ class loginPage extends HTMLElement {
         subRegister(){
             const clickEvent = document.querySelector("#register");
             clickEvent.addEventListener('click', async (e) =>{
-                console.log("ffffffffffffffffff");
                 const form = document.querySelector("#form-resiter");
                 const fromData = new FormData(form);
                 const data = Object.fromEntries(fromData);
@@ -424,8 +423,10 @@ class loginPage extends HTMLElement {
                         // agent: new https.Agent({ rejectUnauthorized: false })
                     })
                     if (res.ok) {
-                            navigateTo('/login')
+                        showAlert("Register success", "success");
+                        navigateTo('/login')
                     } else {
+                        showAlert("You have somthing wrong please check again", "error");
                         console.log(document.querySelector('.regi-error'))
                         document.querySelector('.regi-error').textContent = 'You have somthing wrong please check again';
                     }
@@ -459,7 +460,6 @@ class loginPage extends HTMLElement {
 
                         })
                     if (res.ok) {
-                        console.log('--- OTP VERIFIED SUCCESSFULLY ---');
 
                         try{
                             const res = await fetch("https://"+window.location.host+"/api/user/", {
@@ -475,8 +475,8 @@ class loginPage extends HTMLElement {
                             })
                             console.log(`res : ${res}`)
                                 if (res.ok) {
+                                    showAlert("welcome", "success");
 
-                                    console.log('--- USER DATA VERIFIED SUCCESSFULLY ---');
                                     // // Add success logic, like redirecting to home page
                                     const data = await res.json();
                                     readData.setData(data);
@@ -490,6 +490,7 @@ class loginPage extends HTMLElement {
                                 console.log("Error verifying OTP:", error);
                             }
                     } else {
+                        showAlert("Invalid OTP. Please try again.", "error");
     
                         const errorCode = document.querySelector('.otp-error');
                         errorCode.textContent = "Invalid OTP. Please try again.";
@@ -535,16 +536,19 @@ class loginPage extends HTMLElement {
                                            `;
                                         this.veryOtp();
                                     }else{
+                                        showAlert("welcome", "success");
                                         navigateTo('/home');
                                     }
 
                                     }
                                     else{
-                                    const errorCode = document.querySelector('.otp-error');
-                                    errorCode.textContent = "Username or password not corect!!.";
-                                    errorCode.style.color = "#D9D9D9";
-                                    otpSubmitBtn.disabled = false;
-                                }
+                                        showAlert("Username or password not corect!", "error");
+
+                                        const errorCode = document.querySelector('.otp-error');
+                                        errorCode.textContent = "Username or password not corect!!.";
+                                        errorCode.style.color = "#D9D9D9";
+                                        otpSubmitBtn.disabled = false;
+                                    }
                     }catch(error){
                         console.log('Error log in : ' , error);
                     }
