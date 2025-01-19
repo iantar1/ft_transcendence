@@ -38,7 +38,7 @@ class Notifications(WebsocketConsumer):
 
         cookies = self.scope.get("cookies", {})
         access_token = cookies.get("access")
-
+        print(f"cookies: {access_token}")
         self.user = get_user_by_token(access_token)
         if self.user:
             userInfo = UserSerializer(self.user).data

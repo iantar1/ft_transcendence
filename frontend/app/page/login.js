@@ -458,7 +458,7 @@ class loginPage extends HTMLElement {
                     if (res.ok) {
                         console.log('--- OTP VERIFIED SUCCESSFULLY ---');
 
-                        try{
+                        try{8
                             const res = await fetch("https://"+window.location.host+"/api/user/", {
                                 method: 'GET', 
                                 headers: {

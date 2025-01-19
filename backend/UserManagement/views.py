@@ -196,48 +196,60 @@ class LogoutView(APIView):
 class UpdateView(APIView):
     
     def post(self, request):
-        token = request.COOKIES.get('access')
+        # token = request.COOKIES.get('access')
     
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
-        try:
-            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
+        # if not token:
+        #     raise AuthenticationFailed('Unauthenticated')
+        # try:
+        #     playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        # except jwt.ExpiredSignatureError:
+        #     raise AuthenticationFailed('Unauthenticated')
         
-    #check password and update it (password) (new password)
         
-        user = User.objects.filter(id=playload['id']).first()
+        # user = User.objects.filter(id=playload['id']).first()
+        response = Response()
+        user = getUserByToken(request.COOKIES, response)
         serializer = UserSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        response.data = serializer.data
+        return response
 
 class ChangePasswordView(APIView):
     
     def post(self, request):
-        token = request.COOKIES.get('access')
+        # token = request.COOKIES.get('access')
     
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
+        # if not token:
+        #     raise AuthenticationFailed('Unauthenticated')
         
-        try:
-            playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
+        # try:
+        #     playload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+        # except jwt.ExpiredSignatureError:
+        #     raise AuthenticationFailed('Unauthenticated')
         
-        user = User.objects.filter(id=playload['id']).first()
+        # user = User.objects.filter(id=playload['id']).first()
+
+        response = Response()
+        user = getUserByToken(request.COOKIES, response)
+
         crrent_password = request.data['crrent_password']
         new_password1 = request.data['new_password1']
         new_password2 = request.data['new_password2']
         if not user.check_password(crrent_password):
             raise AuthenticationFailed("incorrect password")
         if new_password1 != new_password2:
-            return Response("Password1 is different from Password2", status=400)
+            response.data = {"error":"Password1 is different from Password2"}
+            response.status = 400
+            return response
+            # return Response("Password1 is different from Password2", status=400)
         
         user.set_password(new_password1)
         user.save()
-        return Response({"seccess":"the password changed successfuly"}, status=200)
+        response.data = {"seccess":"the password changed successfuly"}
+        response.status = 200
+        # return response
+        # return Response({"seccess":"the password changed successfuly"}, status=200)
 
 
 class ChangeBioImage(APIView):

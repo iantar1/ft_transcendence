@@ -479,12 +479,25 @@ class homePage extends HTMLElement {
         }
         uuss();
         window.notificationSocket = new WebSocket('wss://'+window.location.host+'/wss/notif/');
+        let data_ = {
+            "to_user":"",
+            "action":"",
+        };
+        data_["to_user"] = "iantar";
+        data_["action"] = "send";
+        window.notificationSocket.onclose = (event) => {
+                if (!event.wasClean) {
+                        console.log("Connection closed unexpectedly");
+                    }
+                };
         window.notificationSocket.onopen = (event) => {
-            console.log("notification Connetcted ...");
+                    console.log("notification Connetcted ...");
+                    window.notificationSocket.send(JSON.stringify(data_));
         };
         window.notificationSocket.onmessage = (message) => {
-            data = JSON.parse(message);
-            console.log(data);
+            // data = JSON.parse(message);
+            // console.log(data);
+            console.log(message);
         };
         window.notificationSocket.onerror = (e) => {
             console.log('error :', e);
