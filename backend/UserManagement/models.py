@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 import os
+from django.utils import timezone
 
 class User(AbstractUser):
     username = models.CharField(max_length=50, unique=True)
@@ -52,9 +53,15 @@ class MatchHistory(models.Model):
     game_type = models.CharField(null=True, max_length=10)
     is_draw = models.BooleanField(default=0)
     game_id = models.CharField(max_length=255, null=True)
+    created = models.DateTimeField(editable=False)
+    # time = models.TimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user1.username} vs {self.user2.username}" 
+        return f"{self.user1.username} vs {self.user2.username}"
+    
+    def save(self, *args, **kwargs):
+        self.created = timezone.now()
+        return super(MatchHistory, self).save(*args, **kwargs)
 
 #on_delete=models.CASCADE: if a User object is deleted, all related MatchHistory objects will also be deleted.
     # 1v1 games, dates, and relevant details

@@ -13,6 +13,7 @@ import random
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.utils import timezone
+import time
 
 
 class RegesterView(APIView):
@@ -418,7 +419,10 @@ class MatchHistoryView(APIView):
                 user2_score=opponent_score,
                 winner=winner,
                 game_type=game_type,
-                game_id=game_id
+                game_id=game_id,
+                # date=datetime.today().date(),
+                # time=datetime.now().time()
+
             )
             history.save()
 

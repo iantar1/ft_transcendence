@@ -5,20 +5,37 @@ import { navigateTo } from '../routing.js';
 import { submitTournament } from '../pong/js/submitTournament.js';
 
 function getBadgeColor(rank) {
-    switch(rank) {
-        case 1: return 'warning';
-        case 2: return 'secondary';
-        case 3: return 'bronze';
-        case 4: return 'blue';
-        default: return 'default';
+    // switch(rank) {
+    //     case 1: return 'warning';
+    //     case 2: return 'secondary';
+    //     case 3: return 'bronze';
+    //     case 4: return 'blue';
+    //     default: return 'default';
+    if (rank == 1) {
+        console.log("--> : " + rank)
+        return "bg-bronze";
     }
-}   
+    if (rank == 2) {
+        console.log("--> : " + rank)
+        return "bg-blue";
+    }
+    if (rank == 3) {
+        console.log("--> : " + rank)
+        return "bg-success";
+    }
+    if (rank == 4) {
+        console.log("--> : " + rank)
+        return "bg-warning";
+    }
+}
+   
 
 var web3 = null;
         
 var accounts = null;
 
-async function init() {
+// async function init() {
+export async function init() {
     if (typeof window.ethereum !== 'undefined') {
         web3 = new Web3(window.ethereum);
 
@@ -58,16 +75,17 @@ async function init() {
 
             // Add event listeners for the new buttons
             const submitBtn = document.getElementById('submitBtn');
+            submitBtn.style.display = "none";
             const getBtn = document.getElementById('getBtn');
 
-            submitBtn.addEventListener('click', () => {
-                try {
-                    // Add your submit logic here
-                    showNotification('success', 'Operation completed successfully!');
-                } catch (error) {
-                    showNotification('error', 'An error occurred during submission.');
-                }
-            });
+            // submitBtn.addEventListener('click', () => {
+            //     try {
+            //         // Add your submit logic here
+            //         showNotification('success', 'Operation completed successfully!');
+            //     } catch (error) {
+            //         showNotification('error', 'An error occurred during submission.');
+            //     }
+            // });
 
             getBtn.addEventListener('click', async () => {
                 try{
@@ -113,7 +131,7 @@ async function init() {
                                         ${tournament.players.map(player => `
                                             <tr>
                                                 <td>
-                                                    <span class="badge bg-${getBadgeColor(player.rank)}">#${player.rank}</span>
+                                                    <span class="badge ${getBadgeColor(player.rank)}"> #${player.rank}</span>
                                                 </td>
                                                 <td class="text-light">${player.address}</td>
                                                 <td class="text-light">${player.points}</td>

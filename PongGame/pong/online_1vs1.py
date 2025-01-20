@@ -210,7 +210,8 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
                 "opponent_score": self.score["player2"],
                 "user_score": self.score["player1"],
                 "game_type": "pong",
-                "game_id": self.group_room
+                "game_id": self.group_room,
+                "draw": False,
             }
             access = self.cookies["access"]
             refresh = self.cookies["refresh"]
@@ -220,15 +221,23 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
             }
 
             # Send the match history to backend
-            try:
-                response = requests.post(BACKEND_URL_MATCH, json=match_data, cookies=cookies, timeout=5)
-                if response.status_code == 200:
-                    print("Match history successfully sent to backend 1")
-                else:
-                    print(f"Failed to send match history: {response.status_code} - {response.text}")
-            except requests.exceptions.RequestException as e:
-                print(f"Error sending match history: {e}")
-            
+            # try:
+            #     response = requests.post(BACKEND_URL_MATCH, json=match_data, cookies=cookies, timeout=5)
+            #     if response.status_code == 200:
+            #         print("Match history successfully sent to backend 1")
+            #     else:
+            #         print(f"Failed to send match history: {response.status_code} - {response.text}")
+            # except requests.exceptions.RequestException as e:
+            #     print(f"Error sending match history: {e}")
+            async with httpx.AsyncClient() as client:
+                try:
+                    response = await client.post(BACKEND_URL_MATCH, json=match_data, cookies=cookies, timeout=5)
+                    if response.status_code == 200:
+                        print("Match history successfully sent to backend 1")
+                    else:
+                        print(f"Failed to send match history: {response.status_code} - {response.text}")
+                except httpx.RequestError as e:
+                    print(f"Error sending match history: {e}")
             await self.send(text_data=json.dumps(
             {
                 "type": "game_over",
