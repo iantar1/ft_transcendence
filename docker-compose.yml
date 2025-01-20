@@ -4,13 +4,10 @@ services:
   postgree_db:
     image: postgres:15
     container_name: postgree_db
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+    env_file:
+      - .env
     restart: always
-    # ports:
-    #   - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
     
@@ -20,8 +17,6 @@ services:
     container_name: backend
     image: backend
     build: ./backend
-    ports:
-      - "8000:8000"
     volumes:
       - ./backend:/backend
     env_file:
@@ -33,12 +28,12 @@ services:
     container_name: ponggame
     image: ponggame
     build: ./PongGame
-    ports:
-      - "5050:5050"
     volumes:
       - ./PongGame:/app
 
   frontend:
+    depends_on:
+      - backend
     container_name: frontend
     image: frontend
     build: ./frontend
@@ -60,8 +55,7 @@ services:
     container_name: tictactoe
     image: tictactoe
     build: ./TicTacToe
-    # ports:
-    #   - "4040:4040"
+
     volumes:
       - ./TicTacToe:/app
   
