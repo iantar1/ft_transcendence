@@ -385,7 +385,14 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
                     "opponent_score": self.score["player2"],
                     "user_score": self.score["player1"],
                     "game_type": "pong",
-                    "game_id": self.group_room
+                    "game_id": self.group_room,
+                    "draw": False
+                }
+                access = self.cookies["access"]
+                refresh = self.cookies["refresh"]
+                cookies = {
+                    "access": access,
+                    "refresh": refresh
                 }
 
                 # Send match history to backend
@@ -393,7 +400,7 @@ class Remote1vs1Consumer(AsyncWebsocketConsumer):
                     response = requests.post(
                         BACKEND_URL_MATCH,
                         json=match_data,
-                        cookies=self.cookies,
+                        cookies=cookies,
                         timeout=5
                     )
                     if response.status_code == 200:

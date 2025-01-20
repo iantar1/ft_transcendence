@@ -1,6 +1,5 @@
 from django.urls import path
 from . import local_1vs
-from . import online_1vs1
 from . import online
 from . import ai_mode
 from . import tournamentConsumer as t 

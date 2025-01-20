@@ -1042,8 +1042,10 @@ class profilePage extends HTMLElement {
             const player2 = match.user2;
             const winner = match.winner.username;
             const loser = winner === player1.username ? player2.username : player1.username;
-            const time = match.created; // Split the time string at ":"
-            const hourAndMinutes = time; // Format as HH:mm
+            const time = match.created.split('T'); // Split the time string at ":"
+            const date = time[0]; // Format as HH:mm
+            const hourAndMinutes = time[1].split(':'); // Format as HH:mm
+
     
             from += `
                 <tr>
@@ -1061,13 +1063,12 @@ class profilePage extends HTMLElement {
                     </td>
                     <td>
                         <div>
-                            <div>${match.date}</div>
-                            <div>${hourAndMinutes}</div>
+                            <div>${date}</div>
+                            <div>${hourAndMinutes[0]}:${hourAndMinutes[1]}</div>
                         </div>
                     </td>
                     <td>
-                        <div>${winner === player2.username ? 'Win' : 'Lose'}</div>
-                    </td>
+                        <div>${(match.is_draw ? "draw" : (winner === player2.username ? 'Win' : 'Lose'))}</div>                    </td>
                     <td>
                         <div>${match.user2_score}</div>
                     </td>
