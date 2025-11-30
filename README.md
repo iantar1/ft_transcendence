@@ -1,6 +1,6 @@
 # ft_transcendence
 
-A full-stack web project featuring online multiplayer games (Ping-Pong, TicTacToe), real-time chat, and user management.  
+A full-stack web project featuring online multiplayer games (Ping-Pong, TicTacToe) and user management.  
 This repository is part of an educational project combining backend, frontend, game logic, and real-time communication.
 
 ---
@@ -10,16 +10,14 @@ This repository is part of an educational project combining backend, frontend, g
 **ft_transcendence** allows users to:
 
 - Play classic games online in real time (Ping-Pong, TicTacToe)
-- Communicate with other users via private, group, and global chat
 - Manage accounts, profiles, friends, and game statistics
-- Experience real-time updates for games and chat thanks to WebSockets
+- Experience real-time updates for games thanks to WebSockets
 
 The project is divided into multiple components:
 
-- **Backend:** Handles authentication, user management, game logic, chat, and real-time communication
+- **Backend:** Handles authentication, user management, game logic and real-time communication
 - **Frontend:** SPA built with JavaScript/HTML/CSS for the user interface
 - **Games:** Individual modules for Ping-Pong and TicTacToe
-- **Chat:** Real-time messaging module
 - **Docker:** Containerization for easy deployment and consistent development
 
 ---
@@ -28,7 +26,7 @@ The project is divided into multiple components:
 ````bash
 ft_transcendence/
 ├── backend/ ← Django backend
-│ ├── apps/ ← Auth, Users, Games, Chat apps
+│ ├── apps/ ← Auth, Users, Games
 │ ├── manage.py
 │ ├── requirements.txt
 │ ├── Dockerfile
@@ -36,7 +34,6 @@ ft_transcendence/
 ├── frontend/ ← SPA frontend (JS/HTML/CSS)
 ├── PongGame/ ← Ping-Pong game logic & integration
 ├── TicTacToe/ ← TicTacToe game logic
-├── chat/ ← Chat module
 ├── blockchain/ ← Optional blockchain features
 ├── docker-compose.yml ← Docker orchestration for backend, frontend, DB
 └── README.md
@@ -65,11 +62,6 @@ ft_transcendence/
 - TicTacToe: turn-based game logic with live updates
 - Matchmaking handled by backend
 
-### Chat
-
-- Real-time communication via WebSockets
-- Supports private and group conversations
-
 ---
 
 ## ✅ Features
@@ -80,24 +72,18 @@ ft_transcendence/
 - REST API endpoints for frontend consumption
 - Real-time game session management
 - Matchmaking system for multiplayer games
-- WebSocket support for chat and live gameplay
+- WebSocket support live gameplay
 - Docker-ready for development and deployment
 
 ### Frontend
 
 - Responsive SPA for interacting with backend APIs
 - Game interface for Ping-Pong and TicTacToe
-- Real-time chat interface
 
 ### Games
 
 - Game state synchronization and persistence
 - Real-time multiplayer support
-
-### Chat
-
-- Private, group, and global chat rooms
-- Real-time notifications
 
 ---
 
@@ -118,20 +104,3 @@ cd ft_transcendence
 
 docker-compose up --build
 ```
-
-Access the application:
-
-    Backend API: http://localhost:8000/
-
-    Frontend SPA: http://localhost:3000/ (or configured port)
-
-    WebSocket endpoints for games and chat are live
-
-Future Improvements
-
-    Advanced matchmaking and ranking system
-    Persistent game history & leaderboards
-    User profile pages with avatars and stats
-    Enhanced chat features (media sharing, notifications)
-    Security improvements (rate limiting, input validation)
-    Additional games or mini-apps
