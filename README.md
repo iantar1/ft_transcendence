@@ -25,7 +25,7 @@ The project is divided into multiple components:
 ---
 
 ## 📂 Repository Structure
-
+````bash
 ft_transcendence/
 ├── backend/ ← Django backend
 │ ├── apps/ ← Auth, Users, Games, Chat apps
@@ -40,7 +40,7 @@ ft_transcendence/
 ├── blockchain/ ← Optional blockchain features
 ├── docker-compose.yml ← Docker orchestration for backend, frontend, DB
 └── README.md
-
+````
 
 
 ---
